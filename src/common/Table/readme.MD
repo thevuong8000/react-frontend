@@ -1,8 +1,8 @@
 Schema for `colConfigs`
-```
-ActionButton: {
+```js
+interface ActionButton {
+  onClick: (row_data, index) => undefined,
   show: boolean | (row_data) => boolean,
-  onClick: function,
   title: string,
   disabled: boolean | (row_data) => boolean,
   colorScheme: string,
@@ -10,22 +10,22 @@ ActionButton: {
   text: string
 }
 
-HeaderCheckbox: {
-  onClick: function,
+interface HeaderCheckbox {
+  onClick: (event) => undefined,
   checked: boolean
 }
 
-colConfigs: [
+var colConfigs: [
   {
     headerType: TABLE_CELL_TYPE,
     headerCheckbox: HeaderCheckbox,
     headerText: string,
-    onHeaderClick: function,
+    onHeaderClick: (event) => undefined,
     headerStyle: object,
     headerProps: object,
 
     cellType: TABLE_CELL_TYPE,
-    onCellClick: function,
+    onCellClick: void,
     cellChecked: (row_data, index) => boolean,
     cellProp: string,
     cellStyle: object,
