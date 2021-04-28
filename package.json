@@ -1,5 +1,5 @@
 {
-  "name": "athena-labeling-ui",
+  "name": "react-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -20,6 +20,7 @@
     "hash-sum": "^2.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-icons": "^4.2.0",
     "react-router-dom": "^5.1.2",
     "uuid": "^8.1.0"
   },
