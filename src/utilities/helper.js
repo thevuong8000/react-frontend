@@ -3,10 +3,10 @@
  * @param {string} href
  */
 export const downloadFile = (href, fileName) => {
-	const aTag = document.createElement("a");
+	const aTag = document.createElement('a');
 	aTag.href = href;
-	aTag.target = "_blank";
-	aTag.download = fileName || "download";
+	aTag.target = '_blank';
+	aTag.download = fileName || 'download';
 
 	document.body.appendChild(aTag);
 	aTag.click();
@@ -21,6 +21,6 @@ export const downloadFile = (href, fileName) => {
  */
 export const insertString = (source, replaceObj) =>
 	Object.entries(replaceObj).reduce((acc, [key, value]) => {
-		const regEx = new RegExp(`\\\${\\s*${key}\\s*}`, "g");
+		const regEx = new RegExp(`\\\${\\s*${key}\\s*}`, 'g');
 		return acc.replace(regEx, value);
 	}, source);

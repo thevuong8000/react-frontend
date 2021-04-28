@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from 'react';
 
 const MOCK_USER = {
-  name: "katorin",
+  name: 'katorin'
 };
 
 const AuthContext = createContext();
@@ -10,17 +10,15 @@ const AuthProvider = ({ children }) => {
   const [data, setData] = useState(MOCK_USER);
 
   const logIn = () => {
-    console.log("log in");
+    console.log('log in');
   };
 
   const logOut = () => {
-    console.log("log out");
+    console.log('log out');
   };
 
   return (
-    <AuthContext.Provider value={{ user: data, logIn, logOut }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ user: data, logIn, logOut }}>{children}</AuthContext.Provider>
   );
 };
 

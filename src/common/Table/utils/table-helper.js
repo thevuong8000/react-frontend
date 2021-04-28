@@ -6,16 +6,16 @@
 export const getStatusColorCode = (code) => {
 	switch (code) {
 		case 1:
-			return "orange"; // pending
+			return 'orange'; // pending
 		case 2:
-			return "blue"; // processing
+			return 'blue'; // processing
 		case 3:
-			return "green"; // done
+			return 'green'; // done
 		case 4:
-			return "yellow"; // timeout
+			return 'yellow'; // timeout
 		case 5:
-			return "red"; // error
+			return 'red'; // error
 		default:
-			return "gray";
+			return 'gray';
 	}
 };
