@@ -6,12 +6,7 @@
   "globals": {
     "_DEV_": "readonly"
   },
-  "extends": [
-    "plugin:react/recommended",
-    "airbnb",
-    "prettier",
-    "prettier/react"
-  ],
+  "extends": ["plugin:react/recommended", "airbnb", "prettier", "prettier/react"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -21,18 +16,12 @@
   },
   "plugins": ["react", "react-hooks"],
   "rules": {
-    "indent": [
-      "error",
-      "tab",
-      {
-        "SwitchCase": 1
-      }
-    ],
+    "indent": "off",
     "react/jsx-props-no-spreading": 0,
     "no-tabs": 0,
     "no-console": 0,
-    "react/jsx-indent": ["error", "tab"],
-    "react/jsx-indent-props": ["error", "tab"],
+    "react/jsx-indent": "off",
+    "react/jsx-indent-props": "off",
     "react/destructuring-assignment": [0, "never"],
     "react/prop-types": 0,
     "react/jsx-filename-extension": 0,

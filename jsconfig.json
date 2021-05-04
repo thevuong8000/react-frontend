@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@common/*": ["./src/common/*"],
+      "@constants/*": ["./src/constants/*"],
+      "@contexts/*": ["./src/contexts/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@utilities/*": ["./src/utilities/*"]
+    }
+  },
+  "exclude": [".env.*"],
+  "globals": {
+    "_DEV_": "readonly"
+  }
+}
