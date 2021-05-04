@@ -3,7 +3,7 @@ import Header from '@common/Header/Header';
 import { ROUTE } from '@constants/routing';
 import { PAGE_TITLE } from '@constants/text';
 import React, { lazy } from 'react';
-import { Redirect, Route, BrowserRounter as Router, Switch } from 'react-router';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 
 const Homepage = lazy(() => import('../Homepage/Homepage'));
 

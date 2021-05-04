@@ -1,9 +1,9 @@
 import React, { lazy } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import { ROUTE } from '@constants/configs';
+import { ROUTE } from '@constants/routing';
 import { PAGE_TITLE } from '@constants/text';
 
-const LoginPage = lazy(() => import('../login/login'));
+const LoginPage = lazy(() => import('../Login/Login'));
 
 const UnauthenticatedPage = () => (
   <Router>
