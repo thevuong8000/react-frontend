@@ -3,12 +3,3 @@ export const APP_CONFIG = {
 };
 
 export const API_PATH = {};
-
-export const ROUTE = {
-	HOME: {
-		to: '/'
-	},
-	LOGIN: {
-		to: '/login'
-	}
-};

@@ -1,0 +1,14 @@
+export const EXTERNAL_LINK = {
+	FACEBOOK: 'https://www.facebook.com/manh.beomap/',
+	GITHUB: 'https://github.com/thevuong8000',
+	LINKED_IN: 'https://www.linkedin.com/in/manh-tran-a003821a2/'
+};
+
+export const ROUTE = {
+	HOME: {
+		to: '/'
+	},
+	LOGIN: {
+		to: '/login'
+	}
+};
