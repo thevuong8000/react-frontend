@@ -5,11 +5,11 @@ import React, { lazy } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 
 const Homepage = lazy(() => import('../Homepage/Homepage'));
-const DemoComponents = lazy(() => import('@common/DemoComponents'));
+const DemoComponents = lazy(() => import('../../demo-components/DemoComponents'));
 
 const AuthenticatedPage = () => (
   <Router>
-    <Flex direction="column" overflow="hidden" h="100%">
+    <Flex direction="column" overflow="hidden" h="100vh">
       <Header />
       <Box>
         <Switch>
