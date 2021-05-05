@@ -8,7 +8,7 @@ require('./index.scss');
 
 const config = {
   initialColorMode: 'light',
-  useSystemColorMode: true
+  useSystemColorMode: false
 };
 const theme = extendTheme({ config });
 

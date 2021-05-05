@@ -5,8 +5,17 @@ export const TEXT_LOG_IN = {
 };
 
 export const TEXT_COMMON = {
+	TITLE: 'REACT-FRONTEND',
 	CONFIRM: 'Confirm',
 	CANCEL: 'Cancel'
+};
+
+export const TEXT_HEADER = {
+	PROFILE: {
+		SETTINGS: 'Settings',
+		LOG_OUT: 'Log out',
+		FEEDBACK: 'Give Feedback'
+	}
 };
 
 export const PAGE_TITLE = {
