@@ -5,9 +5,14 @@ import React from 'react';
 import { ROUTE } from '@constants/routing';
 import Profile from '@common/Profile/Profile';
 import { TEXT_COMMON } from '@constants/text';
+import { useColorMode } from '@chakra-ui/color-mode';
+import { FaMoon, FaSun } from 'react-icons/fa';
+import Button from '@common/Button/Button';
+import { DEFAULT_SIZE } from '@constants/global';
 
 const Header = () => {
   const location = useLocation();
+  const { colorMode, toggleColorMode } = useColorMode();
 
   const LeftItems = () => (
     <Box
@@ -29,7 +34,18 @@ const Header = () => {
     </Box>
   );
 
-  const RightItems = () => <Profile />;
+  const RightItems = () => (
+    <Flex>
+      <Button onClick={toggleColorMode} size="md" variant="ghost" colorScheme="gray">
+        {colorMode === 'light' ? (
+          <FaMoon size={DEFAULT_SIZE.ICON} color="gray" />
+        ) : (
+          <FaSun size={DEFAULT_SIZE.ICON} />
+        )}
+      </Button>
+      <Profile />
+    </Flex>
+  );
 
   return (
     <Flex boxShadow="sm" align="center" justify="space-between" h="14" p="6">
