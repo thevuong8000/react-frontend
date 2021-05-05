@@ -8,8 +8,7 @@ import { useAuth } from '@contexts/auth-provider';
 import { IoIosSettings } from 'react-icons/io';
 import { MdFeedback } from 'react-icons/md';
 import { FaSignOutAlt } from 'react-icons/fa';
-
-const ICON_SIZE = 20;
+import { DEFAULT_SIZE } from '@constants/global';
 
 const Profile = () => {
   const { user, logOut } = useAuth();
@@ -23,10 +22,12 @@ const Profile = () => {
         </Flex>
       </MenuButton>
       <MenuList>
-        <MenuItem icon={<IoIosSettings size={ICON_SIZE} />}>{TEXT_PROFILE.SETTINGS}</MenuItem>
-        <MenuItem icon={<MdFeedback size={ICON_SIZE} />}>{TEXT_PROFILE.FEEDBACK}</MenuItem>
+        <MenuItem icon={<IoIosSettings size={DEFAULT_SIZE.ICON} />}>
+          {TEXT_PROFILE.SETTINGS}
+        </MenuItem>
+        <MenuItem icon={<MdFeedback size={DEFAULT_SIZE.ICON} />}>{TEXT_PROFILE.FEEDBACK}</MenuItem>
         <MenuDivider />
-        <MenuItem icon={<FaSignOutAlt size={ICON_SIZE} />} onClick={logOut}>
+        <MenuItem icon={<FaSignOutAlt size={DEFAULT_SIZE.ICON} />} onClick={logOut}>
           {TEXT_PROFILE.LOG_OUT}
         </MenuItem>
       </MenuList>
