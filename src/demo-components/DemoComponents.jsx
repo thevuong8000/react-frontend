@@ -1,12 +1,15 @@
-import { Flex, Heading } from '@chakra-ui/layout';
+import { Box, Flex, Heading } from '@chakra-ui/layout';
 import React, { useEffect } from 'react';
+import ButtonDemo from './Button/ButtonDemo';
 
 const Demo = ({ title, children }) => (
-  <Flex>
+  <Flex direction="column" w="100%">
     <Heading>{title}</Heading>
-    {children}
+    <Box>{children}</Box>
   </Flex>
 );
+
+const items = [{ title: 'Button', component: <ButtonDemo /> }];
 
 const DemoComponents = ({ documentTitle }) => {
   useEffect(() => {
@@ -15,7 +18,11 @@ const DemoComponents = ({ documentTitle }) => {
 
   return (
     <Flex>
-      <div>Demo Components</div>
+      {items.map((item, index) => (
+        <Demo key={`demo-component-${index}`} title={item.title}>
+          {item.component}
+        </Demo>
+      ))}
     </Flex>
   );
 };
