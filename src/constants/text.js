@@ -5,6 +5,7 @@ export const TEXT_LOG_IN = {
 };
 
 export const TEXT_COMMON = {
+	TITLE: 'REACT-FRONTEND',
 	CONFIRM: 'Confirm',
 	CANCEL: 'Cancel'
 };

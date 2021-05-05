@@ -1,9 +1,10 @@
-import { Flex, Spacer, Link as ChakraLink, Box } from '@chakra-ui/layout';
+import { Flex, Spacer, Box } from '@chakra-ui/layout';
+import { Button as ChakraButton } from '@chakra-ui/button';
 import { Link, useLocation } from 'react-router-dom';
 import React from 'react';
 import { ROUTE } from '@constants/routing';
-import { Image } from '@chakra-ui/image';
 import Profile from '@common/Profile/Profile';
+import { TEXT_COMMON } from '@constants/text';
 
 const Header = () => {
   const location = useLocation();
@@ -18,26 +19,20 @@ const Header = () => {
       alignItems="center"
     >
       {/* Logo */}
-      <ChakraLink
+      <ChakraButton
         as={Link}
-        w="10rem"
-        to={{ pathname: ROUTE.HOME, state: { from: location.pathname } }}
+        to={{ pathname: ROUTE.HOME.to, state: { from: location.pathname } }}
+        variant="outline"
       >
-        <Image
-          objectFit="contain"
-          maxW="100%"
-          objectPosition="center"
-          alt="Logo"
-          src="/imgs/logo.jpg"
-        />
-      </ChakraLink>
+        {TEXT_COMMON.TITLE}
+      </ChakraButton>
     </Box>
   );
 
   const RightItems = () => <Profile />;
 
   return (
-    <Flex boxShadow="sm" align="center" justify="space-between">
+    <Flex boxShadow="sm" align="center" justify="space-between" h="14" p="6">
       <LeftItems />
       <Spacer />
       <RightItems />
