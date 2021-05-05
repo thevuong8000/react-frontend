@@ -9,6 +9,14 @@ export const TEXT_COMMON = {
 	CANCEL: 'Cancel'
 };
 
+export const TEXT_HEADER = {
+	PROFILE: {
+		SETTINGS: 'Settings',
+		LOG_OUT: 'Log out',
+		FEEDBACK: 'Give Feedback'
+	}
+};
+
 export const PAGE_TITLE = {
 	HOMEPAGE: 'Homepage',
 	LOGIN: 'Login'
