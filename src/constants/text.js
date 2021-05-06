@@ -17,8 +17,3 @@ export const TEXT_HEADER = {
 		FEEDBACK: 'Give Feedback'
 	}
 };
-
-export const PAGE_TITLE = {
-	HOMEPAGE: 'Homepage',
-	LOGIN: 'Login'
-};

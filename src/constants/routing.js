@@ -6,9 +6,15 @@ export const EXTERNAL_LINK = {
 
 export const ROUTE = {
 	HOME: {
-		to: '/'
+		to: '/home',
+		title: 'Homepage'
 	},
 	LOGIN: {
-		to: '/login'
+		to: '/login',
+		title: 'Login'
+	},
+	DEMO: {
+		to: '/demo-components',
+		title: 'Demo Components'
 	}
 };
