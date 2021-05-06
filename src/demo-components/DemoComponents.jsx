@@ -1,6 +1,9 @@
 import { Box, Flex, Heading } from '@chakra-ui/layout';
 import React, { useEffect } from 'react';
 import ButtonDemo from './Button/ButtonDemo';
+import InputTextDemo from './InputText/InputTextDemo';
+import InputCheckboxDemo from './InputCheckbox/InputCheckboxDemo';
+import TableDemo from './Table/TableDemo';
 
 const Demo = ({ title, children }) => (
   <Flex direction="column" w="100%">
@@ -9,7 +12,12 @@ const Demo = ({ title, children }) => (
   </Flex>
 );
 
-const items = [{ title: 'Button', component: <ButtonDemo /> }];
+const items = [
+  { title: 'Button', component: <ButtonDemo /> },
+  { title: 'Input Text', component: <InputTextDemo /> },
+  { title: 'Input Checkbox', component: <InputCheckboxDemo /> },
+  { title: 'Table', component: <TableDemo /> }
+];
 
 const DemoComponents = ({ documentTitle }) => {
   useEffect(() => {
@@ -17,7 +25,7 @@ const DemoComponents = ({ documentTitle }) => {
   }, [documentTitle]);
 
   return (
-    <Flex p="10">
+    <Flex p="10" direction="column" gridGap="10">
       {items.map((item, index) => (
         <Demo key={`demo-component-${index}`} title={item.title}>
           {item.component}
