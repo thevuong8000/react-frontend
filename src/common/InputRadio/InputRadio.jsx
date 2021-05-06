@@ -9,6 +9,7 @@ const InputRadio = ({
   colorScheme = 'green', // green | orange | pink | purple | red | teal | yellow
   onChange,
   isColumn,
+  gap = '3',
   ...props
 }) => (
   <RadioGroup
@@ -19,6 +20,7 @@ const InputRadio = ({
     d="flex"
     flexDir={isColumn ? 'column' : 'row'}
     flexWrap="wrap"
+    gridGap={gap}
     {...props}
   >
     {options.map((option, index) => (
@@ -27,6 +29,7 @@ const InputRadio = ({
         value={option.value}
         onChange={onChange}
         isDisabled={option.isDisabled}
+        spacing="1.5"
         cursor="pointer"
       >
         {option.text}
