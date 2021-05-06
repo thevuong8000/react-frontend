@@ -17,7 +17,7 @@ const DemoComponents = ({ documentTitle }) => {
   }, [documentTitle]);
 
   return (
-    <Flex>
+    <Flex p="10">
       {items.map((item, index) => (
         <Demo key={`demo-component-${index}`} title={item.title}>
           {item.component}

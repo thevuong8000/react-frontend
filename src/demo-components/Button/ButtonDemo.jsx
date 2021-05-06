@@ -5,11 +5,11 @@ import { SIZE } from '@constants/demo';
 import React, { useState } from 'react';
 
 const ButtonDemo = () => {
-  const [size, setSize] = useState(0);
+  const [size, setSize] = useState(1);
   const [variant, setVariant] = useState('solid');
   const [colorScheme, setColorScheme] = useState('blue');
   return (
-    <Flex direction="row" w="100%" justifyContent="space-between" align="center" pl="20">
+    <Flex direction="row" w="100%" justifyContent="space-between" align="center">
       <Flex direction="column">
         {/* Size */}
         <Flex align="center">
