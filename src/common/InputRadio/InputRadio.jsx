@@ -4,7 +4,7 @@ import React from 'react';
 const InputRadio = ({
   name,
   value,
-  options = [], // { value: string | number | boolean, text: string }, value must be unique
+  options = [], // { value: any, text: string, isDisabled }, value must be unique
   size = 'sm', // sm | md | lg
   colorScheme = 'green', // green | orange | pink | purple | red | teal | yellow
   onChange,
