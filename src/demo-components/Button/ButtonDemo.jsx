@@ -3,14 +3,16 @@ import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/
 import Button from '@common/Button/Button';
 import { SIZE } from '@constants/demo';
 import React, { useState } from 'react';
+import { STYLE } from '../demo-helper/constants';
 
 const ButtonDemo = () => {
   const [size, setSize] = useState(1);
   const [variant, setVariant] = useState('solid');
   const [colorScheme, setColorScheme] = useState('blue');
   return (
-    <Flex direction="row" w="100%" justifyContent="space-between" align="center">
-      <Flex direction="column">
+    <Flex {...STYLE.DEMO_WRAPPER}>
+      {/* Options */}
+      <Flex {...STYLE.COMPONENT_OPTIONS}>
         {/* Size */}
         <Flex align="center">
           <Text mr="4">Size:</Text>
@@ -32,7 +34,9 @@ const ButtonDemo = () => {
           <Text mr="4">Color Scheme:</Text>
         </Flex>
       </Flex>
-      <Flex w="50%" align="center" justifyContent="center">
+
+      {/* Render Button */}
+      <Flex {...STYLE.COMPONENT_RENDER}>
         <Button size={SIZE.DEFAULT[size]} variant={variant} colorScheme={colorScheme}>
           Button
         </Button>

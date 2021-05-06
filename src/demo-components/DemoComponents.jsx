@@ -4,6 +4,7 @@ import ButtonDemo from './Button/ButtonDemo';
 import InputTextDemo from './InputText/InputTextDemo';
 import InputCheckboxDemo from './InputCheckbox/InputCheckboxDemo';
 import TableDemo from './Table/TableDemo';
+import InputRadioDemo from './InputRadio/InputRadioDemo';
 
 const Demo = ({ title, children }) => (
   <Flex direction="column" w="100%">
@@ -16,6 +17,7 @@ const items = [
   { title: 'Button', component: <ButtonDemo /> },
   { title: 'Input Text', component: <InputTextDemo /> },
   { title: 'Input Checkbox', component: <InputCheckboxDemo /> },
+  { title: 'Input Radio', component: <InputRadioDemo /> },
   { title: 'Table', component: <TableDemo /> }
 ];
 
