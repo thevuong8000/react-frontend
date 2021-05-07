@@ -5,6 +5,7 @@ import InputTextDemo from './InputText/InputTextDemo';
 import InputCheckboxDemo from './InputCheckbox/InputCheckboxDemo';
 import TableDemo from './Table/TableDemo';
 import InputRadioDemo from './InputRadio/InputRadioDemo';
+import SelectorDemo from './Selector/SelectorDemo';
 
 const Demo = ({ title, children }) => (
   <Flex direction="column" w="100%">
@@ -28,7 +29,7 @@ const items = [
   { title: COMPONENT_NAME.INPUT_CHECKBOX, component: <InputCheckboxDemo /> },
   { title: COMPONENT_NAME.INPUT_RADIO, component: <InputRadioDemo /> },
   { title: COMPONENT_NAME.TABLE, component: <TableDemo /> },
-  { title: COMPONENT_NAME.SELECTOR, component }
+  { title: COMPONENT_NAME.SELECTOR, component: <SelectorDemo /> }
 ];
 
 const DemoComponents = ({ documentTitle }) => {

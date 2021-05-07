@@ -24,3 +24,20 @@ export const insertString = (source, replaceObj) =>
 		const regEx = new RegExp(`\\\${\\s*${key}\\s*}`, 'g');
 		return acc.replace(regEx, value);
 	}, source);
+
+/**
+ * Check if str1 includes str2 insensitively
+ * @param {string} str1 source string
+ * @param {string} str2 target string
+ * @returns {boolean}
+ */
+export const includeStr = (str1 = '', str2 = '') =>
+	`${str1}`.toLowerCase().includes(`${str2}`.toLowerCase());
+
+/**
+ * Join strings by a separator
+ * @param {array} arrStrings
+ * @param {string} separator
+ * @returns {string}
+ */
+export const joinStrings = (arrStrings = [], separator = ', ') => arrStrings.join(separator);

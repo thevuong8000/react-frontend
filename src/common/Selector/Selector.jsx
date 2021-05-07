@@ -2,6 +2,7 @@ import { useBoolean } from '@chakra-ui/hooks';
 import { Input, InputGroup } from '@chakra-ui/input';
 import { Flex } from '@chakra-ui/layout';
 import DropdownTable from '@common/Helper-Component/DropdownTable/DropdownTable';
+import { includeStr, joinStrings } from '@utilities/helper';
 import React, { useEffect, useRef, useState } from 'react';
 
 const Selector = ({
@@ -9,23 +10,29 @@ const Selector = ({
   value,
   options = [], // { value: any, text: string, isDisable: boolean, Icon: React.Component }
   onChange,
-  isChecked, // (item, value) => boolean: Check if {item} in {value}
   isMultiple, // multiple selection
   placeholder,
-  valueToString,
+  isSelected, // (item, value) => boolean: Check if {item} in {value}
+  valueToString, // (value) => string
   ...props
 }) => {
   const [filterOptions, setFilterOptions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showOptions, setShowOptions] = useBoolean(false);
 
   const dropdownRef = useRef();
 
+  // Default functions
+  const _valueToString = valueToString ?? joinStrings;
+
   useEffect(() => {
     setFilterOptions(options ?? []);
   }, [options]);
 
-  const _valueToString = valueToString ?? (() => {});
+  useEffect(() => {
+    setFilterOptions(options.filter((opt) => includeStr(opt.text, searchQuery)));
+  }, [searchQuery]);
 
   const _onShowOptions = () => {
     if (showOptions) return;

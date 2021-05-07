@@ -1,4 +1,5 @@
-import { Box, VStack, Button as ChakraButton } from '@chakra-ui/layout';
+import { Button as ChakraButton } from '@chakra-ui/button';
+import { Box, VStack } from '@chakra-ui/layout';
 import { useTheme } from '@chakra-ui/system';
 import useToggle from '@hooks/useToggle';
 import React, { forwardRef } from 'react';
@@ -17,9 +18,7 @@ const DropdownTable = (props, ref) => {
   const opacity = useToggle(isOpen, { trueValue: '1', falseValue: '0' });
   const visibility = useToggle(isOpen, { trueValue: 'visible', falseValue: 'hidden' });
 
-  const DropdownItems = ({ option }) => {
-    <ChakraButton>{option.text}</ChakraButton>;
-  };
+  const DropdownItems = ({ option }) => <ChakraButton>{option.text}</ChakraButton>;
 
   return (
     <Box w="100%" pos="relative" ref={ref}>
