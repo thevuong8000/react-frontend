@@ -25,11 +25,11 @@ const COMPONENT_NAME = {
 
 const items = [
   { title: COMPONENT_NAME.BUTTON, component: <ButtonDemo /> },
+  { title: COMPONENT_NAME.SELECTOR, component: <SelectorDemo /> },
   { title: COMPONENT_NAME.INPUT_TEXT, component: <InputTextDemo /> },
   { title: COMPONENT_NAME.INPUT_CHECKBOX, component: <InputCheckboxDemo /> },
   { title: COMPONENT_NAME.INPUT_RADIO, component: <InputRadioDemo /> },
-  { title: COMPONENT_NAME.TABLE, component: <TableDemo /> },
-  { title: COMPONENT_NAME.SELECTOR, component: <SelectorDemo /> }
+  { title: COMPONENT_NAME.TABLE, component: <TableDemo /> }
 ];
 
 const DemoComponents = ({ documentTitle }) => {

@@ -1,4 +1,4 @@
-import { Flex, Text } from '@chakra-ui/layout';
+import { Box, Flex, Text } from '@chakra-ui/layout';
 import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/slider';
 import Selector from '@common/Selector/Selector';
 import React, { useState } from 'react';
@@ -46,7 +46,9 @@ const SelectorDemo = () => {
 
       {/* Render Button */}
       <Flex {...STYLE.COMPONENT_RENDER}>
-        <Selector name="selector-demo" options={options} />
+        <Box w="md">
+          <Selector name="selector-demo" options={options} />
+        </Box>
       </Flex>
     </Flex>
   );
