@@ -2,7 +2,7 @@ import { useBoolean } from '@chakra-ui/hooks';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/slider';
 import Selector from '@common/Selector/Selector';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { STYLE } from '../demo-helper/constants';
 
 const options = [
@@ -19,17 +19,20 @@ const SelectorDemo = () => {
   const [size, setSize] = useState(1);
   const [variant, setVariant] = useState('solid');
   const [colorScheme, setColorScheme] = useState('blue');
-  const [isMultiple, setIsMultiple] = useBoolean(false);
+  const [isMultiple, setIsMultiple] = useBoolean(true);
 
-  const [selectedOptions, setSelectedOptions] = useState('');
+  const [selectedOptions, setSelectedOptions] = useState([]);
 
   const _onSelectSingle = (e) => {
-    console.log(e.target);
-    console.log(e.target.value);
     setSelectedOptions(e.target.value);
   };
 
-  const _onSelectMultiple = (e) => {};
+  const _onSelectMultiple = (e) => {
+    const { value } = e.target;
+    setSelectedOptions((prevOpts) =>
+      prevOpts.includes(value) ? prevOpts.filter((opt) => opt !== value) : [...prevOpts, value]
+    );
+  };
 
   return (
     <Flex {...STYLE.DEMO_WRAPPER}>
@@ -64,6 +67,7 @@ const SelectorDemo = () => {
             name="selector-demo"
             options={options}
             selected={selectedOptions || []}
+            isMultiple={isMultiple}
             onChange={isMultiple ? _onSelectMultiple : _onSelectSingle}
             placeholder="Select option(s)"
           />
