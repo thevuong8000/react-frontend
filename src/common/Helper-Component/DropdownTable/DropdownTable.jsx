@@ -22,7 +22,7 @@ const DropdownTable = (props, ref) => {
   const visibility = useToggle(isOpen, { trueValue: 'visible', falseValue: 'hidden' });
 
   const DropdownItems = ({ option }) => {
-    const isChecked = selectedOptions.some((selOption) => selOption.text === option.text);
+    const isChecked = selectedOptions.includes(option.text);
     const checkedVisibility = useToggle(isChecked, { trueValue: 'visible', falseValue: 'hidden' });
     return (
       <Tooltip label={option.text} hasArrow placement="auto">
@@ -63,7 +63,7 @@ const DropdownTable = (props, ref) => {
         transform="translateY(0.5rem)"
         opacity={opacity}
         visibility={visibility}
-        transition="all 0.2s ease"
+        transition="all 0.1s ease"
       >
         {options.map((option, index) => (
           <DropdownItems key={`${name}-option-${index}`} option={option} />
