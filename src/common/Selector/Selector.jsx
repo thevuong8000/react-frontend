@@ -70,6 +70,7 @@ const Selector = ({
           size="sm" // sm | md | lg
           isDisabled={options.length <= 0}
           w="100%"
+          borderRadius="md"
           onChange={_onSearchQueryChange}
           onFocus={_onShowOptions}
           onBlur={_onInputBlur}

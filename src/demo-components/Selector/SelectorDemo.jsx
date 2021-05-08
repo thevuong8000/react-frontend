@@ -1,27 +1,31 @@
 import { useBoolean } from '@chakra-ui/hooks';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/slider';
+import InputCheckbox from '@common/InputCheckbox/InputCheckbox';
 import Selector from '@common/Selector/Selector';
-import { useState } from 'react';
+import { SIZE } from '@constants/demo';
+import { useEffect, useState } from 'react';
 import { STYLE } from '../demo-helper/constants';
 
 const options = [
-  { text: 'option 1' },
-  { text: 'option 2' },
-  { text: 'option 3' },
-  { text: 'option 4' },
-  { text: 'option 5' },
-  { text: 'option 6' },
-  { text: 'option 7' }
+  { text: 'abc' },
+  { text: 'abcd' },
+  { text: 'abcde' },
+  { text: 'abcdef' },
+  { text: 'abcdefghj' },
+  { text: 'aaaaaaaaaaa' },
+  { text: 'aaab' }
 ];
 
 const SelectorDemo = () => {
   const [size, setSize] = useState(1);
-  const [variant, setVariant] = useState('solid');
-  const [colorScheme, setColorScheme] = useState('blue');
-  const [isMultiple, setIsMultiple] = useBoolean(true);
+  const [isMultiple, setIsMultiple] = useBoolean(false);
 
   const [selectedOptions, setSelectedOptions] = useState([]);
+
+  useEffect(() => {
+    setSelectedOptions([]);
+  }, [isMultiple]);
 
   const _onSelectSingle = (e) => {
     setSelectedOptions(e.target.value);
@@ -49,14 +53,10 @@ const SelectorDemo = () => {
           </Slider>
         </Flex>
 
-        {/* Variant */}
+        {/* Multiple option */}
         <Flex>
-          <Text mr="4">Variant:</Text>
-        </Flex>
-
-        {/* Color Scheme */}
-        <Flex>
-          <Text mr="4">Color Scheme:</Text>
+          <Text mr="4">Multiple</Text>
+          <InputCheckbox value={isMultiple} onChange={setIsMultiple.toggle} />
         </Flex>
       </Flex>
 
@@ -70,6 +70,7 @@ const SelectorDemo = () => {
             isMultiple={isMultiple}
             onChange={isMultiple ? _onSelectMultiple : _onSelectSingle}
             placeholder="Select option(s)"
+            size={SIZE.DEFAULT[size]}
           />
         </Box>
       </Flex>

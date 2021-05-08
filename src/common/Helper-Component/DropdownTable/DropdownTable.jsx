@@ -13,8 +13,7 @@ const DropdownTable = (props, ref) => {
     selectedOptions = [],
     options = [], // { text: string, isDisable: boolean, Icon: React.Component }
     isOpen,
-    onSelect,
-    isMultiple
+    onSelect
   } = props;
 
   const { zIndices } = useTheme();
