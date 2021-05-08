@@ -5,12 +5,12 @@ import { Flex } from '@chakra-ui/layout';
 import AnimatedChevron from '@common/AnimatedIcons/Chevron';
 import DropdownTable from '@common/Helper-Component/DropdownTable/DropdownTable';
 import { includeStr, joinStrings } from '@utilities/helper';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 const Selector = ({
   name,
-  selected, // string | string[]
-  options = [], // { text: string, isDisable: boolean, Icon: React.Component }
+  selected, // selected option(s)
+  options = [],
   onChange,
   isMultiple = false, // multiple selection
   ...props
@@ -94,13 +94,19 @@ const Selector = ({
   );
 };
 
-// Selector.propTypes = {
-//   name: PropTypes.string,
-//   selected: PropTypes.arrayOf(PropTypes.string).isRequired,
-//   options: PropTypes.arrayOf(PropTypes.string).isRequired,
-//   onChange: PropTypes.func.isRequired,
-//   isMultiple: PropTypes.bool,
-//   placeholder: PropTypes.string
-// };
+const { string, func, bool, element, arrayOf, shape, oneOfType } = PropTypes;
+Selector.propTypes = {
+  name: string,
+  selected: oneOfType([string, arrayOf(string)]).isRequired,
+  options: arrayOf(
+    shape({
+      text: string.isRequired,
+      isDisabled: bool,
+      Icon: element
+    })
+  ).isRequired,
+  onChange: func.isRequired,
+  isMultiple: bool
+};
 
 export default Selector;
