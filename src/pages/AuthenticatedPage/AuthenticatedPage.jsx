@@ -11,7 +11,7 @@ const AuthenticatedPage = () => (
   <Router>
     <Flex direction="column" overflow="hidden" h="100vh">
       <Header />
-      <Box>
+      <Box overflowX="hidden" overflowY="auto" w="100%" h="100%">
         <Switch>
           <Route
             exact

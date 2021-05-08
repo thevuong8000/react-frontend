@@ -2,36 +2,13 @@ import { APP_CONFIG } from '@constants/configs';
 
 /** --> TABLE OF CONTENTS <--
  * 	1) USER AUTHENTICATION INFOMATION
+ * 	2) STRING PROCESS
+ * 	3) API CONFIG
+ * 	4) OTHERS
+ *
  */
 
-/**
- * Download file from href
- * @param {string} href
- */
-export const downloadFile = (href, fileName) => {
-	const aTag = document.createElement('a');
-	aTag.href = href;
-	aTag.target = '_blank';
-	aTag.download = fileName || 'download';
-
-	document.body.appendChild(aTag);
-	aTag.click();
-	document.body.removeChild(aTag);
-};
-
-/**
- * Replace variables (which is placed between ${}) in a string
- * @param {string} source input string. E.g. "Hello ${name}!"
- * @param {object} replaceObj object contains value to replace. E.g. { name: "Katorin" }
- * Result from above inputs is "Hello Katorin!"
- */
-export const insertString = (source, replaceObj) =>
-	Object.entries(replaceObj).reduce((acc, [key, value]) => {
-		const regEx = new RegExp(`\\\${\\s*${key}\\s*}`, 'g');
-		return acc.replace(regEx, value);
-	}, source);
-
-/* ================================================================== */
+/* ============================= USER AUTHENTICATION INFOMATION ============================= */
 /* USER AUTHENTICATION INFOMATION */
 
 /**
@@ -54,6 +31,39 @@ export const clearLoginInfo = () => {
  */
 export const getLoginInfo = () => JSON.parse(localStorage.getItem(APP_CONFIG.AUTH_DATA));
 
+/* ============================= STRING PROCESSING ============================= */
+
+/**
+ * Replace variables (which is placed between ${}) in a string
+ * @param {string} source input string. E.g. "Hello ${name}!"
+ * @param {object} replaceObj object contains value to replace. E.g. { name: "Katorin" }
+ * Result from above inputs is "Hello Katorin!"
+ */
+export const insertString = (source, replaceObj) =>
+	Object.entries(replaceObj).reduce((acc, [key, value]) => {
+		const regEx = new RegExp(`\\\${\\s*${key}\\s*}`, 'g');
+		return acc.replace(regEx, value);
+	}, source);
+
+/**
+ * Check if str1 includes str2 insensitively
+ * @param {string} str1 source string
+ * @param {string} str2 target string
+ * @returns {boolean}
+ */
+export const includeStr = (str1 = '', str2 = '') =>
+	`${str1}`.toLowerCase().includes(`${str2}`.toLowerCase());
+
+/**
+ * Join strings by a separator
+ * @param {array} arrStrings
+ * @param {string} separator
+ * @returns {string}
+ */
+export const joinStrings = (arrStrings = [], separator = ', ') => arrStrings.join(separator);
+
+/* ============================= API CONFIG ============================= */
+
 /**
  * Setup api config
  * @param {object} query Extra config
@@ -69,4 +79,21 @@ export const getRequestConfig = (config = {}) => {
 			...headers
 		}
 	};
+};
+
+/* ============================= OTHERS ============================= */
+
+/**
+ * Download file from href
+ * @param {string} href
+ */
+export const downloadFile = (href, fileName) => {
+	const aTag = document.createElement('a');
+	aTag.href = href;
+	aTag.target = '_blank';
+	aTag.download = fileName || 'download';
+
+	document.body.appendChild(aTag);
+	aTag.click();
+	document.body.removeChild(aTag);
 };
