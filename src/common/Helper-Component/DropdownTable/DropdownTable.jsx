@@ -11,7 +11,7 @@ const DropdownTable = (props, ref) => {
   const {
     name,
     selectedOptions = [],
-    options = [], // { value: any, text: string, isDisable: boolean, Icon: React.Component }
+    options = [], // { text: string, isDisable: boolean, Icon: React.Component }
     isOpen,
     onSelect,
     isMultiple
@@ -22,7 +22,7 @@ const DropdownTable = (props, ref) => {
   const visibility = useToggle(isOpen, { trueValue: 'visible', falseValue: 'hidden' });
 
   const DropdownItems = ({ option }) => {
-    const isChecked = selectedOptions.some((selOption) => selOption.value === option.value);
+    const isChecked = selectedOptions.some((selOption) => selOption.text === option.text);
     const checkedVisibility = useToggle(isChecked, { trueValue: 'visible', falseValue: 'hidden' });
     return (
       <Tooltip label={option.text} hasArrow placement="auto">
@@ -30,19 +30,18 @@ const DropdownTable = (props, ref) => {
           w="100%"
           variant="ghost"
           colorScheme="gray"
+          value={option.text}
           onClick={onSelect}
           pt="2"
           pb="2"
           justifyContent="space-between"
+          isDisabled={option.isDisabled}
+          leftIcon={option.icon}
         >
-          <Text maxW="85%" textOverflow="ellipsis" overflow="hidden">
+          <Text maxW="85%" textOverflow="ellipsis" overflow="hidden" pointerEvents="none">
             {option.text}
           </Text>
-          <Icon
-            as={TiTick}
-            color="green"
-            //  visibility={checkedVisibility}
-          />
+          <Icon as={TiTick} color="green" visibility={checkedVisibility} />
         </ChakraButton>
       </Tooltip>
     );
@@ -64,7 +63,7 @@ const DropdownTable = (props, ref) => {
         transform="translateY(0.5rem)"
         opacity={opacity}
         visibility={visibility}
-        transition="all 0.3s ease"
+        transition="all 0.2s ease"
       >
         {options.map((option, index) => (
           <DropdownItems key={`${name}-option-${index}`} option={option} />

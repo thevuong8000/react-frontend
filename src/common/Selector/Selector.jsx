@@ -5,34 +5,29 @@ import { Flex } from '@chakra-ui/layout';
 import AnimatedChevron from '@common/AnimatedIcons/Chevron';
 import DropdownTable from '@common/Helper-Component/DropdownTable/DropdownTable';
 import { includeStr, joinStrings } from '@utilities/helper';
+// import PropTypes from 'prop-types';
 
 const Selector = ({
   name,
-  value,
-  options = [], // { value: any, text: string, isDisable: boolean, Icon: React.Component }
+  selected, // string | string[]
+  options = [], // { text: string, isDisable: boolean, Icon: React.Component }
   onChange,
-  isMultiple, // multiple selection
-  placeholder,
-  isSelected, // (item, value) => boolean: Check if {item} in {value}
-  valueToString, // (value) => string
+  isMultiple = false, // multiple selection
   ...props
 }) => {
-  const [filterOptions, setFilterOptions] = useState([]);
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [filterOptions, setFilterOptions] = useState(options ?? []);
   const [searchQuery, setSearchQuery] = useState('');
   const [showOptions, setShowOptions] = useBoolean(false);
 
   const dropdownRef = useRef();
 
-  // Default functions
-  const _valueToString = valueToString ?? joinStrings;
-
-  useEffect(() => {
-    setFilterOptions(options ?? []);
-  }, [options]);
+  const selectedOptions = Array.isArray(selected) ? selected : [selected];
+  const inputValue = joinStrings(selectedOptions);
 
   useEffect(() => {
     setFilterOptions(options.filter((opt) => includeStr(opt.text, searchQuery)));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
   const _onShowOptions = () => {
@@ -41,15 +36,23 @@ const Selector = ({
     setSearchQuery('');
   };
 
+  const _closeOptions = () => {
+    setShowOptions.off();
+  };
+
   const _onInputBlur = (e) => {
     // Do not hide dropdown if click into dropdown or input-field
-    if (dropdownRef.current.contains(e.relatedTarget) && isMultiple) {
-      e.target.focus();
+    if (dropdownRef.current.contains(e.relatedTarget)) {
+      if (isMultiple) e.target.focus();
       return;
     }
 
-    setShowOptions.off();
-    setSearchQuery(_valueToString(value));
+    _closeOptions();
+  };
+
+  const _onSelect = (e) => {
+    onChange(e);
+    if (!isMultiple) _closeOptions();
   };
 
   const _onSearchQueryChange = (e) => {
@@ -61,7 +64,7 @@ const Selector = ({
       <InputGroup name={name} w="100%">
         <Input
           id={`${name}-search-bar`}
-          value={searchQuery}
+          value={showOptions ? searchQuery : inputValue}
           autoComplete="off"
           spellCheck={false}
           size="sm" // sm | md | lg
@@ -83,11 +86,20 @@ const Selector = ({
         options={filterOptions}
         isMultiple={isMultiple}
         isOpen={showOptions}
-        value={value}
-        onSelect={() => {}}
+        selectedOptions={selectedOptions}
+        onSelect={_onSelect}
       />
     </Flex>
   );
 };
+
+// Selector.propTypes = {
+//   name: PropTypes.string,
+//   selected: PropTypes.arrayOf(PropTypes.string).isRequired,
+//   options: PropTypes.arrayOf(PropTypes.string).isRequired,
+//   onChange: PropTypes.func.isRequired,
+//   isMultiple: PropTypes.bool,
+//   placeholder: PropTypes.string
+// };
 
 export default Selector;
