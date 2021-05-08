@@ -1,8 +1,11 @@
+import { forwardRef } from 'react';
 import { Button as ChakraButton } from '@chakra-ui/button';
-import { Box, VStack } from '@chakra-ui/layout';
+import { Box, Text, VStack } from '@chakra-ui/layout';
 import { useColorModeValue, useTheme } from '@chakra-ui/system';
 import useToggle from '@hooks/useToggle';
-import React, { forwardRef } from 'react';
+import { TiTick } from 'react-icons/ti';
+import Icon from '@chakra-ui/icon';
+import { Tooltip } from '@chakra-ui/tooltip';
 
 const DropdownTable = (props, ref) => {
   const {
@@ -18,11 +21,32 @@ const DropdownTable = (props, ref) => {
   const opacity = useToggle(isOpen, { trueValue: '1', falseValue: '0' });
   const visibility = useToggle(isOpen, { trueValue: 'visible', falseValue: 'hidden' });
 
-  const DropdownItems = ({ option }) => (
-    <ChakraButton w="100%" variant="ghost" colorScheme="gray" onClick={onSelect} p="2">
-      {option.text}
-    </ChakraButton>
-  );
+  const DropdownItems = ({ option }) => {
+    const isChecked = selectedOptions.some((selOption) => selOption.value === option.value);
+    const checkedVisibility = useToggle(isChecked, { trueValue: 'visible', falseValue: 'hidden' });
+    return (
+      <Tooltip label={option.text} hasArrow placement="auto">
+        <ChakraButton
+          w="100%"
+          variant="ghost"
+          colorScheme="gray"
+          onClick={onSelect}
+          pt="2"
+          pb="2"
+          justifyContent="space-between"
+        >
+          <Text maxW="85%" textOverflow="ellipsis" overflow="hidden">
+            {option.text}
+          </Text>
+          <Icon
+            as={TiTick}
+            color="green"
+            //  visibility={checkedVisibility}
+          />
+        </ChakraButton>
+      </Tooltip>
+    );
+  };
 
   return (
     <Box w="100%" pos="relative" ref={ref}>
