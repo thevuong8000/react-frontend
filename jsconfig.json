@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "module": "commonJS",
     "baseUrl": ".",
     "paths": {
       "@common/*": ["./src/common/*"],
