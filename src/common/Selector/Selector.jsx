@@ -5,7 +5,7 @@ import { Flex } from '@chakra-ui/layout';
 import AnimatedChevron from '@common/AnimatedIcons/Chevron';
 import DropdownTable from '@common/Helper-Component/DropdownTable/DropdownTable';
 import { includeStr, joinStrings } from '@utilities/helper';
-import PropTypes from 'prop-types';
+import { string, func, bool, element, arrayOf, shape, oneOfType } from 'prop-types';
 
 const Selector = ({
   name,
@@ -94,7 +94,6 @@ const Selector = ({
   );
 };
 
-const { string, func, bool, element, arrayOf, shape, oneOfType } = PropTypes;
 Selector.propTypes = {
   name: string,
   selected: oneOfType([string, arrayOf(string)]).isRequired,

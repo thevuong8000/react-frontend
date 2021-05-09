@@ -6,7 +6,7 @@ import useToggle from '@hooks/useToggle';
 import { TiTick } from 'react-icons/ti';
 import Icon from '@chakra-ui/icon';
 import { Tooltip } from '@chakra-ui/tooltip';
-import PropTypes from 'prop-types';
+import { bool, string, element, func, arrayOf, shape } from 'prop-types';
 
 const DropdownTable = forwardRef((props, ref) => {
   const { name, selectedOptions = [], options = [], isOpen, onSelect } = props;
@@ -67,7 +67,6 @@ const DropdownTable = forwardRef((props, ref) => {
   );
 });
 
-const { bool, string, element, func, arrayOf, shape } = PropTypes;
 DropdownTable.propTypes = {
   name: string,
   selectedOptions: arrayOf(string).isRequired,

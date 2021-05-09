@@ -1,5 +1,5 @@
 import { Radio, RadioGroup } from '@chakra-ui/radio';
-import Proptypes from 'prop-types';
+import { string, bool, any, func, arrayOf, shape } from 'prop-types';
 
 const InputRadio = ({ name, value, options = [], onChange, isColumn, gap = '3', ...props }) => (
   <RadioGroup
@@ -28,7 +28,6 @@ const InputRadio = ({ name, value, options = [], onChange, isColumn, gap = '3', 
   </RadioGroup>
 );
 
-const { string, bool, any, func, arrayOf, shape } = Proptypes;
 InputRadio.propTypes = {
   name: string,
   // eslint-disable-next-line react/forbid-prop-types

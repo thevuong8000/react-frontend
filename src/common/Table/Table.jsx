@@ -6,7 +6,18 @@ import { Spinner } from '@chakra-ui/spinner';
 import { Checkbox } from '@chakra-ui/checkbox';
 import { Tooltip } from '@chakra-ui/tooltip';
 import { TEXT_COMMON } from '@constants/text';
-import PropTypes, { any, element } from 'prop-types';
+import {
+  any,
+  arrayOf,
+  bool,
+  element,
+  func,
+  object,
+  objectOf,
+  oneOf,
+  shape,
+  string
+} from 'prop-types';
 import { getStatusColorCode } from './utils/table-helper';
 
 export const TABLE_CELL_TYPE = {
@@ -166,7 +177,6 @@ const Rows = memo(({ error, configs, rows, noResultText, loading }) => {
   ));
 });
 
-const { string, bool, number, func, object, objectOf, oneOf, arrayOf, shape } = PropTypes;
 DataTable.propTypes = {
   colConfigs: arrayOf(
     shape({

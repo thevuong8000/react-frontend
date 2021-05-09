@@ -1,5 +1,5 @@
 import { Checkbox } from '@chakra-ui/checkbox';
-import PropTypes from 'prop-types';
+import { string, any, func } from 'prop-types';
 
 const InputCheckbox = ({ className, label, name, value, onChange, ...props }) => (
   <Checkbox
@@ -16,7 +16,6 @@ const InputCheckbox = ({ className, label, name, value, onChange, ...props }) =>
   </Checkbox>
 );
 
-const { string, any, func } = PropTypes;
 InputCheckbox.propTypes = {
   className: string,
   label: string,
