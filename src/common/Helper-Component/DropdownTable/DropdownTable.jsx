@@ -6,15 +6,10 @@ import useToggle from '@hooks/useToggle';
 import { TiTick } from 'react-icons/ti';
 import Icon from '@chakra-ui/icon';
 import { Tooltip } from '@chakra-ui/tooltip';
+import PropTypes from 'prop-types';
 
-const DropdownTable = (props, ref) => {
-  const {
-    name,
-    selectedOptions = [],
-    options = [], // { text: string, isDisable: boolean, Icon: React.Component }
-    isOpen,
-    onSelect
-  } = props;
+const DropdownTable = forwardRef((props, ref) => {
+  const { name, selectedOptions = [], options = [], isOpen, onSelect } = props;
 
   const { zIndices } = useTheme();
   const opacity = useToggle(isOpen, { trueValue: '1', falseValue: '0' });
@@ -70,6 +65,21 @@ const DropdownTable = (props, ref) => {
       </VStack>
     </Box>
   );
+});
+
+const { bool, string, element, func, arrayOf, shape } = PropTypes;
+DropdownTable.propTypes = {
+  name: string,
+  selectedOptions: arrayOf(string).isRequired,
+  options: arrayOf(
+    shape({
+      text: string,
+      isDisabled: bool,
+      Icon: element
+    })
+  ),
+  isOpen: bool.isRequired,
+  onSelect: func.isRequired
 };
 
-export default forwardRef(DropdownTable);
+export default DropdownTable;
