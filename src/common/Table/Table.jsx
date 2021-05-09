@@ -12,6 +12,7 @@ import {
   bool,
   element,
   func,
+  number,
   object,
   objectOf,
   oneOf,
@@ -177,6 +178,29 @@ const Rows = memo(({ error, configs, rows, noResultText, loading }) => {
   ));
 });
 
+const DataTable = memo(({ colConfigs = [], rows = [], loading, noResultText = '', error }) => (
+  <Box boxShadow="xs" overflow="auto">
+    <Table size="sm" variant="striped">
+      <Thead>
+        <Tr>{!loading && <Headers configs={colConfigs} />}</Tr>
+      </Thead>
+      <Tbody>
+        {loading ? (
+          <Loader colConfigs={colConfigs} />
+        ) : (
+          <Rows
+            rows={rows}
+            configs={colConfigs}
+            loading={loading}
+            error={error}
+            noResultText={noResultText}
+          />
+        )}
+      </Tbody>
+    </Table>
+  </Box>
+));
+
 DataTable.propTypes = {
   colConfigs: arrayOf(
     shape({
@@ -218,30 +242,12 @@ DataTable.propTypes = {
       ),
       startIndex: number
     })
-  )
+  ),
+  // eslint-disable-next-line react/forbid-prop-types
+  rows: arrayOf(object),
+  loading: bool,
+  noResultText: string,
+  error: string
 };
-
-const DataTable = memo(({ colConfigs = [], rows = [], loading, noResultText = '', error }) => (
-  <Box boxShadow="xs" overflow="auto">
-    <Table size="sm" variant="striped">
-      <Thead>
-        <Tr>{!loading && <Headers configs={colConfigs} />}</Tr>
-      </Thead>
-      <Tbody>
-        {loading ? (
-          <Loader colConfigs={colConfigs} />
-        ) : (
-          <Rows
-            rows={rows}
-            configs={colConfigs}
-            loading={loading}
-            error={error}
-            noResultText={noResultText}
-          />
-        )}
-      </Tbody>
-    </Table>
-  </Box>
-));
 
 export default DataTable;
