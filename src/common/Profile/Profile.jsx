@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar } from '@chakra-ui/avatar';
-import { Button as ChakraButton } from '@chakra-ui/button';
+import { Button } from '@chakra-ui/button';
 import { Flex, Text } from '@chakra-ui/layout';
 import { Menu, MenuButton, MenuDivider, MenuItem, MenuList } from '@chakra-ui/menu';
 import { TEXT_HEADER } from '@constants/text';
@@ -14,8 +14,8 @@ const Profile = () => {
   const { user, logOut } = useAuth();
   const { PROFILE: TEXT_PROFILE } = TEXT_HEADER;
   return (
-    <Menu autoSelect={false}>
-      <MenuButton as={ChakraButton} variant="ghost">
+    <Menu autoSelect={false} closeOnBlur>
+      <MenuButton as={Button} size="md" variant="ghost">
         <Flex align="center">
           <Avatar name={user.name} size="xs" />
           <Text ml="1.5">{user.name}</Text>

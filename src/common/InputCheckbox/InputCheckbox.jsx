@@ -1,3 +1,4 @@
+import React from 'react';
 import { Checkbox } from '@chakra-ui/checkbox';
 import { string, any, func } from 'prop-types';
 

@@ -1,3 +1,4 @@
+import React from 'react';
 import Icon from '@chakra-ui/icon';
 import { BsChevronDown } from 'react-icons/bs';
 import { bool } from 'prop-types';

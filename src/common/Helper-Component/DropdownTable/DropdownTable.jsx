@@ -1,5 +1,5 @@
-import { forwardRef } from 'react';
-import { Button as ChakraButton } from '@chakra-ui/button';
+import React, { forwardRef } from 'react';
+import { Button } from '@chakra-ui/button';
 import { Box, Text, VStack } from '@chakra-ui/layout';
 import { useColorModeValue, useTheme } from '@chakra-ui/system';
 import useToggle from '@hooks/useToggle';
@@ -20,10 +20,11 @@ const DropdownTable = forwardRef((props, ref) => {
     const checkedVisibility = useToggle(isChecked, { trueValue: 'visible', falseValue: 'hidden' });
     return (
       <Tooltip label={option.text} hasArrow placement="auto">
-        <ChakraButton
+        <Button
           w="100%"
           variant="ghost"
           colorScheme="gray"
+          size="sm"
           value={option.text}
           onClick={onSelect}
           pt="2"
@@ -36,7 +37,7 @@ const DropdownTable = forwardRef((props, ref) => {
             {option.text}
           </Text>
           <Icon as={TiTick} color="green" visibility={checkedVisibility} />
-        </ChakraButton>
+        </Button>
       </Tooltip>
     );
   };

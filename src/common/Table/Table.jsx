@@ -1,5 +1,5 @@
-import { memo } from 'react';
-import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/table';
+import React, { memo } from 'react';
+import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/table';
 import { Button, ButtonGroup } from '@chakra-ui/button';
 import { Badge, Box, Center, Flex, Text } from '@chakra-ui/layout';
 import { Spinner } from '@chakra-ui/spinner';
@@ -7,7 +7,6 @@ import { Checkbox } from '@chakra-ui/checkbox';
 import { Tooltip } from '@chakra-ui/tooltip';
 import { TEXT_COMMON } from '@constants/text';
 import {
-  any,
   arrayOf,
   bool,
   element,
@@ -178,9 +177,9 @@ const Rows = memo(({ error, configs, rows, noResultText, loading }) => {
   ));
 });
 
-const DataTable = memo(({ colConfigs = [], rows = [], loading, noResultText = '', error }) => (
+const Table = memo(({ colConfigs = [], rows = [], loading, noResultText = '', error }) => (
   <Box boxShadow="xs" overflow="auto">
-    <Table size="sm" variant="striped">
+    <ChakraTable size="sm" variant="striped">
       <Thead>
         <Tr>{!loading && <Headers configs={colConfigs} />}</Tr>
       </Thead>
@@ -197,11 +196,11 @@ const DataTable = memo(({ colConfigs = [], rows = [], loading, noResultText = ''
           />
         )}
       </Tbody>
-    </Table>
+    </ChakraTable>
   </Box>
 ));
 
-DataTable.propTypes = {
+Table.propTypes = {
   colConfigs: arrayOf(
     shape({
       // Header Props
@@ -219,7 +218,7 @@ DataTable.propTypes = {
       // Cell Props
       cellType: oneOf(Object.values(TABLE_CELL_TYPE)),
       onCellClick: func,
-      cellChecked: func.call({}, [any, number]),
+      cellChecked: func,
       cellProp: string,
       cellStyle: objectOf(string),
 
@@ -250,4 +249,4 @@ DataTable.propTypes = {
   error: string
 };
 
-export default DataTable;
+export default Table;

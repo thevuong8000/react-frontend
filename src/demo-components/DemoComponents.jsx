@@ -1,6 +1,5 @@
 import { Box, Flex, Heading } from '@chakra-ui/layout';
 import React, { useEffect } from 'react';
-import ButtonDemo from './Button/ButtonDemo';
 import InputTextDemo from './InputText/InputTextDemo';
 import InputCheckboxDemo from './InputCheckbox/InputCheckboxDemo';
 import TableDemo from './Table/TableDemo';
@@ -15,7 +14,6 @@ const Demo = ({ title, children }) => (
 );
 
 const COMPONENT_NAME = {
-  BUTTON: 'Button',
   INPUT_TEXT: 'Input Text',
   INPUT_CHECKBOX: 'Input Checkbox',
   INPUT_RADIO: 'Input Radio',
@@ -24,7 +22,6 @@ const COMPONENT_NAME = {
 };
 
 const items = [
-  { title: COMPONENT_NAME.BUTTON, component: <ButtonDemo /> },
   { title: COMPONENT_NAME.SELECTOR, component: <SelectorDemo /> },
   { title: COMPONENT_NAME.INPUT_TEXT, component: <InputTextDemo /> },
   { title: COMPONENT_NAME.INPUT_CHECKBOX, component: <InputCheckboxDemo /> },
