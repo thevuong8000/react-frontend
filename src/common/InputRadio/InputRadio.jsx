@@ -1,22 +1,12 @@
 import { Radio, RadioGroup } from '@chakra-ui/radio';
-import React from 'react';
+import { string, bool, any, func, arrayOf, shape } from 'prop-types';
 
-const InputRadio = ({
-  name,
-  value,
-  options = [], // { value: any, text: string, isDisabled }, value must be unique
-  size = 'sm', // sm | md | lg
-  colorScheme = 'green', // green | orange | pink | purple | red | teal | yellow
-  onChange,
-  isColumn,
-  gap = '3',
-  ...props
-}) => (
+const InputRadio = ({ name, value, options = [], onChange, isColumn, gap = '3', ...props }) => (
   <RadioGroup
     name={name}
     value={value}
-    size={size}
-    colorScheme={colorScheme}
+    size="sm"
+    colorScheme="green"
     d="flex"
     flexDir={isColumn ? 'column' : 'row'}
     flexWrap="wrap"
@@ -37,5 +27,22 @@ const InputRadio = ({
     ))}
   </RadioGroup>
 );
+
+InputRadio.propTypes = {
+  name: string,
+  // eslint-disable-next-line react/forbid-prop-types
+  value: any,
+  options: arrayOf(
+    shape({
+      // eslint-disable-next-line react/forbid-prop-types
+      value: any,
+      text: string,
+      isDisabled: bool
+    })
+  ),
+  onChange: func.isRequired,
+  isColumn: bool,
+  gap: string
+};
 
 export default InputRadio;

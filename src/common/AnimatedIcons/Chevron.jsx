@@ -1,6 +1,6 @@
 import Icon from '@chakra-ui/icon';
-import React from 'react';
 import { BsChevronDown } from 'react-icons/bs';
+import { bool } from 'prop-types';
 
 const AnimatedChevron = ({ isRotated }) => (
   <Icon
@@ -9,5 +9,9 @@ const AnimatedChevron = ({ isRotated }) => (
     transition="all 0.3s ease"
   />
 );
+
+AnimatedChevron.propTypes = {
+  isRotated: bool
+};
 
 export default AnimatedChevron;

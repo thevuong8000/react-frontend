@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/table';
 import { Button, ButtonGroup } from '@chakra-ui/button';
 import { Badge, Box, Center, Flex, Text } from '@chakra-ui/layout';
@@ -6,6 +6,19 @@ import { Spinner } from '@chakra-ui/spinner';
 import { Checkbox } from '@chakra-ui/checkbox';
 import { Tooltip } from '@chakra-ui/tooltip';
 import { TEXT_COMMON } from '@constants/text';
+import {
+  any,
+  arrayOf,
+  bool,
+  element,
+  func,
+  number,
+  object,
+  objectOf,
+  oneOf,
+  shape,
+  string
+} from 'prop-types';
 import { getStatusColorCode } from './utils/table-helper';
 
 export const TABLE_CELL_TYPE = {
@@ -187,5 +200,54 @@ const DataTable = memo(({ colConfigs = [], rows = [], loading, noResultText = ''
     </Table>
   </Box>
 ));
+
+DataTable.propTypes = {
+  colConfigs: arrayOf(
+    shape({
+      // Header Props
+      headerType: oneOf(Object.values(TABLE_CELL_TYPE)),
+      headerCheckbox: shape({
+        onClick: func.isRequired,
+        checked: bool
+      }),
+      headerText: string,
+      onHeaderClick: func,
+      headerStyle: objectOf(string),
+      // eslint-disable-next-line react/forbid-prop-types
+      headerProps: object,
+
+      // Cell Props
+      cellType: oneOf(Object.values(TABLE_CELL_TYPE)),
+      onCellClick: func,
+      cellChecked: func.call({}, [any, number]),
+      cellProp: string,
+      cellStyle: objectOf(string),
+
+      // Others
+      component: element,
+      disabled: bool || func,
+      message: func,
+      mapValue: func,
+
+      buttons: arrayOf(
+        shape({
+          onClick: func,
+          show: bool || func,
+          title: string,
+          disabled: bool || func,
+          colorScheme: string,
+          variant: string,
+          text: string
+        })
+      ),
+      startIndex: number
+    })
+  ),
+  // eslint-disable-next-line react/forbid-prop-types
+  rows: arrayOf(object),
+  loading: bool,
+  noResultText: string,
+  error: string
+};
 
 export default DataTable;
