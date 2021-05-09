@@ -1,13 +1,11 @@
 import { Flex, Spacer, Box } from '@chakra-ui/layout';
-import { Button as ChakraButton } from '@chakra-ui/button';
+import { Button } from '@chakra-ui/button';
 import { Link, useLocation } from 'react-router-dom';
-import React from 'react';
 import { ROUTE } from '@constants/routing';
 import Profile from '@common/Profile/Profile';
 import { TEXT_COMMON } from '@constants/text';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { FaMoon, FaSun } from 'react-icons/fa';
-import Button from '@common/Button/Button';
 import { DEFAULT_SIZE } from '@constants/global';
 
 const Header = () => {
@@ -24,13 +22,14 @@ const Header = () => {
       alignItems="center"
     >
       {/* Logo */}
-      <ChakraButton
+      <Button
         as={Link}
         to={{ pathname: ROUTE.HOME.to, state: { from: location.pathname } }}
         variant="outline"
+        size="md"
       >
         {TEXT_COMMON.TITLE}
-      </ChakraButton>
+      </Button>
     </Box>
   );
 
