@@ -1,23 +1,14 @@
 import { Checkbox } from '@chakra-ui/checkbox';
 import PropTypes from 'prop-types';
 
-const InputCheckbox = ({
-  className,
-  label,
-  name,
-  value,
-  colorScheme = 'teal', // teal | blue | cyan | green | orange | pink | purple | red | yellow
-  size = 'md', // xs | sm | md | lg
-  onChange,
-  ...props
-}) => (
+const InputCheckbox = ({ className, label, name, value, onChange, ...props }) => (
   <Checkbox
     {...props}
     className={className}
     name={name}
     value={value}
-    size={size}
-    colorScheme={colorScheme}
+    size="md"
+    colorScheme="teal"
     onChange={onChange}
     isChecked={!!value}
   >
@@ -28,7 +19,7 @@ const InputCheckbox = ({
 const { string, any, func } = PropTypes;
 InputCheckbox.propTypes = {
   className: string,
-  label: string.isRequired,
+  label: string,
   name: string,
   // eslint-disable-next-line react/forbid-prop-types
   value: any.isRequired,
