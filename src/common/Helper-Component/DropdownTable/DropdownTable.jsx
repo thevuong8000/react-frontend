@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import { Button } from '@chakra-ui/button';
 import { Box, Text, VStack } from '@chakra-ui/layout';
 import { useColorModeValue, useTheme } from '@chakra-ui/system';

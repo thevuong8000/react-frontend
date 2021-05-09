@@ -1,5 +1,5 @@
 import { Box, Flex, Heading } from '@chakra-ui/layout';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import InputTextDemo from './InputText/InputTextDemo';
 import InputCheckboxDemo from './InputCheckbox/InputCheckboxDemo';
 import TableDemo from './Table/TableDemo';

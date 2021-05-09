@@ -1,3 +1,4 @@
+import React from 'react';
 import Icon from '@chakra-ui/icon';
 import { Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-ui/input';
 import { Text } from '@chakra-ui/layout';

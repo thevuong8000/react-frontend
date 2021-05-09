@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import React, { memo } from 'react';
 import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/table';
 import { Button, ButtonGroup } from '@chakra-ui/button';
 import { Badge, Box, Center, Flex, Text } from '@chakra-ui/layout';
