@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { Flex, Text } from '@chakra-ui/layout';
 import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/slider';
-import InputCheckbox from '@common/InputCheckbox/InputCheckbox';
-import InputRadio from '@common/InputRadio/InputRadio';
+import { InputCheckbox, InputRadio } from '@common';
 import { SIZE } from '@constants/demo';
 import { STYLE } from '../demo-helper/constants';
 

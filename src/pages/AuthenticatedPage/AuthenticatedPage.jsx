@@ -1,6 +1,6 @@
 import React, { lazy } from 'react';
 import { Box, Flex } from '@chakra-ui/layout';
-import Header from '@common/Header/Header';
+import { Header } from '@common';
 import { ROUTE } from '@constants/routing';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 

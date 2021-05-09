@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/slider';
-import InputCheckbox from '@common/InputCheckbox/InputCheckbox';
-import Selector from '@common/Selector/Selector';
+import { InputCheckbox, Selector } from '@common';
 import { SIZE } from '@constants/demo';
 import { STYLE } from '../demo-helper/constants';
 
