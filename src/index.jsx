@@ -36,7 +36,7 @@ const theme = extendTheme(
   }),
   withDefaultSize({
     size: 'sm',
-    components: ['RadioGroup']
+    components: ['RadioGroup', 'Input']
   })
 
   // Variant

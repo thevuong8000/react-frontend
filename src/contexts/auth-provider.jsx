@@ -7,10 +7,14 @@ const MOCK_USER = {
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const [data, setData] = useState(MOCK_USER);
+  const [data, setData] = useState(null);
 
-  const logIn = () => {
-    console.log('log in');
+  /**
+   * Log in with payload
+   * @param {object} payload: { username, password }
+   */
+  const logIn = (payload) => {
+    console.log(payload);
   };
 
   const logOut = () => {

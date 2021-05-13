@@ -97,3 +97,14 @@ export const downloadFile = (href, fileName) => {
 	aTag.click();
 	document.body.removeChild(aTag);
 };
+
+/**
+ * Check if input is empty: empty-string | empty-array | empty-object
+ * @param {*} input
+ * @returns {boolean}
+ */
+export const isEmpty = (input) =>
+	input === '' ||
+	input === null ||
+	input === undefined ||
+	(typeof input === 'object' && Object.keys(input).length <= 0);
