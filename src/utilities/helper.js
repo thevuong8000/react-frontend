@@ -108,3 +108,22 @@ export const isEmpty = (input) =>
 	input === null ||
 	input === undefined ||
 	(typeof input === 'object' && Object.keys(input).length <= 0);
+
+/**
+ * Map for object
+ * For example:
+ * obj = { a: {name: 'abc'}, b: 'def' }
+ * func = (str) => 'x' + str
+ * => return { a: {name: 'xabc'}, b: 'xdef' }
+ * @param {object} obj
+ * @param {function} func
+ * @returns {object}
+ */
+export const objMap = (obj, func) =>
+	Object.fromEntries(
+		Object.entries(obj).map(([key, value]) =>
+			typeof value === 'object'
+				? [key, objMap(value, func)]
+				: [key, typeof value === 'function' ? (...params) => func(value(...params)) : func(value)]
+		)
+	);
