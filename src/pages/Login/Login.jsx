@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { FiUser, FiLock } from 'react-icons/fi';
 
 const DEFAULT_PAYLOAD = { username: '', password: '' };
+
 const Login = ({ documentTitle }) => {
   const { logIn } = useAuth();
   const { createUser } = useUsers();

@@ -17,17 +17,15 @@ const Profile = () => {
     <Menu autoSelect={false} closeOnBlur>
       <MenuButton as={Button} size="md" variant="ghost">
         <Flex align="center">
-          <Avatar name={user.name} size="xs" />
-          <Text ml="1.5">{user.name}</Text>
+          <Avatar name={user.username} size="xs" />
+          <Text ml="1.5">{user.username}</Text>
         </Flex>
       </MenuButton>
-      <MenuList>
-        <MenuItem icon={<IoIosSettings size={DEFAULT_SIZE.ICON} />}>
-          {TEXT_PROFILE.SETTINGS}
-        </MenuItem>
-        <MenuItem icon={<MdFeedback size={DEFAULT_SIZE.ICON} />}>{TEXT_PROFILE.FEEDBACK}</MenuItem>
+      <MenuList zIndex="dropdown">
+        <MenuItem icon={<IoIosSettings size={18} />}>{TEXT_PROFILE.SETTINGS}</MenuItem>
+        <MenuItem icon={<MdFeedback size={18} />}>{TEXT_PROFILE.FEEDBACK}</MenuItem>
         <MenuDivider />
-        <MenuItem icon={<FaSignOutAlt size={DEFAULT_SIZE.ICON} />} onClick={logOut}>
+        <MenuItem icon={<FaSignOutAlt size={18} />} onClick={logOut}>
           {TEXT_PROFILE.LOG_OUT}
         </MenuItem>
       </MenuList>
