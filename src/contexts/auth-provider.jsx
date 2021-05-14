@@ -1,7 +1,7 @@
 import { API_PATH } from '@constants/configs';
 import useApi from '@hooks/useApi';
-// import { saveLoginInfo } from '@utilities/helper';
-import React, { createContext, useContext, useState } from 'react';
+import { clearLoginInfo, getLoginInfo, saveLoginInfo } from '@utilities/helper';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const AuthContext = createContext();
 
@@ -9,21 +9,29 @@ const AuthProvider = ({ children }) => {
   const [data, setData] = useState(null);
   const { apiPost } = useApi();
 
+  useEffect(() => {
+    const storedInfo = getLoginInfo();
+
+    // eslint-disable-next-line no-use-before-define
+    logIn(storedInfo);
+  }, []);
+
   /**
    * Log in with payload
    * @param {object} payload: { username, password }
    */
   const logIn = async (payload) => {
     try {
-      const result = await apiPost(API_PATH.USERS.VERIFY, payload);
-      // saveLoginInfo(result);
-      setData(result);
+      await apiPost(API_PATH.USERS.VERIFY, payload);
+      saveLoginInfo(payload);
+      setData(payload);
     } catch (err) {
       console.log(err);
     }
   };
 
   const logOut = () => {
+    clearLoginInfo();
     setData(null);
   };
 
