@@ -1,8 +1,10 @@
 import { Button } from '@chakra-ui/button';
+import { LightMode } from '@chakra-ui/color-mode';
 import { useBoolean } from '@chakra-ui/hooks';
-import { Box, Flex, Heading } from '@chakra-ui/layout';
+import { Flex, Heading } from '@chakra-ui/layout';
 import { InputText } from '@common/';
 import { useAuth } from '@contexts/auth-provider';
+import useUsers from '@hooks/useUsers';
 import { isEmpty } from '@utilities/helper';
 import React, { useEffect, useState } from 'react';
 import { FiUser, FiLock } from 'react-icons/fi';
@@ -10,6 +12,7 @@ import { FiUser, FiLock } from 'react-icons/fi';
 const DEFAULT_PAYLOAD = { username: '', password: '' };
 const Login = ({ documentTitle }) => {
   const { logIn } = useAuth();
+  const { createUser } = useUsers();
   const [payload, setPayload] = useState(DEFAULT_PAYLOAD);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -37,8 +40,9 @@ const Login = ({ documentTitle }) => {
     setPayload((prevPayload) => ({ ...prevPayload, [field]: value }));
   };
 
-  const _onSubmit = (e) => {
-    e.preventDefault();
+  const _onLogin = (e) => {
+    if (e) e.preventDefault();
+
     if (_isErrorInput()) return;
     setIsLoginIn.on();
     try {
@@ -50,11 +54,12 @@ const Login = ({ documentTitle }) => {
     }
   };
 
-  const _onCreateAccount = () => {
+  const _onCreateAccount = async () => {
     if (_isErrorInput()) return;
     setIsCreating.on();
     try {
-      console.log('create account with', payload);
+      await createUser(payload);
+      _onLogin();
     } catch (err) {
       console.log(err);
     } finally {
@@ -82,8 +87,8 @@ const Login = ({ documentTitle }) => {
         w="30rem"
       >
         {/* Title */}
-        <Heading mb="10">LOG IN</Heading>
-        <form onSubmit={_onSubmit} style={{ width: '100%' }}>
+        <Heading mb="10">NINJA_FE</Heading>
+        <form onSubmit={_onLogin} style={{ width: '100%' }}>
           <Flex direction="column" align="center" gridGap="3">
             <InputText
               name="username"
@@ -106,7 +111,7 @@ const Login = ({ documentTitle }) => {
             />
             <Button
               type="submit"
-              onClick={_onSubmit}
+              onClick={_onLogin}
               size="sm"
               w="80%"
               mt="8"

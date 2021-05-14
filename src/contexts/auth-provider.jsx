@@ -1,24 +1,30 @@
+import { API_PATH } from '@constants/configs';
+import useApi from '@hooks/useApi';
+// import { saveLoginInfo } from '@utilities/helper';
 import React, { createContext, useContext, useState } from 'react';
-
-const MOCK_USER = {
-  name: 'katorin'
-};
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [data, setData] = useState(null);
+  const { apiPost } = useApi();
 
   /**
    * Log in with payload
    * @param {object} payload: { username, password }
    */
-  const logIn = (payload) => {
-    console.log(payload);
+  const logIn = async (payload) => {
+    try {
+      const result = await apiPost(API_PATH.USERS.VERIFY, payload);
+      // saveLoginInfo(result);
+      setData(result);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const logOut = () => {
-    console.log('log out');
+    setData(null);
   };
 
   return (

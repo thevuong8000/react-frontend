@@ -1,7 +1,10 @@
+import { API_PATH } from '@constants/configs';
+import useApi from './useApi';
+
 const useUsers = () => {
-	const createUser = (payload) => {
-		console.log('create user', payload);
-	};
+	const { apiPost } = useApi();
+
+	const createUser = (payload) => apiPost(API_PATH.USERS.ROOT, payload);
 
 	const updateUser = (payload) => {
 		console.log('update user', payload);

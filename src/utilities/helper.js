@@ -15,7 +15,7 @@ import { APP_CONFIG } from '@constants/configs';
  * Save login data into LocalStorage
  */
 export const saveLoginInfo = (authData) => {
-	localStorage.setItem(APP_CONFIG.AUTH_DATA, authData);
+	localStorage.setItem(APP_CONFIG.AUTH_DATA, JSON.stringify(authData));
 };
 
 /**
@@ -69,16 +69,18 @@ export const joinStrings = (arrStrings = [], separator = ', ') => arrStrings.joi
  * @param {object} query Extra config
  */
 export const getRequestConfig = (config = {}) => {
-	const loginInfo = getLoginInfo();
-	const { headers = {} } = config;
+	console.log('Need update later');
+	return config;
+	// const loginInfo = getLoginInfo();
+	// const { headers = {} } = config;
 
-	return {
-		...config,
-		headers: {
-			...(loginInfo ? { Authorization: `Bearer ${loginInfo.access_token}` } : {}),
-			...headers
-		}
-	};
+	// return {
+	// 	...config,
+	// 	headers: {
+	// 		...(loginInfo ? { Authorization: `Bearer ${loginInfo.access_token}` } : {}),
+	// 		...headers
+	// 	}
+	// };
 };
 
 /* ============================= OTHERS ============================= */
