@@ -1,3 +1,6 @@
-export const DEFAULT_SIZE = {
-	ICON: 20
+export const VARIABLES = {
+	USERS: {
+		NAME: 'username',
+		PASSWORD: 'password'
+	}
 };

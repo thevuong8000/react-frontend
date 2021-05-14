@@ -8,7 +8,9 @@ import { useAuth } from '@contexts/auth-provider';
 import { IoIosSettings } from 'react-icons/io';
 import { MdFeedback } from 'react-icons/md';
 import { FaSignOutAlt } from 'react-icons/fa';
-import { DEFAULT_SIZE } from '@constants/global';
+import { VARIABLES } from '@constants/global';
+
+const { NAME: name } = VARIABLES.USERS;
 
 const Profile = () => {
   const { user, logOut } = useAuth();
@@ -17,8 +19,8 @@ const Profile = () => {
     <Menu autoSelect={false} closeOnBlur>
       <MenuButton as={Button} size="md" variant="ghost">
         <Flex align="center">
-          <Avatar name={user.username} size="xs" />
-          <Text ml="1.5">{user.username}</Text>
+          <Avatar name={user[name]} size="xs" />
+          <Text ml="1.5">{user[name]}</Text>
         </Flex>
       </MenuButton>
       <MenuList zIndex="dropdown">

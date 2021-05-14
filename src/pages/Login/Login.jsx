@@ -1,5 +1,4 @@
 import { Button } from '@chakra-ui/button';
-import { LightMode } from '@chakra-ui/color-mode';
 import { useBoolean } from '@chakra-ui/hooks';
 import { Flex, Heading } from '@chakra-ui/layout';
 import { InputText } from '@common/';
@@ -8,8 +7,10 @@ import useUsers from '@hooks/useUsers';
 import { isEmpty } from '@utilities/helper';
 import React, { useEffect, useState } from 'react';
 import { FiUser, FiLock } from 'react-icons/fi';
+import { VARIABLES } from '@constants/global';
 
-const DEFAULT_PAYLOAD = { username: '', password: '' };
+const { NAME: username, PASSWORD: password } = VARIABLES.USERS;
+const DEFAULT_PAYLOAD = { [username]: '', [password]: '' };
 
 const Login = ({ documentTitle }) => {
   const { logIn } = useAuth();
@@ -26,7 +27,7 @@ const Login = ({ documentTitle }) => {
   }, [documentTitle]);
 
   const _isErrorInput = () => {
-    if (isEmpty(payload.username) || isEmpty(payload.password)) {
+    if (isEmpty(payload[username]) || isEmpty(payload[password])) {
       setErrorMessage('username and password can not be empty!');
       return true;
     }
@@ -92,18 +93,18 @@ const Login = ({ documentTitle }) => {
         <form onSubmit={_onLogin} style={{ width: '100%' }}>
           <Flex direction="column" align="center" gridGap="3">
             <InputText
-              name="username"
+              name={username}
               size="sm"
-              value={payload.username}
+              value={payload[username]}
               onChange={_onFieldChange}
               icon={<FiUser />}
               placeholder="username"
               isRequired
             />
             <InputText
-              name="password"
+              name={password}
               size="sm"
-              value={payload.password}
+              value={payload[password]}
               onChange={_onFieldChange}
               type="password"
               icon={<FiLock />}
