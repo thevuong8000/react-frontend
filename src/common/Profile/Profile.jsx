@@ -17,7 +17,7 @@ const Profile = () => {
   const { PROFILE: TEXT_PROFILE } = TEXT_HEADER;
   return (
     <Menu autoSelect={false} closeOnBlur>
-      <MenuButton as={Button} size="md" variant="ghost">
+      <MenuButton as={Button} size="md" variant="ghost" colorScheme="gray">
         <Flex align="center">
           <Avatar name={user[name]} size="xs" />
           <Text ml="1.5">{user[name]}</Text>

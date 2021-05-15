@@ -22,9 +22,9 @@ const AuthProvider = ({ children }) => {
    */
   const logIn = async (payload) => {
     try {
-      await apiPost(API_PATH.USERS.VERIFY, payload);
-      saveLoginInfo(payload);
-      setData(payload);
+      const result = await apiPost(API_PATH.USERS.VERIFY, payload);
+      saveLoginInfo(result);
+      setData(result);
     } catch (err) {
       console.log(err);
     }
