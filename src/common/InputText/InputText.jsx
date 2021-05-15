@@ -9,7 +9,7 @@ const InputText = ({ error, icon, moreInfo, ...props }) => (
   <>
     <InputGroup maxW="unset">
       {icon && <InputLeftElement h="100%">{icon}</InputLeftElement>}
-      <Input autoComplete="off" spellCheck="false" type="text" {...props} />
+      <Input autoComplete="off" spellCheck="false" type="text" borderRadius="md" {...props} />
       {moreInfo && (
         <InputRightElement h="100%">
           <Tooltip label={moreInfo.message} hasArrow placement="auto">

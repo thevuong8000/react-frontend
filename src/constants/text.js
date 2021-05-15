@@ -17,6 +17,13 @@ export const TEXT_HEADER = {
 	PROFILE: {
 		SETTINGS: 'Settings',
 		LOG_OUT: 'Log out',
-		FEEDBACK: 'Give Feedback'
+		FEEDBACK: 'Give Feedback',
+		CHANGE_PASSWORD: 'Change Password'
 	}
+};
+
+export const TEXT_MODAL = {
+	CURRENT_PASSWORD: 'Current Password',
+	NEW_PASSWORD: 'New Password',
+	CONFIRM_PASSWORD: 'Confirm Password'
 };

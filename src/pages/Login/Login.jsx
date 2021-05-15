@@ -14,7 +14,6 @@ import { LightMode } from '@chakra-ui/color-mode';
 import { TEXT_COMMON, TEXT_LOG_IN } from '@constants/text';
 
 const LOGIN_INPUT_STYLE = {
-  borderRadius: 'md',
   borderColor: 'gray.300',
   _placeholder: {
     color: 'gray.400'

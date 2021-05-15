@@ -34,6 +34,13 @@ const theme = extendTheme(
         defaultProps: {
           size: 'sm'
         }
+      },
+      Modal: {
+        defaultProps: {
+          autoFocus: false,
+          isCentered: true,
+          returnFocusOnClose: false
+        }
       }
     }
   }

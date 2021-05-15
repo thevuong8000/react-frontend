@@ -2,7 +2,7 @@ import { API_PATH } from '@constants/configs';
 import useApi from './useApi';
 
 const useUsers = () => {
-	const { apiPost } = useApi();
+	const { apiPost, apiPut } = useApi();
 
 	const createUser = (payload) => apiPost(API_PATH.USERS.ROOT, payload);
 
@@ -14,9 +14,7 @@ const useUsers = () => {
 		console.log('delete user', payload);
 	};
 
-	const updatePassword = ({ id, password }) => {
-		console.log('update password', id, password);
-	};
+	const updatePassword = ({ id, password }) => apiPut(API_PATH.USERS.ACITON(id), { password });
 
 	return { createUser, updateUser, deleteUser, updatePassword };
 };
