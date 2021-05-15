@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Avatar } from '@chakra-ui/avatar';
 import { Button } from '@chakra-ui/button';
 import { Flex, Text } from '@chakra-ui/layout';
@@ -7,7 +7,7 @@ import { TEXT_HEADER } from '@constants/text';
 import { useAuth } from '@contexts/auth-provider';
 import { IoIosSettings } from 'react-icons/io';
 import { MdFeedback } from 'react-icons/md';
-import { FaSignOutAlt } from 'react-icons/fa';
+import { FaLock, FaSignOutAlt } from 'react-icons/fa';
 import { VARIABLES } from '@constants/global';
 import { useBoolean } from '@chakra-ui/hooks';
 import ChangePasswordModal from './Modal/ChangePasswordModal';
@@ -32,7 +32,7 @@ const Profile = () => {
         <MenuList zIndex="dropdown">
           <MenuItem icon={<IoIosSettings size={18} />}>{TEXT_PROFILE.SETTINGS}</MenuItem>
           <MenuItem icon={<MdFeedback size={18} />}>{TEXT_PROFILE.FEEDBACK}</MenuItem>
-          <MenuItem icon={<MdFeedback size={18} />} onClick={setShowChangePassword.on}>
+          <MenuItem icon={<FaLock size={18} />} onClick={setShowChangePassword.on}>
             {TEXT_PROFILE.CHANGE_PASSWORD}
           </MenuItem>
           <MenuDivider />
