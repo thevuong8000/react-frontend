@@ -15,6 +15,7 @@ import { Box, Flex, Text } from '@chakra-ui/layout';
 import { VARIABLES } from '@constants/global';
 import Form from '@common/Form/Form';
 import { AiOutlineClose, AiOutlineCheck } from 'react-icons/ai';
+import { isValidPassword } from '@utilities/helper';
 
 const InputField = ({ title, children }) => (
   <Flex direction="row" justifyContent="space-between" w="100%" align="center">
@@ -41,8 +42,25 @@ const ChangePasswordModal = ({ onClose }) => {
     setPayload((prevPayload) => ({ ...prevPayload, [field]: value }));
   };
 
+  const _isValidPayload = () => {
+    const errorMessage =
+      payload[newPass] === payload[curPass]
+        ? 'New password can not be the same with the current password'
+        : payload[newPass] !== payload[confirmPass]
+        ? 'The password is not matched'
+        : isValidPassword(payload[newPass])
+        ? 'The bad password'
+        : '';
+    return { isValid: !!errorMessage, message: errorMessage };
+  };
+
   const _onSubmit = (e) => {
     e.preventDefault();
+    const checkPayload = _isValidPayload();
+    if (!checkPayload.isValid) {
+      console.log(checkPayload.message);
+      return;
+    }
     console.log(payload);
   };
 
@@ -62,6 +80,7 @@ const ChangePasswordModal = ({ onClose }) => {
                   onChange={_onFieldChange}
                   type="password"
                   placeholder="password..."
+                  isRequired
                 />
               </InputField>
               <InputField title={`${TEXT_MODAL.NEW_PASSWORD}:`}>
@@ -71,6 +90,7 @@ const ChangePasswordModal = ({ onClose }) => {
                   onChange={_onFieldChange}
                   type="password"
                   placeholder="password..."
+                  isRequired
                 />
               </InputField>
               <InputField title={`${TEXT_MODAL.CONFIRM_PASSWORD}:`}>
@@ -80,6 +100,7 @@ const ChangePasswordModal = ({ onClose }) => {
                   onChange={_onFieldChange}
                   type="password"
                   placeholder="password..."
+                  isRequired
                 />
               </InputField>
             </Flex>

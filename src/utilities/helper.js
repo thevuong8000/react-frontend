@@ -4,7 +4,8 @@ import { APP_CONFIG } from '@constants/configs';
  * 	1) USER AUTHENTICATION INFOMATION
  * 	2) STRING PROCESS
  * 	3) API CONFIG
- * 	4) OTHERS
+ * 	4) VERIFICATION
+ * 	5) OTHERS
  *
  */
 
@@ -82,6 +83,22 @@ export const getRequestConfig = (config = {}) => {
 	// 	}
 	// };
 };
+
+/* ============================= VERIFICATION ============================= */
+
+/**
+ * Validate password as followed rules:
+ * 1) Minimum 8 characters
+ * 2) Maximum 50 characters
+ * 2) One uppercase letter
+ * 3) One lowercase letter
+ * 4) One number
+ * 5) One special character
+ * @param {string} password
+ * @returns {boolean}
+ */
+export const isValidPassword = (password) =>
+	/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,50}$/.test(password);
 
 /* ============================= OTHERS ============================= */
 
