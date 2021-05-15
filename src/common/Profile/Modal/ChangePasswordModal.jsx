@@ -16,6 +16,7 @@ import { VARIABLES } from '@constants/global';
 import Form from '@common/Form/Form';
 import { AiOutlineClose, AiOutlineCheck } from 'react-icons/ai';
 import { isValidPassword } from '@utilities/helper';
+import useNotify, { TOAST_STATUS } from '@hooks/useNotify';
 
 const InputField = ({ title, children }) => (
   <Flex direction="row" justifyContent="space-between" w="100%" align="center">
@@ -35,6 +36,7 @@ const DEFAULT_PAYLOAD = {
   [confirmPass]: ''
 };
 const ChangePasswordModal = ({ onClose }) => {
+  const { setNotifier } = useNotify();
   const [payload, setPayload] = useState(DEFAULT_PAYLOAD);
 
   const _onFieldChange = (e) => {
@@ -51,13 +53,19 @@ const ChangePasswordModal = ({ onClose }) => {
         : isValidPassword(payload[newPass])
         ? 'The bad password'
         : '';
-    return { isValid: !!errorMessage, message: errorMessage };
+    return { isInValid: !!errorMessage, message: errorMessage };
   };
 
   const _onSubmit = (e) => {
     e.preventDefault();
     const checkPayload = _isValidPayload();
-    if (!checkPayload.isValid) {
+    if (checkPayload.isInValid) {
+      setNotifier({
+        status: TOAST_STATUS.ERROR,
+        title: 'Invalid Password',
+        description: checkPayload.message,
+        id: 'invalid-password'
+      });
       console.log(checkPayload.message);
       return;
     }

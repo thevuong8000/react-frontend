@@ -8,15 +8,16 @@ export const TOAST_STATUS = {
 };
 
 const DEFAULT_TOAST_OPTIONS = {
-	position: 'bottom-right', // top | top-left | top-right | bottom | bottom-left | bottom-right
-	status: TOAST_STATUS.INFO
+	position: 'top', // top | top-left | top-right | bottom | bottom-left | bottom-right
+	status: TOAST_STATUS.INFO,
+	isClosable: true
 };
 const useNotify = () => {
 	const toast = useToast();
 
-	const setNotifier = (toastProps) => {
+	const setNotifier = ({ title, description, ...toastProps }) => {
 		if (toastProps.id && toast.isActive(toastProps.id)) return;
-		toast({ ...DEFAULT_TOAST_OPTIONS, ...toastProps });
+		toast({ ...DEFAULT_TOAST_OPTIONS, ...toastProps, title, description });
 	};
 	return {
 		setNotifier
@@ -24,3 +25,4 @@ const useNotify = () => {
 };
 
 export default useNotify;
+// Source: https://chakra-ui.com/docs/feedback/toast
