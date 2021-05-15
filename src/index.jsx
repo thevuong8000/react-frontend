@@ -45,7 +45,7 @@ const theme = extendTheme(
 ReactDOM.render(
   <>
     <ColorModeScript initialColorMode={config.initialColorMode} />
-    <ChakraProvider theme={theme}>
+    <ChakraProvider theme={theme} resetCSS>
       <AppProviders>
         <App />
       </AppProviders>

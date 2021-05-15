@@ -7,7 +7,21 @@ import useUsers from '@hooks/useUsers';
 import { isEmpty } from '@utilities/helper';
 import React, { useEffect, useState } from 'react';
 import { FiUser, FiLock } from 'react-icons/fi';
+import { HiOutlineLogin } from 'react-icons/hi';
+import { AiOutlinePlus } from 'react-icons/ai';
 import { VARIABLES } from '@constants/global';
+import { LightMode } from '@chakra-ui/color-mode';
+
+const LOGIN_INPUT_STYLE = {
+  borderRadius: 'md',
+  borderColor: 'gray.300',
+  _placeholder: {
+    color: 'gray.400'
+  },
+  _hover: {
+    borderColor: 'gray.500'
+  }
+};
 
 const { NAME: username, PASSWORD: password } = VARIABLES.USERS;
 const DEFAULT_PAYLOAD = { [username]: '', [password]: '' };
@@ -89,47 +103,53 @@ const Login = ({ documentTitle }) => {
         w="30rem"
       >
         {/* Title */}
-        <Heading mb="10">NINJA_FE</Heading>
+        <Heading color="black" mb="10">
+          NINJA_FE
+        </Heading>
         <form onSubmit={_onLogin} style={{ width: '100%' }}>
           <Flex direction="column" align="center" gridGap="3">
             <InputText
+              {...LOGIN_INPUT_STYLE}
               name={username}
-              size="sm"
               value={payload[username]}
               onChange={_onFieldChange}
-              icon={<FiUser />}
+              icon={<FiUser color="black" />}
               placeholder="username"
               isRequired
             />
             <InputText
+              {...LOGIN_INPUT_STYLE}
               name={password}
-              size="sm"
               value={payload[password]}
               onChange={_onFieldChange}
               type="password"
-              icon={<FiLock />}
+              icon={<FiLock color="black" />}
               placeholder="password"
               isRequired
             />
-            <Button
-              type="submit"
-              onClick={_onLogin}
-              size="sm"
-              w="80%"
-              mt="8"
-              isDisabled={isLoading}
-            >
-              Login
-            </Button>
-            <Button
-              onClick={_onCreateAccount}
-              size="sm"
-              w="80%"
-              colorScheme="green"
-              isDisabled={isLoading}
-            >
-              Create Account
-            </Button>
+            <LightMode>
+              <Button
+                type="submit"
+                onClick={_onLogin}
+                size="sm"
+                w="80%"
+                mt="8"
+                isDisabled={isLoading}
+                rightIcon={<HiOutlineLogin size={20} />}
+              >
+                Login
+              </Button>
+              <Button
+                onClick={_onCreateAccount}
+                size="sm"
+                w="80%"
+                colorScheme="green"
+                isDisabled={isLoading}
+                rightIcon={<AiOutlinePlus size={20} />}
+              >
+                Create Account
+              </Button>
+            </LightMode>
           </Flex>
         </form>
       </Flex>
