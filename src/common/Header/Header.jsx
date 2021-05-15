@@ -29,7 +29,7 @@ const Header = () => {
         variant="outline"
         size="md"
       >
-        {TEXT_COMMON.TITLE}
+        {TEXT_COMMON.APP_TITLE}
       </Button>
     </Box>
   );

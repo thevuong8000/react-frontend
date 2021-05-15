@@ -1,11 +1,14 @@
 export const TEXT_LOG_IN = {
-	USERNAME: 'Username',
-	PASSWORD: 'Password',
-	ERROR: 'Invalid username or password.'
+	USERNAME: 'username',
+	PASSWORD: 'password',
+	ERROR_LOGIN: 'Invalid username or password.',
+	LOGIN: 'Login',
+	CREATE_ACCOUNT: 'Create Account'
 };
 
 export const TEXT_COMMON = {
-	TITLE: 'REACT-FRONTEND',
+	APP_TITLE: 'REACT-FRONTEND' /* This is the title for the app */,
+
 	CONFIRM: 'Confirm',
 	CANCEL: 'Cancel'
 };

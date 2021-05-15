@@ -11,6 +11,7 @@ import { HiOutlineLogin } from 'react-icons/hi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { VARIABLES } from '@constants/global';
 import { LightMode } from '@chakra-ui/color-mode';
+import { TEXT_COMMON, TEXT_LOG_IN } from '@constants/text';
 
 const LOGIN_INPUT_STYLE = {
   borderRadius: 'md',
@@ -104,7 +105,7 @@ const Login = ({ documentTitle }) => {
       >
         {/* Title */}
         <Heading color="black" mb="10">
-          NINJA_FE
+          {TEXT_COMMON.APP_TITLE}
         </Heading>
         <form onSubmit={_onLogin} style={{ width: '100%' }}>
           <Flex direction="column" align="center" gridGap="3">
@@ -114,7 +115,7 @@ const Login = ({ documentTitle }) => {
               value={payload[username]}
               onChange={_onFieldChange}
               icon={<FiUser color="black" />}
-              placeholder="username"
+              placeholder={TEXT_LOG_IN.USERNAME}
               isRequired
             />
             <InputText
@@ -124,7 +125,7 @@ const Login = ({ documentTitle }) => {
               onChange={_onFieldChange}
               type="password"
               icon={<FiLock color="black" />}
-              placeholder="password"
+              placeholder={TEXT_LOG_IN.PASSWORD}
               isRequired
             />
             <LightMode>
@@ -137,7 +138,7 @@ const Login = ({ documentTitle }) => {
                 isDisabled={isLoading}
                 rightIcon={<HiOutlineLogin size={20} />}
               >
-                Login
+                {TEXT_LOG_IN.LOGIN}
               </Button>
               <Button
                 onClick={_onCreateAccount}
@@ -147,7 +148,7 @@ const Login = ({ documentTitle }) => {
                 isDisabled={isLoading}
                 rightIcon={<AiOutlinePlus size={20} />}
               >
-                Create Account
+                {TEXT_LOG_IN.CREATE_ACCOUNT}
               </Button>
             </LightMode>
           </Flex>
