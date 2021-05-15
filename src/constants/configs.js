@@ -1,5 +1,7 @@
 // import { objMap } from '@utilities/helper';
 
+import { extendTheme } from '@chakra-ui/react';
+
 export const APP_CONFIG = {
 	API_ROOT: process.env.REACT_APP_API_DOMAIN,
 
@@ -13,15 +15,42 @@ export const API_PATH = {
 		VERIFY: `${APP_CONFIG.API_ROOT}/users/verify`
 	}
 };
-// export const API_PATH = objMap(
-// 	{
-// 		USERS: {
-// 			ROOT: `/users`,
-// 			ACTION: (id) => `/users/${id}`,
-// 			VERIFY: `/users/verify`
-// 		}
-// 	},
-// 	(path) => `${APP_CONFIG.API_ROOT}${path}`
-// );
 
-// console.log(API_PATH);
+export const CHAKRA_CUSTOM_THEME = extendTheme(
+	{
+		initialColorMode: 'light',
+		useSystemColorMode: false
+	},
+	{
+		components: {
+			Button: {
+				defaultProps: {
+					colorScheme: 'blue',
+					size: 'xs'
+				}
+			},
+			Checkbox: {
+				defaultProps: {
+					colorScheme: 'green'
+				}
+			},
+			Radio: {
+				defaultProps: {
+					size: 'sm'
+				}
+			},
+			Input: {
+				defaultProps: {
+					size: 'sm'
+				}
+			},
+			Modal: {
+				defaultProps: {
+					autoFocus: false,
+					isCentered: true,
+					returnFocusOnClose: false
+				}
+			}
+		}
+	}
+);

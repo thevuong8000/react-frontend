@@ -1,55 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ChakraProvider, extendTheme, ColorModeScript } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
+import { CHAKRA_CUSTOM_THEME } from '@constants/configs';
 import AppProviders from './contexts/app-providers.jsx';
 import App from './App';
 
 require('./index.scss');
 
-const config = {
-  initialColorMode: 'light',
-  useSystemColorMode: false
-};
-const theme = extendTheme(
-  { config },
-  {
-    components: {
-      Button: {
-        defaultProps: {
-          colorScheme: 'blue',
-          size: 'xs'
-        }
-      },
-      Checkbox: {
-        defaultProps: {
-          colorScheme: 'green'
-        }
-      },
-      Radio: {
-        defaultProps: {
-          size: 'sm'
-        }
-      },
-      Input: {
-        defaultProps: {
-          size: 'sm'
-        }
-      },
-      Modal: {
-        defaultProps: {
-          autoFocus: false,
-          isCentered: true,
-          returnFocusOnClose: false
-        }
-      }
-    }
-  }
-);
-
 ReactDOM.render(
   <>
-    <ColorModeScript initialColorMode={config.initialColorMode} />
-    <ChakraProvider theme={theme} resetCSS>
+    <ColorModeScript initialColorMode="light" />
+    <ChakraProvider theme={CHAKRA_CUSTOM_THEME} resetCSS>
       <AppProviders>
         <App />
       </AppProviders>
