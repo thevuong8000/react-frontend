@@ -107,6 +107,8 @@ const Login = ({ documentTitle }) => {
         <Heading color="black" mb="10">
           {TEXT_COMMON.APP_TITLE}
         </Heading>
+
+        {/* Login Form */}
         <form onSubmit={_onLogin} style={{ width: '100%' }}>
           <Flex direction="column" align="center" gridGap="3">
             <InputText
