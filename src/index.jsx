@@ -1,12 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-  ChakraProvider,
-  extendTheme,
-  ColorModeScript,
-  withDefaultColorScheme,
-  withDefaultSize
-} from '@chakra-ui/react';
+import { ChakraProvider, extendTheme, ColorModeScript } from '@chakra-ui/react';
 import AppProviders from './contexts/app-providers.jsx';
 import App from './App';
 
@@ -18,28 +12,31 @@ const config = {
 };
 const theme = extendTheme(
   { config },
-
-  // Color Scheme
-  withDefaultColorScheme({
-    colorScheme: 'blue',
-    components: ['Button']
-  }),
-  withDefaultColorScheme({
-    colorScheme: 'green',
-    components: ['Checkbox']
-  }),
-
-  // Size
-  withDefaultSize({
-    size: 'xs',
-    components: ['Button']
-  }),
-  withDefaultSize({
-    size: 'sm',
-    components: ['RadioGroup', 'Input']
-  })
-
-  // Variant
+  {
+    components: {
+      Button: {
+        defaultProps: {
+          colorScheme: 'blue',
+          size: 'xs'
+        }
+      },
+      Checkbox: {
+        defaultProps: {
+          colorScheme: 'green'
+        }
+      },
+      Radio: {
+        defaultProps: {
+          size: 'sm'
+        }
+      },
+      Input: {
+        defaultProps: {
+          size: 'sm'
+        }
+      }
+    }
+  }
 );
 
 ReactDOM.render(
