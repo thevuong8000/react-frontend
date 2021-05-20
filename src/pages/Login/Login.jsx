@@ -9,7 +9,6 @@ import React, { useEffect, useState } from 'react';
 import { FiUser, FiLock } from 'react-icons/fi';
 import { HiOutlineLogin } from 'react-icons/hi';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { VARIABLES } from '@constants/global';
 import { LightMode } from '@chakra-ui/color-mode';
 import { TEXT_COMMON, TEXT_LOG_IN } from '@constants/text';
 
@@ -23,7 +22,8 @@ const LOGIN_INPUT_STYLE = {
   }
 };
 
-const { NAME: username, PASSWORD: password } = VARIABLES.USERS;
+const username = 'username';
+const password = 'password';
 const DEFAULT_PAYLOAD = { [username]: '', [password]: '' };
 
 const Login = ({ documentTitle }) => {
@@ -56,18 +56,17 @@ const Login = ({ documentTitle }) => {
     setPayload((prevPayload) => ({ ...prevPayload, [field]: value }));
   };
 
-  const _onLogin = (e) => {
+  const _onLogin = async (e) => {
     if (e) e.preventDefault();
 
     if (_isErrorInput()) return;
     setIsLoginIn.on();
     try {
-      logIn(payload);
+      await logIn(payload);
     } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoginIn.off();
+      console.log(JSON.parse(JSON.stringify(err)));
     }
+    setIsLoginIn.off();
   };
 
   const _onCreateAccount = async () => {

@@ -21,13 +21,9 @@ const AuthProvider = ({ children }) => {
    * @param {object} payload: { username, password }
    */
   const logIn = async (payload) => {
-    try {
-      const result = await apiPost(API_PATH.USERS.VERIFY, payload);
-      saveLoginInfo(result);
-      setData(result);
-    } catch (err) {
-      console.log(err);
-    }
+    const result = await apiPost(API_PATH.AUTH.LOGIN, payload);
+    saveLoginInfo(result);
+    setData(result);
   };
 
   const logOut = () => {

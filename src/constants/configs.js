@@ -9,6 +9,10 @@ export const APP_CONFIG = {
 };
 
 export const API_PATH = {
+	AUTH: {
+		LOGIN: `${APP_CONFIG.API_ROOT}/login`,
+		REFRESH_TOKEN: `${APP_CONFIG.API_ROOT}/refresh-token`
+	},
 	USERS: {
 		ROOT: `${APP_CONFIG.API_ROOT}/users`,
 		ACITON: (id) => `${APP_CONFIG.API_ROOT}/users/${id}`,

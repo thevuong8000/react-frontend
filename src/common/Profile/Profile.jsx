@@ -8,11 +8,8 @@ import { useAuth } from '@contexts/auth-provider';
 import { IoIosSettings } from 'react-icons/io';
 import { MdFeedback } from 'react-icons/md';
 import { FaLock, FaSignOutAlt } from 'react-icons/fa';
-import { VARIABLES } from '@constants/global';
 import { useBoolean } from '@chakra-ui/hooks';
 import ChangePasswordModal from './Modal/ChangePasswordModal';
-
-const { NAME: name } = VARIABLES.USERS;
 
 const Profile = () => {
   const { user, logOut } = useAuth();
@@ -25,8 +22,8 @@ const Profile = () => {
       <Menu autoSelect={false} closeOnBlur>
         <MenuButton as={Button} size="md" variant="ghost" colorScheme="gray">
           <Flex align="center">
-            <Avatar name={user[name]} size="xs" />
-            <Text ml="1.5">{user[name]}</Text>
+            <Avatar name={user.name} size="xs" />
+            <Text ml="1.5">{user.name}</Text>
           </Flex>
         </MenuButton>
         <MenuList zIndex="dropdown">
