@@ -19,7 +19,8 @@ const LOGIN_INPUT_STYLE = {
   },
   _hover: {
     borderColor: 'gray.500'
-  }
+  },
+  color: 'black'
 };
 
 const username = 'username';
