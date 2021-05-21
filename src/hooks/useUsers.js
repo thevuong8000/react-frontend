@@ -14,9 +14,10 @@ const useUsers = () => {
 		console.log('delete user', payload);
 	};
 
-	const updatePassword = ({ id, password }) => apiPut(API_PATH.USERS.ACITON(id), { password });
+	/* payload: { current_password, new_password } */
+	const changePassword = (id, payload) => apiPut(API_PATH.USERS.CHANGE_PASSWORD(id), payload);
 
-	return { createUser, updateUser, deleteUser, updatePassword };
+	return { createUser, updateUser, deleteUser, changePassword };
 };
 
 export default useUsers;
