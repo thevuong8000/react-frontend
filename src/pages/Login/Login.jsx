@@ -1,6 +1,6 @@
 import { Button } from '@chakra-ui/button';
 import { useBoolean } from '@chakra-ui/hooks';
-import { Flex, Heading } from '@chakra-ui/layout';
+import { Box, Flex, Heading } from '@chakra-ui/layout';
 import { InputText } from '@common/';
 import { useAuth } from '@contexts/auth-provider';
 import useUsers from '@hooks/useUsers';
@@ -11,6 +11,7 @@ import { HiOutlineLogin } from 'react-icons/hi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { LightMode } from '@chakra-ui/color-mode';
 import { TEXT_COMMON, TEXT_LOG_IN } from '@constants/text';
+import ErrorMessage from '@common/ErrorMessage/ErrorMessage';
 
 const LOGIN_INPUT_STYLE = {
   borderColor: 'gray.300',
@@ -65,7 +66,7 @@ const Login = ({ documentTitle }) => {
     try {
       await logIn(payload);
     } catch (err) {
-      console.log(JSON.parse(JSON.stringify(err)));
+      setErrorMessage(err.message);
     }
     setIsLoginIn.off();
   };
@@ -77,7 +78,7 @@ const Login = ({ documentTitle }) => {
       await createUser(payload);
       _onLogin();
     } catch (err) {
-      console.log(err);
+      setErrorMessage(err.message);
     } finally {
       setIsCreating.off();
     }
@@ -130,14 +131,16 @@ const Login = ({ documentTitle }) => {
               isRequired
             />
             <LightMode>
+              {errorMessage ? <ErrorMessage message={errorMessage} /> : <Box mt="2" />}
               <Button
                 type="submit"
                 onClick={_onLogin}
                 size="sm"
                 w="80%"
-                mt="8"
                 isDisabled={isLoading}
                 rightIcon={<HiOutlineLogin size={20} />}
+                isLoading={isLogingIn}
+                loadingText={TEXT_LOG_IN.LOGIN}
               >
                 {TEXT_LOG_IN.LOGIN}
               </Button>
@@ -148,6 +151,8 @@ const Login = ({ documentTitle }) => {
                 colorScheme="green"
                 isDisabled={isLoading}
                 rightIcon={<AiOutlinePlus size={20} />}
+                isLoading={isCreating}
+                loadingText={TEXT_LOG_IN.CREATE_ACCOUNT}
               >
                 {TEXT_LOG_IN.CREATE_ACCOUNT}
               </Button>
