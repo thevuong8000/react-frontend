@@ -30,7 +30,7 @@ export const clearLoginInfo = () => {
  * Get login data from Localstorage
  * @returns {object}
  */
-export const getLoginInfo = () => JSON.parse(localStorage.getItem(APP_CONFIG.AUTH_DATA));
+export const getLoginInfo = () => JSON.parse(localStorage.getItem(APP_CONFIG.AUTH_DATA)) ?? {};
 
 /* ============================= STRING PROCESSING ============================= */
 

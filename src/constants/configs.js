@@ -11,7 +11,8 @@ export const APP_CONFIG = {
 export const API_PATH = {
 	AUTH: {
 		LOGIN: `${APP_CONFIG.API_ROOT}/login`,
-		REFRESH_TOKEN: `${APP_CONFIG.API_ROOT}/refresh-token`
+		REFRESH_TOKEN: `${APP_CONFIG.API_ROOT}/refresh-token`,
+		TEST_TOKEN: `${APP_CONFIG.API_ROOT}/test-token`
 	},
 	USERS: {
 		ROOT: `${APP_CONFIG.API_ROOT}/users`,
