@@ -40,7 +40,6 @@ const Profile = () => {
       </Menu>
 
       {/* Modal here */}
-      {/* <ChangePasswordModal onClose={setShowChangePassword.off} /> */}
       {showChangePassword && <ChangePasswordModal onClose={setShowChangePassword.off} />}
     </>
   );

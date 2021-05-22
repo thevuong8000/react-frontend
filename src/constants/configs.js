@@ -1,5 +1,3 @@
-// import { objMap } from '@utilities/helper';
-
 import { extendTheme } from '@chakra-ui/react';
 
 export const APP_CONFIG = {
