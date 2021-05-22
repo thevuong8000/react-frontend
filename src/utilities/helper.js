@@ -4,7 +4,8 @@ import { APP_CONFIG } from '@constants/configs';
  * 	1) USER AUTHENTICATION INFOMATION
  * 	2) STRING PROCESS
  * 	3) API CONFIG
- * 	4) OTHERS
+ * 	4) VERIFICATION
+ * 	5) OTHERS
  *
  */
 
@@ -15,7 +16,7 @@ import { APP_CONFIG } from '@constants/configs';
  * Save login data into LocalStorage
  */
 export const saveLoginInfo = (authData) => {
-	localStorage.setItem(APP_CONFIG.AUTH_DATA, authData);
+	localStorage.setItem(APP_CONFIG.AUTH_DATA, JSON.stringify(authData));
 };
 
 /**
@@ -29,7 +30,7 @@ export const clearLoginInfo = () => {
  * Get login data from Localstorage
  * @returns {object}
  */
-export const getLoginInfo = () => JSON.parse(localStorage.getItem(APP_CONFIG.AUTH_DATA));
+export const getLoginInfo = () => JSON.parse(localStorage.getItem(APP_CONFIG.AUTH_DATA)) ?? {};
 
 /* ============================= STRING PROCESSING ============================= */
 
@@ -69,17 +70,35 @@ export const joinStrings = (arrStrings = [], separator = ', ') => arrStrings.joi
  * @param {object} query Extra config
  */
 export const getRequestConfig = (config = {}) => {
-	const loginInfo = getLoginInfo();
-	const { headers = {} } = config;
+	console.log('Need update later');
+	return config;
+	// const loginInfo = getLoginInfo();
+	// const { headers = {} } = config;
 
-	return {
-		...config,
-		headers: {
-			...(loginInfo ? { Authorization: `Bearer ${loginInfo.access_token}` } : {}),
-			...headers
-		}
-	};
+	// return {
+	// 	...config,
+	// 	headers: {
+	// 		...(loginInfo ? { Authorization: `Bearer ${loginInfo.access_token}` } : {}),
+	// 		...headers
+	// 	}
+	// };
 };
+
+/* ============================= VERIFICATION ============================= */
+
+/**
+ * Validate password as followed rules:
+ * 1) Minimum 8 characters
+ * 2) Maximum 50 characters
+ * 2) One uppercase letter
+ * 3) One lowercase letter
+ * 4) One number
+ * 5) One special character
+ * @param {string} password
+ * @returns {boolean}
+ */
+export const isValidPassword = (password) =>
+	/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,50}$/.test(password);
 
 /* ============================= OTHERS ============================= */
 
@@ -97,3 +116,33 @@ export const downloadFile = (href, fileName) => {
 	aTag.click();
 	document.body.removeChild(aTag);
 };
+
+/**
+ * Check if input is empty: empty-string | empty-array | empty-object
+ * @param {*} input
+ * @returns {boolean}
+ */
+export const isEmpty = (input) =>
+	input === '' ||
+	input === null ||
+	input === undefined ||
+	(typeof input === 'object' && Object.keys(input).length <= 0);
+
+/**
+ * Map for object
+ * For example:
+ * obj = { a: {name: 'abc'}, b: 'def' }
+ * func = (str) => 'x' + str
+ * => return { a: {name: 'xabc'}, b: 'xdef' }
+ * @param {object} obj
+ * @param {function} func
+ * @returns {object}
+ */
+export const objMap = (obj, func) =>
+	Object.fromEntries(
+		Object.entries(obj).map(([key, value]) =>
+			typeof value === 'object'
+				? [key, objMap(value, func)]
+				: [key, typeof value === 'function' ? (...params) => func(value(...params)) : func(value)]
+		)
+	);

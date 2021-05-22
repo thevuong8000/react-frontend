@@ -1,51 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-  ChakraProvider,
-  extendTheme,
-  ColorModeScript,
-  withDefaultColorScheme,
-  withDefaultSize
-} from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
+import { CHAKRA_CUSTOM_THEME } from '@constants/configs';
 import AppProviders from './contexts/app-providers.jsx';
 import App from './App';
 
 require('./index.scss');
 
-const config = {
-  initialColorMode: 'light',
-  useSystemColorMode: false
-};
-const theme = extendTheme(
-  { config },
-
-  // Color Scheme
-  withDefaultColorScheme({
-    colorScheme: 'blue',
-    components: ['Button']
-  }),
-  withDefaultColorScheme({
-    colorScheme: 'green',
-    components: ['Checkbox']
-  }),
-
-  // Size
-  withDefaultSize({
-    size: 'xs',
-    components: ['Button']
-  }),
-  withDefaultSize({
-    size: 'sm',
-    components: ['RadioGroup']
-  })
-
-  // Variant
-);
-
 ReactDOM.render(
   <>
-    <ColorModeScript initialColorMode={config.initialColorMode} />
-    <ChakraProvider theme={theme}>
+    <ColorModeScript initialColorMode="light" />
+    <ChakraProvider theme={CHAKRA_CUSTOM_THEME} resetCSS>
       <AppProviders>
         <App />
       </AppProviders>

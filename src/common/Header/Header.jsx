@@ -29,7 +29,7 @@ const Header = () => {
         variant="outline"
         size="md"
       >
-        {TEXT_COMMON.TITLE}
+        {TEXT_COMMON.APP_TITLE}
       </Button>
     </Box>
   );
@@ -37,11 +37,7 @@ const Header = () => {
   const RightItems = () => (
     <Flex>
       <Button onClick={toggleColorMode} size="md" variant="ghost" colorScheme="gray">
-        {colorMode === 'light' ? (
-          <FaMoon size={DEFAULT_SIZE.ICON} color="gray" />
-        ) : (
-          <FaSun size={DEFAULT_SIZE.ICON} />
-        )}
+        {colorMode === 'light' ? <FaMoon color="gray" size={20} /> : <FaSun size={20} />}
       </Button>
       <Profile />
     </Flex>

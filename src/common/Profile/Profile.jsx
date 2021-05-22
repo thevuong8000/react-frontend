@@ -7,31 +7,41 @@ import { TEXT_HEADER } from '@constants/text';
 import { useAuth } from '@contexts/auth-provider';
 import { IoIosSettings } from 'react-icons/io';
 import { MdFeedback } from 'react-icons/md';
-import { FaSignOutAlt } from 'react-icons/fa';
-import { DEFAULT_SIZE } from '@constants/global';
+import { FaLock, FaSignOutAlt } from 'react-icons/fa';
+import { useBoolean } from '@chakra-ui/hooks';
+import ChangePasswordModal from './Modal/ChangePasswordModal';
 
 const Profile = () => {
   const { user, logOut } = useAuth();
   const { PROFILE: TEXT_PROFILE } = TEXT_HEADER;
+
+  const [showChangePassword, setShowChangePassword] = useBoolean(false);
+
   return (
-    <Menu autoSelect={false} closeOnBlur>
-      <MenuButton as={Button} size="md" variant="ghost">
-        <Flex align="center">
-          <Avatar name={user.name} size="xs" />
-          <Text ml="1.5">{user.name}</Text>
-        </Flex>
-      </MenuButton>
-      <MenuList>
-        <MenuItem icon={<IoIosSettings size={DEFAULT_SIZE.ICON} />}>
-          {TEXT_PROFILE.SETTINGS}
-        </MenuItem>
-        <MenuItem icon={<MdFeedback size={DEFAULT_SIZE.ICON} />}>{TEXT_PROFILE.FEEDBACK}</MenuItem>
-        <MenuDivider />
-        <MenuItem icon={<FaSignOutAlt size={DEFAULT_SIZE.ICON} />} onClick={logOut}>
-          {TEXT_PROFILE.LOG_OUT}
-        </MenuItem>
-      </MenuList>
-    </Menu>
+    <>
+      <Menu autoSelect={false} closeOnBlur>
+        <MenuButton as={Button} size="md" variant="ghost" colorScheme="gray">
+          <Flex align="center">
+            <Avatar name={user.name} size="xs" />
+            <Text ml="1.5">{user.name}</Text>
+          </Flex>
+        </MenuButton>
+        <MenuList zIndex="dropdown">
+          <MenuItem icon={<IoIosSettings size={18} />}>{TEXT_PROFILE.SETTINGS}</MenuItem>
+          <MenuItem icon={<MdFeedback size={18} />}>{TEXT_PROFILE.FEEDBACK}</MenuItem>
+          <MenuItem icon={<FaLock size={18} />} onClick={setShowChangePassword.on}>
+            {TEXT_PROFILE.CHANGE_PASSWORD}
+          </MenuItem>
+          <MenuDivider />
+          <MenuItem icon={<FaSignOutAlt size={18} />} onClick={logOut}>
+            {TEXT_PROFILE.LOG_OUT}
+          </MenuItem>
+        </MenuList>
+      </Menu>
+
+      {/* Modal here */}
+      {showChangePassword && <ChangePasswordModal onClose={setShowChangePassword.off} />}
+    </>
   );
 };
 
