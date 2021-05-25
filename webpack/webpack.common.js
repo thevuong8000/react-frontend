@@ -27,7 +27,7 @@ const configFile = {
 
 const envConfig = {
 	...dotenv.parse(configFile.global),
-	...dotenv.parse(configFile[process.env.mode] ?? {})
+	...dotenv.parse(configFile[process.env.mode] || {})
 };
 
 const configs = {};
