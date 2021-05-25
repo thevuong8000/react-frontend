@@ -23,8 +23,7 @@
   },
   "scripts": {
     "dev": "cross-env mode=development webpack-dev-server --config webpack/webpack.config.dev.js",
-    "build:staging": "cross-env mode=staging BABEL_ENV=staging webpack --config webpack/webpack.config.prod.js",
-    "build:test": "cross-env mode=test BABEL_ENV=test webpack --config webpack/webpack.config.prod.js",
+    "build": "cross-env mode=staging BABEL_ENV=staging webpack --config webpack/webpack.config.prod.js",
     "build:production": "cross-env mode=production BABEL_ENV=production webpack --config webpack/webpack.config.prod.js",
     "lint": "eslint --quiet --cache ./src",
     "lint:fix": "prettier-eslint --write $PWD/'src/**/*.[jt]s?(x)'",
