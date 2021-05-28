@@ -15,9 +15,10 @@ const useApi = () => {
 				refresh_token: localData.refresh_token,
 				user_id: localData.user_id
 			});
+
 			saveLoginInfo({
 				...localData,
-				access_token: result.access_token
+				access_token: result.data.access_token
 			});
 			return true;
 		} catch (e) {

@@ -19,7 +19,6 @@ const Homepage = ({ documentTitle }) => {
   useEffect(() => {
     apiGet(API_PATH.USERS.ROOT)
       .then((res) => {
-        // console.log(res);
         setUsers(res.users ?? []);
       })
       .catch((err) => setUsers([]));
