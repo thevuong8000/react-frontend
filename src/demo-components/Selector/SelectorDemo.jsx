@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/slider';
-import { InputCheckbox, Selector } from '@common';
+import { Selector } from '@common';
 import { SIZE } from '@constants/demo';
+import { Checkbox } from '@chakra-ui/checkbox';
 import { STYLE } from '../demo-helper/constants';
 
 const options = [
@@ -55,7 +56,7 @@ const SelectorDemo = () => {
         {/* Multiple option */}
         <Flex>
           <Text mr="4">Multiple</Text>
-          <InputCheckbox value={isMultiple} onChange={setIsMultiple.toggle} />
+          <Checkbox value={isMultiple} onChange={setIsMultiple.toggle} />
         </Flex>
       </Flex>
 

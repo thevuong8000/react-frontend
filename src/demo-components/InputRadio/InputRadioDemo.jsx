@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { Flex, Text } from '@chakra-ui/layout';
 import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/slider';
-import { InputCheckbox, InputRadio } from '@common';
+import { InputRadio } from '@common';
 import { SIZE } from '@constants/demo';
+import { Checkbox } from '@chakra-ui/checkbox';
 import { STYLE } from '../demo-helper/constants';
 
 const InputRadioDemo = () => {
@@ -46,7 +47,7 @@ const InputRadioDemo = () => {
         {/* Column option */}
         <Flex>
           <Text mr="4">Column</Text>
-          <InputCheckbox value={isColumn} onChange={setIsColumn.toggle} />
+          <Checkbox value={isColumn} onChange={setIsColumn.toggle} />
         </Flex>
       </Flex>
 
