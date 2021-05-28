@@ -54,9 +54,14 @@ const useChecklist = ({ initList = [], idKey = '' }) => {
 
 	const toggleAll = useCallback(
 		(state) => {
-			setDict((prevDict) => {
-				Object.fromEntries(Object.entries(prevDict).map(([key]) => [key, state ?? !allChecked]));
-			});
+			setDict((prevDict) =>
+				Object.fromEntries(
+					Object.entries(prevDict).map(([key, val]) => [
+						key,
+						{ ...val, checked: state ?? !allChecked }
+					])
+				)
+			);
 		},
 		[allChecked]
 	);
