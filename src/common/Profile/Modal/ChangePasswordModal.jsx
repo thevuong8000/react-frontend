@@ -56,7 +56,7 @@ const ChangePasswordModal = ({ onClose }) => {
 
     setIsLoading.on();
     try {
-      await changePassword(user._id, {
+      await changePassword(user.id, {
         current_password: payload.currentPassword,
         new_password: payload.newPassword
       });
