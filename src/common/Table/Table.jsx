@@ -51,7 +51,7 @@ const Headers = memo(({ configs }) =>
         onClick={item.cellType !== TABLE_CELL_TYPE.CHECKBOX ? item.onHeaderClick : null}
         cursor={item.onHeaderClick ? 'pointer' : 'initial'}
         p={0}
-        style={{ ...item.headerStyle }}
+        style={item.headerStyle}
         {...item.headerProps}
       >
         <Button
