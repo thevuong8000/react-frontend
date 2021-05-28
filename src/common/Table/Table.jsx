@@ -6,18 +6,7 @@ import { Spinner } from '@chakra-ui/spinner';
 import { Checkbox } from '@chakra-ui/checkbox';
 import { Tooltip } from '@chakra-ui/tooltip';
 import { TEXT_COMMON } from '@constants/text';
-import {
-  arrayOf,
-  bool,
-  element,
-  func,
-  number,
-  object,
-  objectOf,
-  oneOf,
-  shape,
-  string
-} from 'prop-types';
+import { arrayOf, bool, func, number, object, objectOf, oneOf, shape, string } from 'prop-types';
 import { getStatusColorCode } from './utils/table-helper';
 
 export const TABLE_CELL_TYPE = {
@@ -62,7 +51,7 @@ const Headers = memo(({ configs }) =>
         onClick={item.cellType !== TABLE_CELL_TYPE.CHECKBOX ? item.onHeaderClick : null}
         cursor={item.onHeaderClick ? 'pointer' : 'initial'}
         p={0}
-        style={item.headerStyle}
+        style={{ ...item.headerStyle }}
         {...item.headerProps}
       >
         <Button
@@ -100,9 +89,11 @@ const RowItem = memo(({ row, rowIndex, configs }) => (
         );
       } else if (col.cellType === TABLE_CELL_TYPE.STATUS) {
         content = (
-          <Badge colorScheme={getStatusColorCode(row[col.cellProp])}>
-            <Tooltip label={col?.message(row) ?? ''}>
-              <Text>{col?.mapValue(row[col.cellProp], row, rowIndex) ?? row[col.cellProp]}</Text>
+          <Badge size="sm" colorScheme={getStatusColorCode(row[col.cellProp])}>
+            <Tooltip label={col.message ? col.message(row) : ''}>
+              <Text>
+                {col.mapValue ? col.mapValue(row[col.cellProp], row, rowIndex) : row[col.cellProp]}
+              </Text>
             </Tooltip>
           </Badge>
         );
@@ -120,7 +111,7 @@ const RowItem = memo(({ row, rowIndex, configs }) => (
                   colorScheme={btn.colorScheme}
                   variant={btn.variant ?? 'ghost'}
                 >
-                  <btn.icon />
+                  <btn.icon size={20} />
                 </Button>
               ) : null
             )}

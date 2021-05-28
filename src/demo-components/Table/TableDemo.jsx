@@ -9,22 +9,31 @@ const rows = [
   {
     link: EXTERNAL_LINK.FACEBOOK,
     type: 'Facebook',
-    id: 'id-facebook'
+    id: 'id-facebook',
+    freq: 5
   },
   {
     link: EXTERNAL_LINK.GITHUB,
     type: 'Github',
-    id: 'id-github'
+    id: 'id-github',
+    freq: 3
   },
   {
     link: EXTERNAL_LINK.LINKED_IN,
     type: 'Linked In',
-    id: 'id-linkedin'
+    id: 'id-linkedin',
+    freq: 4
   }
 ];
 
+const FREQ_CODE = {
+  5: 'hardly',
+  3: 'always',
+  4: 'sometimes'
+};
+
 const TableDemo = () => {
-  const { checkedItems, allChecked, toggleCheck, toggleCheckAll, isChecked } = useChecklist({
+  const { checkedItems, allChecked, toggleCheck, toggleAll, isChecked } = useChecklist({
     initList: rows,
     idKey: 'id'
   });
@@ -34,11 +43,14 @@ const TableDemo = () => {
       headerText: 'No.',
       headerType: TABLE_CELL_TYPE.CHECKBOX,
       headerCheckbox: {
-        onClick: toggleCheckAll,
-        isChecked: allChecked
+        onClick: () => toggleAll(),
+        checked: allChecked
       },
 
       cellType: TABLE_CELL_TYPE.CHECKBOX,
+      cellStyle: {
+        width: '10%'
+      },
       onCellClick: (row) => toggleCheck(row.id),
       cellChecked: (row) => isChecked(row.id)
     },
@@ -49,7 +61,10 @@ const TableDemo = () => {
         <Link href={row.link} color="blue.400" isExternal>
           {row.link}
         </Link>
-      )
+      ),
+      cellStyle: {
+        width: '40%'
+      }
     },
 
     {
@@ -58,8 +73,16 @@ const TableDemo = () => {
     },
 
     {
+      headerText: 'Online Frequency',
+      cellType: TABLE_CELL_TYPE.STATUS,
+      cellProp: 'freq',
+      mapValue: (value) => FREQ_CODE[value]
+    },
+
+    {
       headerText: 'Actions',
       cellType: TABLE_CELL_TYPE.ACTION,
+      headerStyle: { textAlign: 'center' },
       buttons: [
         { icon: MdDelete, onClick: () => {}, title: 'delete', colorScheme: 'red' },
         { icon: MdEdit, onClick: () => {}, title: 'edit', colorScheme: 'teal' }
