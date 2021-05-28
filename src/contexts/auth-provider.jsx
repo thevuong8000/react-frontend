@@ -14,13 +14,24 @@ const AuthProvider = ({ children }) => {
   /* Test-token for the first page load */
   const [finishFirstLoad, setFinishFirstLoad] = useBoolean(false);
 
-  /* Verify the access_token with user id */
-  useEffect(() => {
+  /* Verify if memoized user data is still valid */
+  const _verifyToken = async () => {
     const storedInfo = getLoginInfo();
     const { id, access_token } = storedInfo;
-    apiPost(API_PATH.AUTH.TEST_TOKEN, { id, access_token }).then(() => setData(storedInfo));
+
+    try {
+      await apiPost(API_PATH.AUTH.TEST_TOKEN, { id, access_token });
+      setData(storedInfo);
+    } catch (error) {
+      setData(null);
+    }
 
     setFinishFirstLoad.on();
+  };
+
+  /* Verify the stored user information */
+  useEffect(() => {
+    _verifyToken();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

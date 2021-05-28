@@ -67,8 +67,10 @@ const Login = ({ documentTitle }) => {
       await logIn(payload);
     } catch (err) {
       setErrorMessage(err.message);
+
+      // Avoid set state when terminate component(log in successfully)
+      setIsLoginIn.off();
     }
-    setIsLoginIn.off();
   };
 
   const _onCreateAccount = async () => {
