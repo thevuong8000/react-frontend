@@ -70,18 +70,16 @@ export const joinStrings = (arrStrings = [], separator = ', ') => arrStrings.joi
  * @param {object} query Extra config
  */
 export const getRequestConfig = (config = {}) => {
-	console.log('Need update later');
-	return config;
-	// const loginInfo = getLoginInfo();
-	// const { headers = {} } = config;
+	const { access_token } = getLoginInfo();
+	const { headers = {} } = config;
 
-	// return {
-	// 	...config,
-	// 	headers: {
-	// 		...(loginInfo ? { Authorization: `Bearer ${loginInfo.access_token}` } : {}),
-	// 		...headers
-	// 	}
-	// };
+	return {
+		...config,
+		headers: {
+			...(access_token ? { Authorization: `Bearer ${access_token}` } : {}),
+			...headers
+		}
+	};
 };
 
 /* ============================= VERIFICATION ============================= */
