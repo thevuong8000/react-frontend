@@ -6,25 +6,13 @@ import { Spinner } from '@chakra-ui/spinner';
 import { Checkbox } from '@chakra-ui/checkbox';
 import { Tooltip } from '@chakra-ui/tooltip';
 import { TEXT_COMMON } from '@constants/text';
-import {
-  arrayOf,
-  bool,
-  element,
-  func,
-  number,
-  object,
-  objectOf,
-  oneOf,
-  shape,
-  string
-} from 'prop-types';
+import { arrayOf, bool, func, number, object, objectOf, oneOf, shape, string } from 'prop-types';
 import { getStatusColorCode } from './utils/table-helper';
 
 export const TABLE_CELL_TYPE = {
   ACTION: 'action',
   CHECKBOX: 'checkbox',
   INDEX: 'index',
-  LINK: 'link',
   STATUS: 'status',
   TEXT: 'text'
 };
@@ -67,6 +55,7 @@ const Headers = memo(({ configs }) =>
         {...item.headerProps}
       >
         <Button
+          size="sm"
           fontSize="sm"
           variant="ghost"
           leftIcon={item.headerIcon}
@@ -94,39 +83,38 @@ const RowItem = memo(({ row, rowIndex, configs }) => (
             isDisabled={col.disabled ? col.disabled(row, rowIndex) : false}
           >
             <Flex alignItems="center">
-              <Text mr={1}>{col.cellProp ? row[col.cellProp] : ''}</Text>
+              <Text mr={1}>{col.cellProp ? row[col.cellProp] : rowIndex}</Text>
             </Flex>
           </Checkbox>
         );
       } else if (col.cellType === TABLE_CELL_TYPE.STATUS) {
         content = (
-          <Badge colorScheme={getStatusColorCode(row[col.cellProp])}>
-            <Tooltip label={col?.message(row) ?? ''}>
-              <Text>{col?.mapValue(row[col.cellProp], row, rowIndex) ?? row[col.cellProp]}</Text>
+          <Badge size="sm" colorScheme={getStatusColorCode(row[col.cellProp])}>
+            <Tooltip label={col.message ? col.message(row) : ''}>
+              <Text>
+                {col.mapValue ? col.mapValue(row[col.cellProp], row, rowIndex) : row[col.cellProp]}
+              </Text>
             </Tooltip>
           </Badge>
         );
       } else if (col.cellType === TABLE_CELL_TYPE.ACTION) {
         content = (
           <ButtonGroup display="flex" justifyContent="center">
-            {col.buttons.map((btn, btnIndex) => {
-              if (!btn.show || btn.show(row)) {
-                return (
-                  <Button
-                    key={`action-${rowIndex}-${btnIndex}`}
-                    type="button"
-                    onClick={() => btn.onClick(row, rowIndex)}
-                    title={btn.title}
-                    disabled={btn.disabled && btn.disabled(row)}
-                    colorScheme={btn.colorScheme}
-                    variant={btn.variant ?? 'ghost'}
-                  >
-                    {btn.text ? <btn.text>{btn.text}</btn.text> : <btn.icon />}
-                  </Button>
-                );
-              }
-              return null;
-            })}
+            {col.buttons.map((btn, btnIndex) =>
+              !btn.isHidden ? (
+                <Button
+                  key={`action-${rowIndex}-${btnIndex}`}
+                  type="button"
+                  onClick={() => btn.onClick(row, rowIndex)}
+                  title={btn.title}
+                  disabled={btn.disabled && btn.disabled(row)}
+                  colorScheme={btn.colorScheme}
+                  variant={btn.variant ?? 'ghost'}
+                >
+                  <btn.icon size={20} />
+                </Button>
+              ) : null
+            )}
           </ButtonGroup>
         );
       } else if (col.cellType === TABLE_CELL_TYPE.INDEX) {
@@ -142,6 +130,7 @@ const RowItem = memo(({ row, rowIndex, configs }) => (
       return (
         <Td
           key={`row-item-${rowIndex}-${colIndex}`}
+          pl="3"
           style={typeof col.cellStyle === 'function' ? col.cellStyle(row, rowIndex) : col.cellStyle}
         >
           {content}
@@ -206,7 +195,7 @@ Table.propTypes = {
       // Header Props
       headerType: oneOf(Object.values(TABLE_CELL_TYPE)),
       headerCheckbox: shape({
-        onClick: func.isRequired,
+        onClick: func,
         checked: bool
       }),
       headerText: string,
@@ -223,7 +212,7 @@ Table.propTypes = {
       cellStyle: objectOf(string),
 
       // Others
-      component: element,
+      component: func,
       disabled: bool || func,
       message: func,
       mapValue: func,

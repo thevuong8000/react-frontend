@@ -1,10 +1,11 @@
-import { useBoolean } from '@chakra-ui/hooks';
 import { useCallback, useEffect, useState } from 'react';
 
 const useChecklist = ({ initList = [], idKey = '' }) => {
+	/* dict: { [id]: { value: any, checked: boolean } } */
 	const [dict, setDict] = useState({});
+
 	const [checkedItems, setCheckedItems] = useState([]);
-	const [allChecked, setAllChecked] = useBoolean(false);
+	const [allChecked, setAllChecked] = useState(false);
 
 	const initChecklist = useCallback(
 		(list) => {
@@ -53,16 +54,24 @@ const useChecklist = ({ initList = [], idKey = '' }) => {
 
 	const toggleAll = useCallback(
 		(state) => {
-			setDict((prevDict) => {
-				Object.fromEntries(Object.entries(prevDict).map(([key]) => [key, state ?? !allChecked]));
-			});
+			setDict((prevDict) =>
+				Object.fromEntries(
+					Object.entries(prevDict).map(([key, val]) => [
+						key,
+						{ ...val, checked: state ?? !allChecked }
+					])
+				)
+			);
 		},
 		[allChecked]
 	);
 
+	const isChecked = useCallback((id) => dict[id]?.checked, [dict]);
+
 	return {
 		checkedItems,
 		allChecked,
+		isChecked,
 		toggleCheck,
 		toggleAll
 	};
