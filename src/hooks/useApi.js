@@ -3,12 +3,15 @@ import Axios from 'axios';
 import { useCallback } from 'react';
 import { getLoginInfo, getRequestConfig, saveLoginInfo } from '@utilities/helper';
 import { API_PATH } from '@constants/configs';
+import { HTTP_CODE } from '@constants/global';
 
 const useApi = () => {
 	// const { logOut } = useAuth();
 
 	const needRetry = useCallback(async (error) => {
-		console.log(error);
+		/* Retry only if unauthorized error */
+		if (error?.response?.status !== HTTP_CODE.UNAUTHORIZED) return false;
+
 		try {
 			const localData = getLoginInfo();
 			const result = await Axios.post(API_PATH.AUTH.REFRESH_TOKEN, {
@@ -37,6 +40,7 @@ const useApi = () => {
 				return getFullResponse ? result : result.data;
 			} catch (error) {
 				if (!retried) {
+					console.log(JSON.parse(JSON.stringify(error.response)));
 					const couldRetry = await needRetry(error);
 					if (couldRetry) return tryApi(fn, params, config, getFullResponse, true);
 				}
