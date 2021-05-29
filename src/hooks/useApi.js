@@ -9,6 +9,12 @@ const useApi = () => {
 	/* Get logOut func even when useAuth has not been initialized */
 	const { logOut } = useAuth() || {};
 
+	/* Get error data */
+	const getErrorResponse = (error) => {
+		const { data, status } = error.response;
+		return Object.assign(new Error(), { ...data, status });
+	};
+
 	const needRetry = useCallback(
 		async (error) => {
 			/* Retry only if unauthorized error */
@@ -44,11 +50,10 @@ const useApi = () => {
 				return getFullResponse ? result : result.data;
 			} catch (error) {
 				if (!retried) {
-					console.log(JSON.parse(JSON.stringify(error.response)));
 					const couldRetry = await needRetry(error);
 					if (couldRetry) return tryApi(fn, params, config, getFullResponse, true);
 				}
-				return Promise.reject(error);
+				return Promise.reject(getErrorResponse(error));
 			}
 		},
 		[needRetry]
