@@ -1,13 +1,30 @@
 // import { useAuth } from '@contexts/auth-provider';
 import Axios from 'axios';
 import { useCallback } from 'react';
-import { getRequestConfig } from '@utilities/helper';
+import { getLoginInfo, getRequestConfig, saveLoginInfo } from '@utilities/helper';
+import { API_PATH } from '@constants/configs';
 
 const useApi = () => {
 	// const { logOut } = useAuth();
 
 	const needRetry = useCallback(async (error) => {
 		console.log(error);
+		try {
+			const localData = getLoginInfo();
+			const result = await Axios.post(API_PATH.AUTH.REFRESH_TOKEN, {
+				refresh_token: localData.refresh_token,
+				user_id: localData.user_id
+			});
+
+			saveLoginInfo({
+				...localData,
+				access_token: result.data.access_token
+			});
+			return true;
+		} catch (e) {
+			/* refresh-token is expired */
+			console.log(e);
+		}
 		return false;
 	}, []);
 
@@ -15,11 +32,13 @@ const useApi = () => {
 		async (fn, params, config, getFullResponse, retried = false) => {
 			try {
 				const result = await fn(...params, getRequestConfig(config));
+
+				/* Axios: The main data is in {result.data} */
 				return getFullResponse ? result : result.data;
 			} catch (error) {
 				if (!retried) {
-					const retry = await needRetry(error);
-					if (retry) return tryApi(fn, params, config, getFullResponse, true);
+					const couldRetry = await needRetry(error);
+					if (couldRetry) return tryApi(fn, params, config, getFullResponse, true);
 				}
 				return Promise.reject(error);
 			}
