@@ -14,6 +14,7 @@ export const API_PATH = {
 	},
 	USERS: {
 		ROOT: `${APP_CONFIG.API_ROOT}/users`,
+		CREATE: `${APP_CONFIG.API_ROOT}/users/create`,
 		ACITON: (id) => `${APP_CONFIG.API_ROOT}/users/${id}`,
 		VERIFY: `${APP_CONFIG.API_ROOT}/users/verify`,
 		CHANGE_PASSWORD: (id) => `${APP_CONFIG.API_ROOT}/users/${id}/change-password`

@@ -9,13 +9,15 @@ import { IoIosSettings } from 'react-icons/io';
 import { MdFeedback } from 'react-icons/md';
 import { FaLock, FaSignOutAlt } from 'react-icons/fa';
 import { useBoolean } from '@chakra-ui/hooks';
-import ChangePasswordModal from './Modal/ChangePasswordModal';
+import ChangePasswordModal from './ChangePasswordModal/ChangePasswordModal';
+import SettingsModal from './SettingsModal/SettingsModal';
 
 const Profile = () => {
   const { user, logOut } = useAuth();
   const { PROFILE: TEXT_PROFILE } = TEXT_HEADER;
 
   const [showChangePassword, setShowChangePassword] = useBoolean(false);
+  const [showSettings, setShowSettings] = useBoolean(false);
 
   return (
     <>
@@ -27,7 +29,9 @@ const Profile = () => {
           </Flex>
         </MenuButton>
         <MenuList zIndex="dropdown">
-          <MenuItem icon={<IoIosSettings size={18} />}>{TEXT_PROFILE.SETTINGS}</MenuItem>
+          <MenuItem icon={<IoIosSettings size={18} />} onClick={setShowSettings.on}>
+            {TEXT_PROFILE.SETTINGS}
+          </MenuItem>
           <MenuItem icon={<MdFeedback size={18} />}>{TEXT_PROFILE.FEEDBACK}</MenuItem>
           <MenuItem icon={<FaLock size={18} />} onClick={setShowChangePassword.on}>
             {TEXT_PROFILE.CHANGE_PASSWORD}
@@ -41,6 +45,7 @@ const Profile = () => {
 
       {/* Modal here */}
       {showChangePassword && <ChangePasswordModal onClose={setShowChangePassword.off} />}
+      {showSettings && <SettingsModal onClose={setShowSettings.off} />}
     </>
   );
 };
