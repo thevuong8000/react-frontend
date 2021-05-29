@@ -1,4 +1,4 @@
-// import { useAuth } from '@contexts/auth-provider';
+import { useAuth } from '@contexts/auth-provider';
 import Axios from 'axios';
 import { useCallback } from 'react';
 import { getLoginInfo, getRequestConfig, saveLoginInfo } from '@utilities/helper';
@@ -6,30 +6,34 @@ import { API_PATH } from '@constants/configs';
 import { HTTP_CODE } from '@constants/global';
 
 const useApi = () => {
-	// const { logOut } = useAuth();
+	/* Get logOut func even when useAuth has not been initialized */
+	const { logOut } = useAuth() || {};
 
-	const needRetry = useCallback(async (error) => {
-		/* Retry only if unauthorized error */
-		if (error?.response?.status !== HTTP_CODE.UNAUTHORIZED) return false;
+	const needRetry = useCallback(
+		async (error) => {
+			/* Retry only if unauthorized error */
+			if (error?.response?.status !== HTTP_CODE.UNAUTHORIZED) return false;
 
-		try {
-			const localData = getLoginInfo();
-			const result = await Axios.post(API_PATH.AUTH.REFRESH_TOKEN, {
-				refresh_token: localData.refresh_token,
-				user_id: localData.user_id
-			});
+			try {
+				const localData = getLoginInfo();
+				const result = await Axios.post(API_PATH.AUTH.REFRESH_TOKEN, {
+					refresh_token: localData.refresh_token,
+					user_id: localData.user_id
+				});
 
-			saveLoginInfo({
-				...localData,
-				access_token: result.data.access_token
-			});
-			return true;
-		} catch (e) {
-			/* refresh-token is expired */
-			console.log(e);
-		}
-		return false;
-	}, []);
+				saveLoginInfo({
+					...localData,
+					access_token: result.data.access_token
+				});
+				return true;
+			} catch (e) {
+				/* log out if refresh-token is expired */
+				logOut?.();
+			}
+			return false;
+		},
+		[logOut]
+	);
 
 	const tryApi = useCallback(
 		async (fn, params, config, getFullResponse, retried = false) => {
