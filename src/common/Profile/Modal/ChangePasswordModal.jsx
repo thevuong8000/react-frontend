@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/modal';
 import { Button } from '@chakra-ui/button';
 import InputText from '@common/InputText/InputText';
-import { TEXT_COMMON, TEXT_HEADER, TEXT_MODAL } from '@constants/text';
+import { TEXT_COMMON, TEXT_HEADER, TEXT_PROFILE } from '@constants/text';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import Form from '@common/Form/Form';
 import { AiOutlineClose, AiOutlineCheck } from 'react-icons/ai';
@@ -40,6 +40,10 @@ const ChangePasswordModal = ({ onClose }) => {
 
   const [isLoading, setIsLoading] = useBoolean(false);
 
+  /* Submit button only active if
+    1) All fields are fulfilled
+    2) New password is matched  
+  */
   const isValid =
     !isEmpty(payload.newPassword) &&
     !isEmpty(payload.confirmPassword) &&
@@ -62,15 +66,13 @@ const ChangePasswordModal = ({ onClose }) => {
       });
       setNotifier({
         status: TOAST_STATUS.SUCCESS,
-        title: 'Change Password',
-        description: 'Change password successfully!'
+        description: TEXT_PROFILE.CHANGE_PASSWORD_SUCCESS
       });
       onClose();
     } catch (error) {
       setNotifier({
         status: TOAST_STATUS.ERROR,
-        title: 'Invalid Password',
-        description: error.message,
+        description: error.message ?? TEXT_PROFILE.CHANGE_PASSWORD_FAILURE,
         id: 'invalid-password'
       });
     } finally {
@@ -87,33 +89,33 @@ const ChangePasswordModal = ({ onClose }) => {
         <ModalBody>
           <Form onSubmit={_onSubmit}>
             <Flex direction="column" gridGap="5">
-              <InputField title={`${TEXT_MODAL.CURRENT_PASSWORD}:`}>
+              <InputField title={`${TEXT_PROFILE.CURRENT_PASSWORD}:`}>
                 <InputText
                   name="currentPassword"
                   value={payload.currentPassword}
                   onChange={_onFieldChange}
                   type="password"
-                  placeholder="password..."
+                  placeholder={TEXT_PROFILE.PASSWORD_PLACEHOLDER}
                   isRequired
                 />
               </InputField>
-              <InputField title={`${TEXT_MODAL.NEW_PASSWORD}:`}>
+              <InputField title={`${TEXT_PROFILE.NEW_PASSWORD}:`}>
                 <InputText
                   name="newPassword"
                   value={payload.newPassword}
                   onChange={_onFieldChange}
                   type="password"
-                  placeholder="password..."
+                  placeholder={TEXT_PROFILE.PASSWORD_PLACEHOLDER}
                   isRequired
                 />
               </InputField>
-              <InputField title={`${TEXT_MODAL.CONFIRM_PASSWORD}:`}>
+              <InputField title={`${TEXT_PROFILE.CONFIRM_PASSWORD}:`}>
                 <InputText
                   name="confirmPassword"
                   value={payload.confirmPassword}
                   onChange={_onFieldChange}
                   type="password"
-                  placeholder="password..."
+                  placeholder={TEXT_PROFILE.PASSWORD_PLACEHOLDER}
                   isRequired
                 />
               </InputField>
