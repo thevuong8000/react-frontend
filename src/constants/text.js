@@ -22,8 +22,11 @@ export const TEXT_HEADER = {
 	}
 };
 
-export const TEXT_MODAL = {
+export const TEXT_PROFILE = {
 	CURRENT_PASSWORD: 'Current Password',
 	NEW_PASSWORD: 'New Password',
-	CONFIRM_PASSWORD: 'Confirm Password'
+	CONFIRM_PASSWORD: 'Confirm Password',
+	PASSWORD_PLACEHOLDER: 'password...',
+	CHANGE_PASSWORD_SUCCESS: 'Change password successfully',
+	CHANGE_PASSWORD_FAILURE: 'Failed to change password'
 };
