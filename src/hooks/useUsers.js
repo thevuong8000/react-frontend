@@ -4,7 +4,7 @@ import useApi from './useApi';
 const useUsers = () => {
 	const { apiPost, apiPut, apiDelete } = useApi();
 
-	const createUser = (payload) => apiPost(API_PATH.USERS.ROOT, payload);
+	const createUser = (payload) => apiPost(API_PATH.USERS.CREATE, payload);
 
 	const updateUser = (id, payload) => apiPost(API_PATH.USERS.ACITON(id), payload);
 

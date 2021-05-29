@@ -80,7 +80,7 @@ const RowItem = memo(({ row, rowIndex, configs }) => (
             onChange={(e) => col.onCellClick(row, rowIndex, e)}
             isChecked={col.cellChecked(row, rowIndex)}
             spacing={5}
-            isDisabled={col.disabled ? col.disabled(row, rowIndex) : false}
+            isDisabled={col.disabled?.(row, rowIndex) ?? false}
           >
             <Flex alignItems="center">
               <Text mr={1}>{col.cellProp ? row[col.cellProp] : rowIndex}</Text>
@@ -90,10 +90,8 @@ const RowItem = memo(({ row, rowIndex, configs }) => (
       } else if (col.cellType === TABLE_CELL_TYPE.STATUS) {
         content = (
           <Badge size="sm" colorScheme={getStatusColorCode(row[col.cellProp])}>
-            <Tooltip label={col.message ? col.message(row) : ''}>
-              <Text>
-                {col.mapValue ? col.mapValue(row[col.cellProp], row, rowIndex) : row[col.cellProp]}
-              </Text>
+            <Tooltip label={col.message?.(row) ?? ''}>
+              <Text>{col.mapValue?.(row[col.cellProp], row, rowIndex) ?? row[col.cellProp]}</Text>
             </Tooltip>
           </Badge>
         );
@@ -107,7 +105,7 @@ const RowItem = memo(({ row, rowIndex, configs }) => (
                   type="button"
                   onClick={() => btn.onClick(row, rowIndex)}
                   title={btn.title}
-                  disabled={btn.disabled && btn.disabled(row)}
+                  disabled={btn.disabled?.(row)}
                   colorScheme={btn.colorScheme}
                   variant={btn.variant ?? 'ghost'}
                 >

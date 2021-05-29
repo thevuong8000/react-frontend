@@ -10,7 +10,9 @@ export const TEXT_COMMON = {
 	APP_TITLE: 'REACT-FRONTEND' /* This is the title for the app */,
 
 	CONFIRM: 'Confirm',
-	CANCEL: 'Cancel'
+	CANCEL: 'Cancel',
+
+	SAVE: 'Save'
 };
 
 export const TEXT_HEADER = {
