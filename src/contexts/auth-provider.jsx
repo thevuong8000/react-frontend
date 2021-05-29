@@ -17,10 +17,10 @@ const AuthProvider = ({ children }) => {
   /* Verify if memoized user data is still valid */
   const _verifyToken = async () => {
     const storedInfo = getLoginInfo();
-    const { id, access_token } = storedInfo;
+    const { id } = storedInfo;
 
     try {
-      await apiPost(API_PATH.AUTH.TEST_TOKEN, { id, access_token });
+      await apiPost(API_PATH.AUTH.TEST_TOKEN, { id });
       setData(storedInfo);
     } catch (error) {
       setData(null);
