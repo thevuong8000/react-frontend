@@ -11,8 +11,6 @@ const LoaderFull = () => (
     top="0"
     align="center"
     justify="center"
-    bgGradient="linear(to-br, teal.500, teal.800)"
-    bgSize="cover"
   >
     <Spinner
       thickness="4px"
