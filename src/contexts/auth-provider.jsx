@@ -1,9 +1,7 @@
-import { useBoolean } from '@chakra-ui/hooks';
-import LoaderFull from '@common/LoaderFull/LoaderFull';
 import { API_PATH } from '@constants/configs';
 import useApi from '@hooks/useApi';
-import { clearLoginInfo, getLoginInfo, saveLoginInfo } from '@utilities/helper';
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { clearLoginInfo, getLoginInfo, isEmpty, saveLoginInfo } from '@utilities/helper';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 
 const AuthContext = createContext();
 
@@ -11,29 +9,24 @@ const AuthProvider = ({ children }) => {
   const [data, setData] = useState(null);
   const { apiPost } = useApi();
 
-  /* Test-token for the first page load */
-  const [finishFirstLoad, setFinishFirstLoad] = useBoolean(false);
-
   /* Verify if memoized user data is still valid */
-  const _verifyToken = async () => {
+  const verifyToken = async () => {
     const storedInfo = getLoginInfo();
-    const { id } = storedInfo;
 
+    // Nothing to verify
+    if (isEmpty(storedInfo)) return false;
+
+    const { id } = storedInfo;
     try {
       await apiPost(API_PATH.AUTH.TEST_TOKEN, { id });
       setData(storedInfo);
     } catch (error) {
       setData(null);
+      return false;
     }
 
-    setFinishFirstLoad.on();
+    return true;
   };
-
-  /* Verify the stored user information */
-  useEffect(() => {
-    _verifyToken();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   /**
    * Log in with payload
@@ -53,10 +46,10 @@ const AuthProvider = ({ children }) => {
     setData(null);
   }, []);
 
-  if (!finishFirstLoad) return <LoaderFull />;
-
   return (
-    <AuthContext.Provider value={{ user: data, logIn, logOut }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user: data, logIn, logOut, verifyToken }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
