@@ -14,7 +14,7 @@ const AuthProvider = ({ children }) => {
     const storedInfo = getLoginInfo();
 
     // Nothing to verify
-    if (isEmpty(storedInfo)) return false;
+    if (isEmpty(storedInfo)) return;
 
     const { id } = storedInfo;
     try {
@@ -22,10 +22,7 @@ const AuthProvider = ({ children }) => {
       setData(storedInfo);
     } catch (error) {
       setData(null);
-      return false;
     }
-
-    return true;
   };
 
   /**
