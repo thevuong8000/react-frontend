@@ -1,13 +1,32 @@
-import { useEffect, useRef, useState } from 'react';
+import React, {
+  ChangeEvent,
+  ChangeEventHandler,
+  FC,
+  FocusEvent,
+  FocusEventHandler,
+  MouseEvent,
+  MouseEventHandler,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
 import { Flex } from '@chakra-ui/layout';
 import AnimatedChevron from '@common/AnimatedIcons/Chevron';
 import DropdownTable from '@common/Helper-Component/DropdownTable/DropdownTable';
 import { includeStr, joinStrings } from '@utilities/helper';
-import { string, func, bool, element, arrayOf, shape, oneOfType } from 'prop-types';
+import { IDropdownOption } from '../Helper-Component/DropdownTable/DropdownTable';
 
-const Selector = ({
+interface ISelector {
+  name?: string;
+  selected: string;
+  options: IDropdownOption[];
+  onChange: MouseEventHandler;
+  isMultiple?: boolean;
+}
+
+const Selector: FC<ISelector> = ({
   name,
   selected, // selected option(s)
   options = [],
@@ -15,11 +34,11 @@ const Selector = ({
   isMultiple = false, // multiple selection
   ...props
 }) => {
-  const [filterOptions, setFilterOptions] = useState(options ?? []);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [filterOptions, setFilterOptions] = useState<IDropdownOption[]>(options ?? []);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [showOptions, setShowOptions] = useBoolean(false);
 
-  const dropdownRef = useRef();
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const selectedOptions = Array.isArray(selected) ? selected : [selected];
   const inputValue = joinStrings(selectedOptions);
@@ -28,9 +47,9 @@ const Selector = ({
     setFilterOptions(options.filter((opt) => includeStr(opt.text, searchQuery)));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery]);
+  }, [options, searchQuery]);
 
-  const _onShowOptions = () => {
+  const _onShowOptions: FocusEventHandler = () => {
     if (showOptions) return;
     setShowOptions.on();
     setSearchQuery('');
@@ -40,9 +59,9 @@ const Selector = ({
     setShowOptions.off();
   };
 
-  const _onInputBlur = (e) => {
+  const _onInputBlur: FocusEventHandler<HTMLInputElement> = (e: FocusEvent<HTMLInputElement>) => {
     // Do not hide dropdown if click into dropdown or input-field
-    if (dropdownRef.current.contains(e.relatedTarget)) {
+    if (dropdownRef.current.contains(e.relatedTarget as Node)) {
       if (isMultiple) e.target.focus();
       return;
     }
@@ -50,12 +69,14 @@ const Selector = ({
     _closeOptions();
   };
 
-  const _onSelect = (e) => {
+  const _onSelect: MouseEventHandler = (e: MouseEvent) => {
     onChange(e);
     if (!isMultiple) _closeOptions();
   };
 
-  const _onSearchQueryChange = (e) => {
+  const _onSearchQueryChange: ChangeEventHandler<EventTargetBase> = (
+    e: ChangeEvent<EventTargetBase>
+  ) => {
     setSearchQuery(e.target.value);
   };
 
@@ -92,20 +113,6 @@ const Selector = ({
       />
     </Flex>
   );
-};
-
-Selector.propTypes = {
-  name: string,
-  selected: oneOfType([string, arrayOf(string)]).isRequired,
-  options: arrayOf(
-    shape({
-      text: string.isRequired,
-      isDisabled: bool,
-      Icon: element
-    })
-  ).isRequired,
-  onChange: func.isRequired,
-  isMultiple: bool
 };
 
 export default Selector;
