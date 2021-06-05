@@ -5,7 +5,7 @@ import { InputText } from '@common/';
 import { useAuth } from '@contexts/auth-provider';
 import useUsers from '@hooks/useUsers';
 import { isEmpty } from '@utilities/helper';
-import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, ChangeEventHandler, FC, FormEvent, useEffect, useState } from 'react';
 import { FiUser, FiLock } from 'react-icons/fi';
 import { HiOutlineLogin } from 'react-icons/hi';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -13,11 +13,7 @@ import { LightMode } from '@chakra-ui/color-mode';
 import { TEXT_COMMON, TEXT_LOG_IN } from '@constants/text';
 import ErrorMessage from '@common/ErrorMessage/ErrorMessage';
 import { PageBase } from '@pages';
-
-interface IInputField {
-  name: string;
-  value: string;
-}
+import { IInputField } from 'common/Form/Form';
 
 const LOGIN_INPUT_STYLE = {
   borderColor: 'gray.300',
@@ -56,7 +52,7 @@ const Login: FC<PageBase> = ({ documentTitle }) => {
     return false;
   };
 
-  const _onFieldChange = (e: ChangeEvent<IInputField>) => {
+  const _onFieldChange: ChangeEventHandler<IInputField> = (e: ChangeEvent<IInputField>) => {
     // Hide errorMessage if make change
     if (errorMessage) setErrorMessage('');
 

@@ -1,6 +1,11 @@
 import { Button } from '@chakra-ui/button';
 import React, { CSSProperties, FC, FormEvent } from 'react';
 
+export interface IInputField {
+  name: string;
+  value: string;
+}
+
 interface IForm {
   style: CSSProperties;
   onSubmit(e: FormEvent): void;

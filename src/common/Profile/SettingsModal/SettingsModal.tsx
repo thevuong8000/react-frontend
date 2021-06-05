@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, FormEvent, FormEventHandler, useCallback, useMemo } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -17,7 +17,11 @@ import useNotify from '@hooks/useNotify';
 import useUsers from '@hooks/useUsers';
 import { useAuth } from '@contexts/auth-provider';
 
-const Zone = ({ title, children }) => (
+interface IZone {
+  title: string;
+}
+
+const Zone: FC<IZone> = ({ title, children }) => (
   <Flex direction="column">
     <Heading fontSize="xl">{title}</Heading>
     <Box mt="3" borderWidth="thin" borderRadius="lg" p="3">
@@ -26,30 +30,33 @@ const Zone = ({ title, children }) => (
   </Flex>
 );
 
-const SettingsModal = ({ onClose }) => {
+const SettingsModal: FC<ModalBase> = ({ onClose }) => {
   const { user, logOut } = useAuth();
   const { deleteUser } = useUsers();
   const { setNotifier } = useNotify();
 
-  const _onSubmit = async (e) => {
+  const _onSubmit: FormEventHandler = async (e: FormEvent) => {
     e.preventDefault();
   };
 
-  const _onDelete = () => {
+  const _onDelete = useCallback(() => {
     if (window.confirm('Are you sure?')) {
       deleteUser(user.id);
       logOut();
     }
-  };
+  }, []);
 
-  const DANGER_ACTIONS = [
-    {
-      title: 'Delete Account',
-      description: 'Permanently delete this account',
-      onTrigger: _onDelete,
-      buttonText: 'Delete Account'
-    }
-  ];
+  const DANGER_ACTIONS = useMemo(
+    () => [
+      {
+        title: 'Delete Account',
+        description: 'Permanently delete this account',
+        onTrigger: _onDelete,
+        buttonText: 'Delete Account'
+      }
+    ],
+    []
+  );
 
   return (
     <Modal size="2xl" isOpen onClose={onClose}>

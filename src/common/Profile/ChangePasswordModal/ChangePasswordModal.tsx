@@ -1,4 +1,11 @@
-import React, { useState } from 'react';
+import React, {
+  ChangeEvent,
+  ChangeEventHandler,
+  FC,
+  FormEvent,
+  FormEventHandler,
+  useState
+} from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -19,10 +26,15 @@ import useNotify, { TOAST_STATUS } from '@hooks/useNotify';
 import { useBoolean } from '@chakra-ui/hooks';
 import useUsers from '@hooks/useUsers';
 import { useAuth } from '@contexts/auth-provider';
+import { IInputField } from 'common/Form/Form';
 
-const InputField = ({ title, children }) => (
+interface IInputPassword {
+  title: string;
+}
+
+const InputField: FC<IInputPassword> = ({ title, children }) => (
   <Flex direction="row" justifyContent="space-between" w="100%" align="center">
-    <Text flexGrow="1">{title}</Text>
+    <Text flexGrow="initial">{title}</Text>
     <Box w="50%">{children}</Box>
   </Flex>
 );
@@ -32,7 +44,8 @@ const DEFAULT_PAYLOAD = {
   newPassword: '',
   confirmPassword: ''
 };
-const ChangePasswordModal = ({ onClose }) => {
+
+const ChangePasswordModal: FC<ModalBase> = ({ onClose }) => {
   const { setNotifier } = useNotify();
   const { changePassword } = useUsers();
   const { user } = useAuth();
@@ -49,12 +62,12 @@ const ChangePasswordModal = ({ onClose }) => {
     !isEmpty(payload.confirmPassword) &&
     payload.newPassword === payload.confirmPassword;
 
-  const _onFieldChange = (e) => {
+  const _onFieldChange: ChangeEventHandler<IInputField> = (e: ChangeEvent<IInputField>) => {
     const { name: field, value } = e.target;
     setPayload((prevPayload) => ({ ...prevPayload, [field]: value }));
   };
 
-  const _onSubmit = async (e) => {
+  const _onSubmit: FormEventHandler = async (e: FormEvent) => {
     e.preventDefault();
     if (!isValid) return;
 

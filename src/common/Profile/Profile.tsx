@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Avatar } from '@chakra-ui/avatar';
 import { Button } from '@chakra-ui/button';
 import { Flex, Text } from '@chakra-ui/layout';
@@ -12,7 +12,7 @@ import { useBoolean } from '@chakra-ui/hooks';
 import ChangePasswordModal from './ChangePasswordModal/ChangePasswordModal';
 import SettingsModal from './SettingsModal/SettingsModal';
 
-const Profile = () => {
+const Profile: FC = () => {
   const { user, logOut } = useAuth();
   const { PROFILE: TEXT_PROFILE } = TEXT_HEADER;
 
