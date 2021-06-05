@@ -1,12 +1,12 @@
 import LoaderFull from '@common/LoaderFull/LoaderFull';
-import React, { Suspense } from 'react';
+import React, { FC, Suspense } from 'react';
 import { AuthProvider } from './auth-provider';
 import { GlobalProvider } from './global-provider';
 
-const AppProviders = (props) => (
+const AppProviders: FC = ({ children }) => (
   <Suspense fallback={<LoaderFull />}>
     <GlobalProvider>
-      <AuthProvider>{props.children}</AuthProvider>
+      <AuthProvider>{children}</AuthProvider>
     </GlobalProvider>
   </Suspense>
 );

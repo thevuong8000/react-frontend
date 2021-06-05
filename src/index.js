@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import { CHAKRA_CUSTOM_THEME } from '@constants/configs';
-import AppProviders from './contexts/app-providers.jsx';
+import AppProviders from './contexts/app-providers';
 import App from './App';
 
 require('./index.scss');
