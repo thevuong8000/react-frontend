@@ -1,8 +1,30 @@
-import React from 'react';
+import React, { ChangeEventHandler, FC } from 'react';
 import { Radio, RadioGroup } from '@chakra-ui/radio';
-import { string, bool, any, func, arrayOf, shape } from 'prop-types';
 
-const InputRadio = ({ name, value, options = [], onChange, isColumn, gap = '3', ...props }) => (
+interface IRadioOption {
+  text: string;
+  value: string;
+  isDisabled: boolean;
+}
+
+interface IInputRadio {
+  name?: string;
+  value: string;
+  options: IRadioOption[];
+  onChange: ChangeEventHandler;
+  isColumn?: boolean;
+  gap: '1' | '2' | '4' | '5' | '6' | '7' | '8';
+}
+
+const InputRadio: FC<IInputRadio> = ({
+  name,
+  value,
+  options = [],
+  onChange,
+  isColumn,
+  gap = '3',
+  ...props
+}) => (
   <RadioGroup
     name={name}
     value={value}
@@ -28,22 +50,5 @@ const InputRadio = ({ name, value, options = [], onChange, isColumn, gap = '3', 
     ))}
   </RadioGroup>
 );
-
-InputRadio.propTypes = {
-  name: string,
-  // eslint-disable-next-line react/forbid-prop-types
-  value: any,
-  options: arrayOf(
-    shape({
-      // eslint-disable-next-line react/forbid-prop-types
-      value: any,
-      text: string,
-      isDisabled: bool
-    })
-  ),
-  onChange: func.isRequired,
-  isColumn: bool,
-  gap: string
-};
 
 export default InputRadio;
