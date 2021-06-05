@@ -4,6 +4,7 @@
     "esModuleInterop": true,
     "baseUrl": "./src",
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
     "noImplicitAny": true,
     "declaration": true,
