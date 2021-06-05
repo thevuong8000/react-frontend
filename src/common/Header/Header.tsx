@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Flex, Spacer, Box } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/button';
 import { Link, useLocation } from 'react-router-dom';
@@ -7,9 +7,8 @@ import { Profile } from '@common';
 import { TEXT_COMMON } from '@constants/text';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { FaMoon, FaSun } from 'react-icons/fa';
-import { DEFAULT_SIZE } from '@constants/global';
 
-const Header = () => {
+const Header: FC = () => {
   const location = useLocation();
   const { colorMode, toggleColorMode } = useColorMode();
 

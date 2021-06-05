@@ -7,7 +7,12 @@
     "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
     "noImplicitAny": true,
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+
     "declaration": true,
+
     "baseUrl": "./src",
     "paths": {
       "@common/*": ["./common/*"],
