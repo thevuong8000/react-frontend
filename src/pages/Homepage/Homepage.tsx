@@ -1,9 +1,10 @@
 import { Flex, Text } from '@chakra-ui/layout';
 import { API_PATH } from '@constants/configs';
 import useApi from '@hooks/useApi';
-import React, { useEffect, useState } from 'react';
+import { PageBase } from '@pages';
+import React, { FC, useEffect, useState } from 'react';
 
-const Homepage = ({ documentTitle }) => {
+const Homepage: FC<PageBase> = ({ documentTitle }) => {
   useEffect(() => {
     document.title = documentTitle;
   }, [documentTitle]);
@@ -18,10 +19,10 @@ const Homepage = ({ documentTitle }) => {
 
   useEffect(() => {
     apiGet(API_PATH.USERS.ROOT)
-      .then((res) => {
+      .then((res: any) => {
         setUsers(res.users ?? []);
       })
-      .catch((err) => setUsers([]));
+      .catch((err: any) => setUsers([]));
   }, []);
 
   return (
