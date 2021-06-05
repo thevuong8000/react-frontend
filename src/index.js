@@ -8,13 +8,13 @@ import App from './App';
 require('./index.scss');
 
 ReactDOM.render(
-  <>
-    <ColorModeScript initialColorMode="light" />
-    <ChakraProvider theme={CHAKRA_CUSTOM_THEME} resetCSS>
-      <AppProviders>
-        <App />
-      </AppProviders>
-    </ChakraProvider>
-  </>,
-  document.getElementById('root')
+	<>
+		<ColorModeScript initialColorMode="light" />
+		<ChakraProvider theme={CHAKRA_CUSTOM_THEME} resetCSS>
+			<AppProviders>
+				<App />
+			</AppProviders>
+		</ChakraProvider>
+	</>,
+	document.getElementById('root')
 );
