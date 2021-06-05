@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { FC, ReactNode } from 'react';
 import Icon from '@chakra-ui/icon';
 import { Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-ui/input';
 import { Text } from '@chakra-ui/layout';
 import { Tooltip } from '@chakra-ui/tooltip';
-import { element, shape, string } from 'prop-types';
 
-const InputText = ({ error, icon, moreInfo, ...props }) => (
+interface IInputText {
+  error?: Nullable<string>;
+  icon?: ReactNode;
+  moreInfo: Nullable<{
+    message: string;
+    icon: ReactNode;
+  }>;
+}
+
+const InputText: FC<IInputText> = ({ error, icon, moreInfo, ...props }) => (
   <>
     <InputGroup maxW="unset">
       {icon && <InputLeftElement h="100%">{icon}</InputLeftElement>}
@@ -21,15 +29,5 @@ const InputText = ({ error, icon, moreInfo, ...props }) => (
     {error && <Text>{error}</Text>}
   </>
 );
-
-InputText.propTypes = {
-  className: string,
-  error: string,
-  icon: element,
-  moreInfo: shape({
-    message: string,
-    icon: element
-  })
-};
 
 export default InputText;
