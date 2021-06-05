@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import React, { FC, lazy } from 'react';
 import { Box, Flex } from '@chakra-ui/layout';
 import { Header } from '@common';
 import { ROUTE } from '@constants/routing';
@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 const Homepage = lazy(() => import('../Homepage/Homepage'));
 const DemoComponents = lazy(() => import('../../demo-components/DemoComponents'));
 
-const AuthenticatedPage = () => (
+const AuthenticatedPage: FC = () => (
   <Router>
     <Flex direction="column" overflow="hidden" h="100vh">
       <Header />

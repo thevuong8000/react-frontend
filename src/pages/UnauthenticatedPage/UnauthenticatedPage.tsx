@@ -1,10 +1,10 @@
-import React, { lazy } from 'react';
+import React, { FC, lazy } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { ROUTE } from '@constants/routing';
 
 const LoginPage = lazy(() => import('../Login/Login'));
 
-const UnauthenticatedPage = () => (
+const UnauthenticatedPage: FC = () => (
   <Router>
     <Switch>
       <Route
