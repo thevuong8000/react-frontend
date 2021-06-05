@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Flex, Spinner } from '@chakra-ui/react';
 
-const LoaderFull = () => (
+const LoaderFull: FC = () => (
   <Flex
     height="100vh"
     width="100vw"
