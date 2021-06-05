@@ -1,12 +1,12 @@
 import { useBoolean } from '@chakra-ui/hooks';
 import LoaderFull from '@common/LoaderFull/LoaderFull';
-import React, { lazy, useEffect } from 'react';
+import React, { FC, lazy, useEffect } from 'react';
 import { useAuth } from './contexts/auth-provider';
 
 const AuthenticatedPage = lazy(() => import('./pages/AuthenticatedPage/AuthenticatedPage'));
 const UnauthenticatedPage = lazy(() => import('./pages/UnauthenticatedPage/UnauthenticatedPage'));
 
-const App = () => {
+const App: FC = () => {
   const { user, verifyToken } = useAuth();
 
   const [isVerified, setIsVerified] = useBoolean(false);
