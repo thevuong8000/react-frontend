@@ -1,22 +1,37 @@
+const plugins = [
+	'@babel/plugin-syntax-dynamic-import',
+	'react-hot-loader/babel',
+	[
+		'@babel/plugin-transform-runtime',
+		{
+			regenerator: true
+		}
+	]
+];
+
+if (process.env.mode !== 'production') {
+	plugins.push('babel-plugin-typescript-to-proptypes');
+}
+
 module.exports = {
-	babelrcRoots: ["."],
-	presets: [["@babel/preset-env"], "@babel/preset-react"],
-	plugins: [
+	presets: [
+		'@babel/preset-env',
+		'@babel/preset-react',
 		[
-			"@babel/plugin-transform-runtime",
+			'@babel/preset-typescript',
 			{
-				regenerator: true,
-			},
-		],
-		"@babel/plugin-syntax-dynamic-import",
+				allowNamespaces: true
+			}
+		]
 	],
+	plugins,
 	env: {
 		production: {
-			plugins: ["transform-remove-console"],
+			plugins: ['transform-remove-console']
 		},
 		staging: {
-			plugins: ["transform-remove-console"],
-		},
+			plugins: ['transform-remove-console']
+		}
 	},
-	exclude: /node_modules/,
+	exclude: /node_modules/
 };
