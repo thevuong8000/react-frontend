@@ -1,11 +1,36 @@
 import { API_PATH } from '@constants/configs';
 import useApi from '@hooks/useApi';
 import { clearLoginInfo, getLoginInfo, isEmpty, saveLoginInfo } from '@utilities/helper';
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, { Context, createContext, FC, useCallback, useContext, useState } from 'react';
 
-const AuthContext = createContext();
+export interface IUserLogin {
+  username: string;
+  password: string;
+}
 
-const AuthProvider = ({ children }) => {
+export interface IAuthContext {
+  user: object;
+
+  /**
+   * Login with payload
+   * @param payload username and password
+   */
+  logIn(payload: IUserLogin): Promise<void>;
+
+  /**
+   * Log out and clear stored user data
+   */
+  logOut(): void;
+
+  /**
+   * Verify stored access token
+   */
+  verifyToken(): Promise<void>;
+}
+
+const AuthContext: Context<IAuthContext> = createContext(null);
+
+export const AuthProvider: FC = ({ children }) => {
   const [data, setData] = useState(null);
   const { apiPost } = useApi();
 
@@ -50,6 +75,4 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-const useAuth = () => useContext(AuthContext);
-
-export { AuthProvider, useAuth };
+export const useAuth = () => useContext(AuthContext);
