@@ -24,16 +24,7 @@ import { IconType } from 'react-icons/lib';
 import TableHeader from '@common/Table/TableHeader';
 import TableRows from '@common/Table/TableRows';
 
-export const TABLE_CELL_TYPE = {
-  ACTION: 'action' as const,
-  CHECKBOX: 'checkbox' as const,
-  INDEX: 'index' as const,
-  STATUS: 'status' as const,
-  TEXT: 'text' as const
-};
-
-const CELL_VALUES = Object.values(TABLE_CELL_TYPE);
-type Cell = typeof CELL_VALUES[number];
+type Cell = 'action' | 'checkbox' | 'index' | 'status' | 'text';
 
 interface ActionButton<T = {}> {
   text?: string;

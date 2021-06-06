@@ -1,5 +1,5 @@
 import { Link } from '@chakra-ui/layout';
-import Table, { TABLE_CELL_TYPE } from '@common/Table/Table';
+import Table from '@common/Table/Table';
 import { EXTERNAL_LINK } from '@constants/routing';
 import useChecklist from '@hooks/useChecklist';
 import { MdDelete, MdEdit } from 'react-icons/md';
@@ -41,13 +41,13 @@ const TableDemo = () => {
   const colConfigs = [
     {
       headerText: 'No.',
-      headerType: TABLE_CELL_TYPE.CHECKBOX,
+      headerType: 'checkbox',
       headerCheckbox: {
         onClick: () => toggleAll(),
         checked: allChecked
       },
 
-      cellType: TABLE_CELL_TYPE.CHECKBOX,
+      cellType: 'checkbox',
       cellStyle: {
         width: '10%'
       },
@@ -74,14 +74,14 @@ const TableDemo = () => {
 
     {
       headerText: 'Online Frequency',
-      cellType: TABLE_CELL_TYPE.STATUS,
+      cellType: 'status',
       cellProp: 'freq',
       mapValue: (value) => FREQ_CODE[value]
     },
 
     {
       headerText: 'Actions',
-      cellType: TABLE_CELL_TYPE.ACTION,
+      cellType: 'action',
       headerStyle: { textAlign: 'center' },
       buttons: [
         { icon: MdDelete, onClick: () => {}, title: 'delete', colorScheme: 'red' },
