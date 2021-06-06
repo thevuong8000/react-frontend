@@ -14,7 +14,12 @@ declare global {
   }
 
   /**
+   * non-function type
+   */
+  export type NonFunction<T> = T extends Function ? never : T;
+
+  /**
    * Value or function returns Value
    */
-  export type FunctionValue<T, P> = T extends Function ? (props: P) => T : T;
+  export type FunctionValue<T, P> = T extends Function ? never : T | ((props: P) => T);
 }

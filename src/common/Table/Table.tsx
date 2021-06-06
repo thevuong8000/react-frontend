@@ -26,12 +26,16 @@ import TableRows from '@common/Table/TableRows';
 
 type Cell = 'action' | 'checkbox' | 'index' | 'status' | 'text';
 
+interface TableFunctionProps<T> {
+  row?: T;
+  rowIndex?: number;
+}
 interface ActionButton<T = {}> {
   text?: string;
   onClick?: (row: T, rowIndex: number) => void;
   isHidden: boolean;
   title?: string;
-  isDisabled?: FunctionValue<boolean, { row: T; rowIndex: number }>;
+  isDisabled?: FunctionValue<boolean, TableFunctionProps<T>>;
   colorScheme?: ThemeTypings['colorSchemes'];
   variant?: ThemingProps<'Button'>['variant'];
   icon?: IconType;
@@ -55,12 +59,12 @@ export interface ITableCell<T extends {}> {
   onCellClick?: { (row: T, rowIndex: number, e: ChangeEvent): void };
   cellChecked: { (row: T, rowIndex: number): boolean };
   cellProp?: keyof T;
-  cellStyle?: FunctionValue<TableCellProps, { row?: T; rowIndex?: number }>;
-  cellDisabled?: FunctionValue<boolean, { row?: T; rowIndex?: number }>;
+  cellStyle?: FunctionValue<TableCellProps, TableFunctionProps<T>>;
+  cellDisabled?: FunctionValue<boolean, TableFunctionProps<T>>;
 }
 
 export interface ITableColumn<T extends {}> extends ITableHeader, ITableCell<T> {
-  message?: FunctionValue<string, { row?: T; rowIndex?: number }>;
+  message?: FunctionValue<string, TableFunctionProps<T>>;
   mapValue?: { (value: any, row: T, rowIndex: number): any };
 
   buttons?: ActionButton<T>[];

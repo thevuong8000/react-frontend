@@ -127,5 +127,5 @@ export const isEmpty = (input: any): boolean =>
   (typeof input === 'object' && Object.keys(input).length <= 0);
 
 export const evalFV: <T, P>(fn: FunctionValue<T, P>, props: P) => T = (fn, props) => {
-  return typeof fn === 'function' ? fn(props) : fn;
+  return fn instanceof Function ? fn(props) : fn;
 };
