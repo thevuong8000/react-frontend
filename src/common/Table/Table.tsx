@@ -5,12 +5,21 @@ import React, {
   FC,
   memo,
   MouseEventHandler,
+  PropsWithChildren,
   ReactElement
 } from 'react';
-import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/table';
+import {
+  Table as ChakraTable,
+  Thead,
+  Tbody,
+  Tr,
+  Td,
+  TableCellProps,
+  TableColumnHeaderProps
+} from '@chakra-ui/table';
 import { Box, Center } from '@chakra-ui/layout';
 import { Spinner } from '@chakra-ui/spinner';
-import { TableCellProps, TableColumnHeaderProps, ThemingProps } from '@chakra-ui/react';
+import { ThemeTypings, ThemingProps } from '@chakra-ui/system';
 import { IconType } from 'react-icons/lib';
 import TableHeader from '@common/Table/TableHeader';
 import TableRows from '@common/Table/TableRows';
@@ -86,18 +95,24 @@ const Loader: FC<{ colSpan: number }> = ({ colSpan }) => (
   </Tr>
 );
 
-const Table = memo(({ colConfigs = [], rows = [], loading, noResultText = '', error }) => (
+const Table: <T>(props: PropsWithChildren<ITable<T>>) => ReactElement = ({
+  colConfigs = [],
+  rows = [],
+  isLoading,
+  noResultText = '',
+  error
+}) => (
   <Box boxShadow="xs" overflow="auto">
     <ChakraTable size="sm" variant="striped">
-      <Thead>{!loading && <TableHeader configs={colConfigs} />}</Thead>
+      <Thead>{!isLoading && <TableHeader configs={colConfigs} />}</Thead>
       <Tbody>
-        {loading ? (
-          <Loader colConfigs={colConfigs.length} />
+        {isLoading ? (
+          <Loader colSpan={colConfigs.length} />
         ) : (
           <TableRows
             rows={rows}
             colConfigs={colConfigs}
-            isLoading={loading}
+            isLoading={isLoading}
             error={error}
             noResultText={noResultText}
           />
@@ -105,6 +120,6 @@ const Table = memo(({ colConfigs = [], rows = [], loading, noResultText = '', er
       </Tbody>
     </ChakraTable>
   </Box>
-));
+);
 
-export default Table;
+export default memo(Table) as typeof Table;
