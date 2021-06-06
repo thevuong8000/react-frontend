@@ -86,4 +86,4 @@ const RowItem: <T>(props: PropsWithChildren<IRowItem<T>>) => ReactElement = ({
   </Tr>
 );
 
-export default memo(RowItem);
+export default memo(RowItem) as typeof RowItem;

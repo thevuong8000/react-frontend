@@ -78,7 +78,7 @@ export interface ITableColumn<T extends {}> extends ITableHeader, ITableCell<T> 
   startIndex?: number;
 }
 
-interface ITable<T extends {}> {
+export interface ITable<T extends {}> {
   colConfigs: ITableColumn<T>[];
   rows: T[];
   isLoading?: boolean;
@@ -128,7 +128,7 @@ const Table = memo(({ colConfigs = [], rows = [], loading, noResultText = '', er
       <Thead>{!loading && <TableHeader configs={colConfigs} />}</Thead>
       <Tbody>
         {loading ? (
-          <Loader colConfigs={colConfigs} />
+          <Loader colConfigs={colConfigs.length} />
         ) : (
           <Rows
             rows={rows}
