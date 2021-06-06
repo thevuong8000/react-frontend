@@ -1,29 +1,19 @@
 import React, {
   ChangeEvent,
   ChangeEventHandler,
-  Component,
   CSSProperties,
   FC,
   memo,
   MouseEventHandler,
-  NamedExoticComponent,
-  ReactComponentElement,
-  ReactElement,
-  ReactNode
+  ReactElement
 } from 'react';
 import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/table';
-import { Button, ButtonGroup } from '@chakra-ui/button';
-import { Badge, Box, Center, Flex, Text } from '@chakra-ui/layout';
+import { Box, Center } from '@chakra-ui/layout';
 import { Spinner } from '@chakra-ui/spinner';
-import { Checkbox } from '@chakra-ui/checkbox';
-import { Tooltip } from '@chakra-ui/tooltip';
-import { TEXT_COMMON } from '@constants/text';
-import { getStatusColorCode } from './utils/table-helper';
-import { ThemeTypings } from '@chakra-ui/styled-system';
 import { TableCellProps, TableColumnHeaderProps, ThemingProps } from '@chakra-ui/react';
-import { IconBaseProps, IconType } from 'react-icons/lib';
-import RowItem from '@common/Table/RowItem';
+import { IconType } from 'react-icons/lib';
 import TableHeader from '@common/Table/TableHeader';
+import TableRows from '@common/Table/TableRows';
 
 export const TABLE_CELL_TYPE = {
   ACTION: 'action' as const,
@@ -96,32 +86,6 @@ const Loader: FC<{ colSpan: number }> = ({ colSpan }) => (
   </Tr>
 );
 
-const Rows = memo(({ error, configs, rows, noResultText, loading }) => {
-  if (error) {
-    return (
-      <Tr>
-        <Td align="center" colSpan={configs.length}>
-          <Center>{TEXT_COMMON.CANCEL}</Center>
-        </Td>
-      </Tr>
-    );
-  }
-
-  if (!rows || rows.length <= 0) {
-    return (
-      <Tr>
-        <Td align="center" colSpan={configs.length}>
-          <Center>{!loading ? noResultText : ''}</Center>
-        </Td>
-      </Tr>
-    );
-  }
-
-  return rows.map((row, rowIndex) => (
-    <RowItem key={`row-${rowIndex}`} row={row} configs={configs} rowIndex={rowIndex} />
-  ));
-});
-
 const Table = memo(({ colConfigs = [], rows = [], loading, noResultText = '', error }) => (
   <Box boxShadow="xs" overflow="auto">
     <ChakraTable size="sm" variant="striped">
@@ -130,10 +94,10 @@ const Table = memo(({ colConfigs = [], rows = [], loading, noResultText = '', er
         {loading ? (
           <Loader colConfigs={colConfigs.length} />
         ) : (
-          <Rows
+          <TableRows
             rows={rows}
-            configs={colConfigs}
-            loading={loading}
+            colConfigs={colConfigs}
+            isLoading={loading}
             error={error}
             noResultText={noResultText}
           />
