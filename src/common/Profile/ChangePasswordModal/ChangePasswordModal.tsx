@@ -22,7 +22,7 @@ import { Box, Flex, Text } from '@chakra-ui/layout';
 import Form from '@common/Form/Form';
 import { AiOutlineClose, AiOutlineCheck } from 'react-icons/ai';
 import { isEmpty, isValidPassword } from '@utilities/helper';
-import useNotify, { TOAST_STATUS } from '@hooks/useNotify';
+import useNotify from '@hooks/useNotify';
 import { useBoolean } from '@chakra-ui/hooks';
 import useUsers from '@hooks/useUsers';
 import { useAuth } from '@contexts/auth-provider';
@@ -78,13 +78,13 @@ const ChangePasswordModal: FC<ModalBase> = ({ onClose }) => {
         new_password: payload.newPassword
       });
       setNotifier({
-        status: TOAST_STATUS.SUCCESS,
+        status: 'success',
         description: TEXT_PROFILE.CHANGE_PASSWORD_SUCCESS
       });
       onClose();
     } catch (error) {
       setNotifier({
-        status: TOAST_STATUS.ERROR,
+        status: 'error',
         description: error.message ?? TEXT_PROFILE.CHANGE_PASSWORD_FAILURE,
         id: 'invalid-password'
       });
