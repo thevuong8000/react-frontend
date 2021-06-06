@@ -16,14 +16,14 @@ import { APP_CONFIG } from '@constants/configs';
  * Save login data into LocalStorage
  */
 export const saveLoginInfo = (authData) => {
-	localStorage.setItem(APP_CONFIG.AUTH_DATA, JSON.stringify(authData));
+  localStorage.setItem(APP_CONFIG.AUTH_DATA, JSON.stringify(authData));
 };
 
 /**
  * Clear login auth data in Localstorage
  */
 export const clearLoginInfo = () => {
-	localStorage.removeItem(APP_CONFIG.AUTH_DATA);
+  localStorage.removeItem(APP_CONFIG.AUTH_DATA);
 };
 
 /**
@@ -41,10 +41,10 @@ export const getLoginInfo = () => JSON.parse(localStorage.getItem(APP_CONFIG.AUT
  * Result from above inputs is "Hello Katorin!"
  */
 export const insertString = (source, replaceObj) =>
-	Object.entries(replaceObj).reduce((acc, [key, value]) => {
-		const regEx = new RegExp(`\\\${\\s*${key}\\s*}`, 'g');
-		return acc.replace(regEx, value);
-	}, source);
+  Object.entries(replaceObj).reduce((acc, [key, value]) => {
+    const regEx = new RegExp(`\\\${\\s*${key}\\s*}`, 'g');
+    return acc.replace(regEx, value);
+  }, source);
 
 /**
  * Check if str1 includes str2 insensitively
@@ -53,7 +53,7 @@ export const insertString = (source, replaceObj) =>
  * @returns {boolean}
  */
 export const includeStr = (str1 = '', str2 = '') =>
-	`${str1}`.toLowerCase().includes(`${str2}`.toLowerCase());
+  `${str1}`.toLowerCase().includes(`${str2}`.toLowerCase());
 
 /**
  * Join strings by a separator
@@ -70,16 +70,16 @@ export const joinStrings = (arrStrings = [], separator = ', ') => arrStrings.joi
  * @param {object} query Extra config
  */
 export const getRequestConfig = (config = {}) => {
-	const { access_token } = getLoginInfo();
-	const { headers = {} } = config;
+  const { access_token } = getLoginInfo();
+  const { headers = {} } = config;
 
-	return {
-		...config,
-		headers: {
-			...(access_token ? { Authorization: `Bearer ${access_token}` } : {}),
-			...headers
-		}
-	};
+  return {
+    ...config,
+    headers: {
+      ...(access_token ? { Authorization: `Bearer ${access_token}` } : {}),
+      ...headers
+    }
+  };
 };
 
 /* ============================= VERIFICATION ============================= */
@@ -96,7 +96,7 @@ export const getRequestConfig = (config = {}) => {
  * @returns {boolean}
  */
 export const isValidPassword = (password) =>
-	/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,50}$/.test(password);
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,50}$/.test(password);
 
 /* ============================= OTHERS ============================= */
 
@@ -105,14 +105,14 @@ export const isValidPassword = (password) =>
  * @param {string} href
  */
 export const downloadFile = (href, fileName) => {
-	const aTag = document.createElement('a');
-	aTag.href = href;
-	aTag.target = '_blank';
-	aTag.download = fileName || 'download';
+  const aTag = document.createElement('a');
+  aTag.href = href;
+  aTag.target = '_blank';
+  aTag.download = fileName || 'download';
 
-	document.body.appendChild(aTag);
-	aTag.click();
-	document.body.removeChild(aTag);
+  document.body.appendChild(aTag);
+  aTag.click();
+  document.body.removeChild(aTag);
 };
 
 /**
@@ -120,27 +120,12 @@ export const downloadFile = (href, fileName) => {
  * @param {*} input
  * @returns {boolean}
  */
-export const isEmpty = (input) =>
-	input === '' ||
-	input === null ||
-	input === undefined ||
-	(typeof input === 'object' && Object.keys(input).length <= 0);
+export const isEmpty = (input: any): boolean =>
+  input === '' ||
+  input === null ||
+  input === undefined ||
+  (typeof input === 'object' && Object.keys(input).length <= 0);
 
-/**
- * Map for object
- * For example:
- * obj = { a: {name: 'abc'}, b: 'def' }
- * func = (str) => 'x' + str
- * => return { a: {name: 'xabc'}, b: 'xdef' }
- * @param {object} obj
- * @param {function} func
- * @returns {object}
- */
-export const objMap = (obj, func) =>
-	Object.fromEntries(
-		Object.entries(obj).map(([key, value]) =>
-			typeof value === 'object'
-				? [key, objMap(value, func)]
-				: [key, typeof value === 'function' ? (...params) => func(value(...params)) : func(value)]
-		)
-	);
+export const evalFV: <T, P>(fn: FunctionValue<T, P>, props: P) => T = (fn, props) => {
+  return typeof fn === 'function' ? fn(props) : fn;
+};

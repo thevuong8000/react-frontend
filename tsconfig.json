@@ -5,6 +5,8 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true,
+
+    "strict": true,
     "isolatedModules": true,
     "noImplicitAny": true,
 
