@@ -102,7 +102,7 @@ const useApi = () => {
   const apiGet = useCallback(
     <T>(
       url: string,
-      query: any,
+      query?: any,
       { getFullResponse = false, useTimeStamp = false, ...config }: ApiRequestOptions = {}
     ): Promise<T | AxiosResponse<T>> =>
       apiCall('get', url, null, { query, config, getFullResponse, useTimeStamp }),
@@ -111,8 +111,8 @@ const useApi = () => {
   const apiPost = useCallback(
     <T>(
       url: string,
-      body: any,
-      query: any,
+      body?: any,
+      query?: any,
       { getFullResponse = false, useTimeStamp = false, ...config }: ApiRequestOptions = {}
     ): Promise<T | AxiosResponse<T>> =>
       apiCall('post', url, body, { query, config, getFullResponse, useTimeStamp }),
@@ -122,8 +122,8 @@ const useApi = () => {
   const apiPut = useCallback(
     <T>(
       url: string,
-      body: any,
-      query: any,
+      body?: any,
+      query?: any,
       { getFullResponse = false, useTimeStamp = false, ...config }: ApiRequestOptions = {}
     ): Promise<T | AxiosResponse<T>> =>
       apiCall('put', url, body, { query, config, getFullResponse, useTimeStamp }),
@@ -133,8 +133,8 @@ const useApi = () => {
   const apiPatch = useCallback(
     <T>(
       url: string,
-      body: any,
-      query: any,
+      body?: any,
+      query?: any,
       { getFullResponse = false, useTimeStamp = false, ...config }: ApiRequestOptions = {}
     ): Promise<T | AxiosResponse<T>> =>
       apiCall('patch', url, body, { query, config, getFullResponse, useTimeStamp }),
@@ -144,7 +144,7 @@ const useApi = () => {
   const apiDelete = useCallback(
     <T>(
       url: string,
-      query: any,
+      query?: any,
       { getFullResponse = false, useTimeStamp = false, ...config }: ApiRequestOptions = {}
     ): Promise<T | AxiosResponse<T>> =>
       apiCall('delete', url, { query, config, getFullResponse, useTimeStamp }),
