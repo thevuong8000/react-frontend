@@ -23,6 +23,7 @@ import { ThemeTypings } from '@chakra-ui/styled-system';
 import { TableCellProps, TableColumnHeaderProps, ThemingProps } from '@chakra-ui/react';
 import { IconBaseProps, IconType } from 'react-icons/lib';
 import RowItem from '@common/Table/RowItem';
+import TableHeader from '@common/Table/TableHeader';
 
 export const TABLE_CELL_TYPE = {
   ACTION: 'action' as const,
@@ -77,12 +78,6 @@ export interface ITableColumn<T extends {}> extends ITableHeader, ITableCell<T> 
   startIndex?: number;
 }
 
-interface ITableRow<T> {
-  row: T;
-  rowIndex?: number;
-  configs?: ITableColumn<T>[];
-}
-
 interface ITable<T extends {}> {
   colConfigs: ITableColumn<T>[];
   rows: T[];
@@ -100,49 +95,6 @@ const Loader: FC<{ colSpan: number }> = ({ colSpan }) => (
     </Td>
   </Tr>
 );
-
-const Headers: FC<{ configs: ITableHeader[] }> = memo(({ configs }) => (
-  <Tr>
-    {configs.map((item, index) => {
-      let content;
-
-      if (item.headerType === 'checkbox' && item.headerCheckbox) {
-        content = (
-          <Checkbox
-            onChange={item.headerCheckbox.onClick}
-            spacing={5}
-            isChecked={item.headerCheckbox.checked}
-          >
-            <Text fontSize="sm">{item.headerText}</Text>
-          </Checkbox>
-        );
-      } else {
-        content = item.headerText;
-      }
-
-      return (
-        <Th
-          key={`header-col-${index}`}
-          onClick={item.headerType !== 'checkbox' ? item.onHeaderClick : null}
-          cursor={item.onHeaderClick ? 'pointer' : 'initial'}
-          p={0}
-          style={item.headerStyle}
-          {...item.headerProps}
-        >
-          <Button
-            size="sm"
-            fontSize="sm"
-            variant="ghost"
-            leftIcon={item.headerIcon}
-            _focus={{ outline: 'none' }}
-          >
-            {content}
-          </Button>
-        </Th>
-      );
-    })}
-  </Tr>
-));
 
 const Rows = memo(({ error, configs, rows, noResultText, loading }) => {
   if (error) {
@@ -173,7 +125,7 @@ const Rows = memo(({ error, configs, rows, noResultText, loading }) => {
 const Table = memo(({ colConfigs = [], rows = [], loading, noResultText = '', error }) => (
   <Box boxShadow="xs" overflow="auto">
     <ChakraTable size="sm" variant="striped">
-      <Thead>{!loading && <Headers configs={colConfigs} />}</Thead>
+      <Thead>{!loading && <TableHeader configs={colConfigs} />}</Thead>
       <Tbody>
         {loading ? (
           <Loader colConfigs={colConfigs} />
