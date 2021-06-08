@@ -1,7 +1,8 @@
 import { API_PATH } from '@constants/configs';
 import useApi from '@hooks/useApi';
-import { clearLoginInfo, getLoginInfo, isEmpty, saveLoginInfo } from '@utilities/helper';
+import { isEmpty } from '@utilities/helper';
 import React, { Context, createContext, FC, useCallback, useContext, useState } from 'react';
+import { clearLoginInfo, getLoginInfo, saveLoginInfo } from '../utilities/auth';
 
 export interface IUserLogin {
   username: string;

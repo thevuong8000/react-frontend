@@ -1,9 +1,9 @@
 import { useAuth } from '@contexts/auth-provider';
 import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useCallback } from 'react';
-import { getLoginInfo, getRequestConfig, saveLoginInfo } from '@utilities/helper';
 import { API_PATH } from '@constants/configs';
 import { HTTP_CODE } from '@constants/global';
+import { getLoginInfo, getRequestConfig, saveLoginInfo } from '../utilities/auth';
 
 export type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
 

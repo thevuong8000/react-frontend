@@ -1,4 +1,5 @@
 import { APP_CONFIG } from '@constants/configs';
+import { getLoginInfo } from '@utilities/auth';
 
 /** --> TABLE OF CONTENTS <--
  * 	1) USER AUTHENTICATION INFOMATION
@@ -8,29 +9,6 @@ import { APP_CONFIG } from '@constants/configs';
  * 	5) OTHERS
  *
  */
-
-/* ============================= USER AUTHENTICATION INFOMATION ============================= */
-/* USER AUTHENTICATION INFOMATION */
-
-/**
- * Save login data into LocalStorage
- */
-export const saveLoginInfo = (authData) => {
-  localStorage.setItem(APP_CONFIG.AUTH_DATA, JSON.stringify(authData));
-};
-
-/**
- * Clear login auth data in Localstorage
- */
-export const clearLoginInfo = () => {
-  localStorage.removeItem(APP_CONFIG.AUTH_DATA);
-};
-
-/**
- * Get login data from Localstorage
- * @returns {object}
- */
-export const getLoginInfo = () => JSON.parse(localStorage.getItem(APP_CONFIG.AUTH_DATA)) ?? {};
 
 /* ============================= STRING PROCESSING ============================= */
 
@@ -64,23 +42,6 @@ export const includeStr = (str1 = '', str2 = '') =>
 export const joinStrings = (arrStrings = [], separator = ', ') => arrStrings.join(separator);
 
 /* ============================= API CONFIG ============================= */
-
-/**
- * Setup api config
- * @param {object} query Extra config
- */
-export const getRequestConfig = (config = {}) => {
-  const { access_token } = getLoginInfo();
-  const { headers = {} } = config;
-
-  return {
-    ...config,
-    headers: {
-      ...(access_token ? { Authorization: `Bearer ${access_token}` } : {}),
-      ...headers
-    }
-  };
-};
 
 /* ============================= VERIFICATION ============================= */
 
