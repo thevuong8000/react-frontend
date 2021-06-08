@@ -20,7 +20,7 @@ import { IDropdownOption } from '../Helper-Component/DropdownTable/DropdownTable
 
 interface ISelector {
   name?: string;
-  selected: string;
+  selected: string | string[];
   options: IDropdownOption[];
   onChange: MouseEventHandler;
   isMultiple?: boolean;
