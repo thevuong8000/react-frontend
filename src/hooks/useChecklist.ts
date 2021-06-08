@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-interface IInitItem {
+export interface ICheckableItem {
   isDefaultChecked?: boolean;
 }
 
@@ -13,7 +13,7 @@ type IKeyId = string | number;
 
 type IChecklistDict<T> = Record<string | number, { value: T; checked: boolean }>;
 
-const useChecklist = <T extends IInitItem>({ initList = [], idKey }: IChecklist<T>) => {
+const useChecklist = <T extends ICheckableItem>({ initList = [], idKey }: IChecklist<T>) => {
   const [dict, setDict] = useState<IChecklistDict<T>>({});
 
   const [checkedItems, setCheckedItems] = useState<T[]>([]);
