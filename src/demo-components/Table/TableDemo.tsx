@@ -1,11 +1,19 @@
 import { Link } from '@chakra-ui/layout';
-import Table from '@common/Table/Table';
+import Table, { ITableColumn } from '@common/Table/Table';
 import { EXTERNAL_LINK } from '@constants/routing';
 import useChecklist from '@hooks/useChecklist';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import React from 'react';
+import { ICheckableItem } from '@hooks/useChecklist';
 
-const rows = [
+interface IRow extends ICheckableItem {
+  link: string;
+  type: string;
+  id: string;
+  freq: number;
+}
+
+const rows: IRow[] = [
   {
     link: EXTERNAL_LINK.FACEBOOK,
     type: 'Facebook',
@@ -26,19 +34,15 @@ const rows = [
   }
 ];
 
-const FREQ_CODE = {
-  5: 'hardly',
-  3: 'always',
-  4: 'sometimes'
-};
+const FREQ_CODE = ['', '', '', 'always', 'sometimes', 'hardly'];
 
 const TableDemo = () => {
-  const { checkedItems, allChecked, toggleCheck, toggleAll, isChecked } = useChecklist({
+  const { checkedItems, allChecked, toggleCheck, toggleAll, isChecked } = useChecklist<IRow>({
     initList: rows,
     idKey: 'id'
   });
 
-  const colConfigs = [
+  const colConfigs: ITableColumn<IRow>[] = [
     {
       headerText: 'No.',
       headerType: 'checkbox',
@@ -51,13 +55,13 @@ const TableDemo = () => {
       cellStyle: {
         width: '10%'
       },
-      onCellClick: (row) => toggleCheck(row.id),
-      cellChecked: (row) => isChecked(row.id)
+      onCellClick: (row: IRow) => toggleCheck(row.id),
+      cellChecked: (row: IRow) => isChecked(row.id)
     },
 
     {
       headerText: 'Social media',
-      component: (row) => (
+      mapValue: (_: any, row: IRow) => (
         <Link href={row.link} color="blue.400" isExternal>
           {row.link}
         </Link>
@@ -76,7 +80,7 @@ const TableDemo = () => {
       headerText: 'Online Frequency',
       cellType: 'status',
       cellProp: 'freq',
-      mapValue: (value) => FREQ_CODE[value]
+      mapValue: (value: number) => FREQ_CODE[value]
     },
 
     {
@@ -89,7 +93,7 @@ const TableDemo = () => {
       ]
     }
   ];
-  return <Table colConfigs={colConfigs} rows={rows} />;
+  return <Table<IRow> colConfigs={colConfigs} rows={rows} />;
 };
 
 export default TableDemo;

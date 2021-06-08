@@ -33,7 +33,7 @@ interface TableFunctionProps<T> {
 interface ActionButton<T = {}> {
   text?: string;
   onClick?: (row: T, rowIndex: number) => void;
-  isHidden: boolean;
+  isHidden?: boolean;
   title?: string;
   isDisabled?: FunctionValue<boolean, TableFunctionProps<T>>;
   colorScheme?: ThemeTypings['colorSchemes'];
@@ -57,7 +57,7 @@ export interface ITableHeader {
 export interface ITableCell<T extends {}> {
   cellType?: Cell;
   onCellClick?: { (row: T, rowIndex: number, e: ChangeEvent): void };
-  cellChecked: { (row: T, rowIndex: number): boolean };
+  cellChecked?: { (row: T, rowIndex: number): boolean };
   cellProp?: keyof T;
   cellStyle?: FunctionValue<TableCellProps, TableFunctionProps<T>>;
   cellDisabled?: FunctionValue<boolean, TableFunctionProps<T>>;
