@@ -106,7 +106,6 @@ const Selector: FC<ISelector> = ({
         ref={dropdownRef}
         name={name}
         options={filterOptions}
-        isMultiple={isMultiple}
         isOpen={showOptions}
         selectedOptions={selectedOptions}
         onSelect={_onSelect}
