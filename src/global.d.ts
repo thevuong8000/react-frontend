@@ -5,10 +5,6 @@ declare global {
 
   export type Nullable<T> = T | null | undefined;
 
-  export interface ModalBase {
-    onClose(): void;
-  }
-
   /**
    * non-function type
    */

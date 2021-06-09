@@ -16,6 +16,7 @@ import { AiOutlineClose, AiFillSave } from 'react-icons/ai';
 import useNotify from '@hooks/useNotify';
 import useUsers from '@hooks/useUsers';
 import { useAuth } from '@contexts/auth-provider';
+import { ModalBase } from 'modal';
 
 interface IZone {
   title: string;

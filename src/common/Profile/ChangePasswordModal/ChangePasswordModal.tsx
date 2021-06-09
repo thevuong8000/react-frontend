@@ -26,6 +26,7 @@ import { useBoolean } from '@chakra-ui/hooks';
 import useUsers from '@hooks/useUsers';
 import { useAuth } from '@contexts/auth-provider';
 import { IInputField } from 'common/Form/Form';
+import { ModalBase } from 'modal';
 
 interface IInputPassword {
   title: string;
