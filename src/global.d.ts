@@ -9,10 +9,6 @@ declare global {
     onClose(): void;
   }
 
-  export interface EventTargetBase<T = string> {
-    value: T;
-  }
-
   /**
    * non-function type
    */
