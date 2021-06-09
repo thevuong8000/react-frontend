@@ -8,10 +8,10 @@ interface IRadioOption {
 }
 
 interface IInputRadio {
-  name?: string;
+  name: string;
   value: string;
   options: IRadioOption[];
-  onChange: ChangeEventHandler;
+  onChange: ChangeEventHandler<HTMLInputElement>;
   isColumn?: boolean;
   gap: '1' | '2' | '4' | '5' | '6' | '7' | '8';
 }

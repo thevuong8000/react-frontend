@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEventHandler, useState } from 'react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { Flex, Text } from '@chakra-ui/layout';
 import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/slider';
@@ -6,17 +6,18 @@ import { InputRadio } from '@common';
 import { SIZE } from '@constants/demo';
 import { Checkbox } from '@chakra-ui/checkbox';
 import { STYLE } from '../demo-helper/constants';
+import { ThemeTypings } from '@chakra-ui/system';
 
 const InputRadioDemo = () => {
   const [size, setSize] = useState(1);
-  const [colorScheme, setColorScheme] = useState('green');
+  const [colorScheme, setColorScheme] = useState<ThemeTypings['colorSchemes']>('green');
   const [isColumn, setIsColumn] = useBoolean(false);
 
   const options = ['Naruto', 'Sakura', 'Sasuke'].map((item) => ({ text: item, value: item }));
   const [value, setValue] = useState(options[0].value);
 
-  const _onChange = (e) => {
-    setValue(e.target.value);
+  const _onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setValue(e.currentTarget.value);
   };
 
   return (
@@ -47,7 +48,7 @@ const InputRadioDemo = () => {
         {/* Column option */}
         <Flex>
           <Text mr="4">Column</Text>
-          <Checkbox value={isColumn} onChange={setIsColumn.toggle} />
+          <Checkbox isChecked={isColumn} onChange={setIsColumn.toggle} />
         </Flex>
       </Flex>
 
