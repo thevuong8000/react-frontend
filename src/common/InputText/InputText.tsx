@@ -3,14 +3,15 @@ import Icon from '@chakra-ui/icon';
 import { Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-ui/input';
 import { Text } from '@chakra-ui/layout';
 import { Tooltip } from '@chakra-ui/tooltip';
+import { InputProps } from '@chakra-ui/input';
 
-interface IInputText {
+interface IInputText extends InputProps {
   error?: Nullable<string>;
   icon?: ReactNode;
-  moreInfo: Nullable<{
+  moreInfo?: {
     message: string;
     icon: ReactNode;
-  }>;
+  };
 }
 
 const InputText: FC<IInputText> = ({ error, icon, moreInfo, ...props }) => (
