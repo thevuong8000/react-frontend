@@ -1,7 +1,7 @@
 import { Flex, Text } from '@chakra-ui/layout';
 import { API_PATH } from '@constants/configs';
 import useApi from '@hooks/useApi';
-import { PageBase } from '@pages';
+import { PageBase } from 'paging';
 import React, { FC, useEffect, useState } from 'react';
 
 const Homepage: FC<PageBase> = ({ documentTitle }) => {

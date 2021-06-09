@@ -11,7 +11,7 @@ import { HiOutlineLogin } from 'react-icons/hi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { LightMode } from '@chakra-ui/color-mode';
 import { TEXT_COMMON, TEXT_LOG_IN } from '@constants/text';
-import { PageBase } from '@pages';
+import { PageBase } from 'paging';
 import { IInputField } from 'common/Form/Form';
 
 const LOGIN_INPUT_STYLE = {

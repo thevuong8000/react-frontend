@@ -1,4 +1,4 @@
-declare module '@pages' {
+declare module 'paging' {
   export interface PageBase {
     documentTitle: string;
   }

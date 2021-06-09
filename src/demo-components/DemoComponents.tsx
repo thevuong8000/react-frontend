@@ -3,7 +3,7 @@ import React, { FC, ReactNode, useEffect } from 'react';
 import TableDemo from './Table/TableDemo';
 import InputRadioDemo from './InputRadio/InputRadioDemo';
 import SelectorDemo from './Selector/SelectorDemo';
-import { PageBase } from '@pages';
+import { PageBase } from 'paging';
 
 interface IDemo {
   title: string;
