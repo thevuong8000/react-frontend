@@ -21,8 +21,8 @@ import { Box, Center } from '@chakra-ui/layout';
 import { Spinner } from '@chakra-ui/spinner';
 import { ThemeTypings, ThemingProps } from '@chakra-ui/system';
 import { IconType } from 'react-icons/lib';
-import TableHeader from '@common/Table/TableHeader';
-import TableRows from '@common/Table/TableRows';
+import TableHeader from '../Table/TableHeader';
+import TableRows from '../Table/TableRows';
 
 type Cell = 'action' | 'checkbox' | 'index' | 'status' | 'text';
 

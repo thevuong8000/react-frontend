@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/button';
 import { useBoolean } from '@chakra-ui/hooks';
 import { Box, Flex, Heading } from '@chakra-ui/layout';
-import { InputText } from '@common/';
+import { InputText, ErrorMessage } from '@common';
 import { useAuth } from '@contexts/auth-provider';
 import useUsers from '@hooks/useUsers';
 import { isEmpty } from '@utilities/helper';
@@ -11,7 +11,6 @@ import { HiOutlineLogin } from 'react-icons/hi';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { LightMode } from '@chakra-ui/color-mode';
 import { TEXT_COMMON, TEXT_LOG_IN } from '@constants/text';
-import ErrorMessage from '@common/ErrorMessage/ErrorMessage';
 import { PageBase } from '@pages';
 import { IInputField } from 'common/Form/Form';
 

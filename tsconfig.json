@@ -23,7 +23,7 @@
     "baseUrl": "./src",
     "paths": {
       "@common/*": ["./common/*"],
-      "common": ["./common"],
+      "@common": ["./common"],
       "@constants/*": ["./constants/*"],
       "@constants": ["./constants"],
       "@contexts/*": ["./contexts/*"],

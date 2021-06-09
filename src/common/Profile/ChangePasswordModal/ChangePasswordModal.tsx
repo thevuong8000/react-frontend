@@ -16,10 +16,9 @@ import {
   ModalCloseButton
 } from '@chakra-ui/modal';
 import { Button } from '@chakra-ui/button';
-import InputText from '@common/InputText/InputText';
+import { InputText, Form } from '@common';
 import { TEXT_COMMON, TEXT_HEADER, TEXT_PROFILE } from '@constants/text';
 import { Box, Flex, Text } from '@chakra-ui/layout';
-import Form from '@common/Form/Form';
 import { AiOutlineClose, AiOutlineCheck } from 'react-icons/ai';
 import { isEmpty, isValidPassword } from '@utilities/helper';
 import useNotify from '@hooks/useNotify';

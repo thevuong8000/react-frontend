@@ -11,7 +11,7 @@ import {
 import { Button } from '@chakra-ui/button';
 import { TEXT_COMMON, TEXT_HEADER } from '@constants/text';
 import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/layout';
-import Form from '@common/Form/Form';
+import { Form } from '@common';
 import { AiOutlineClose, AiFillSave } from 'react-icons/ai';
 import useNotify from '@hooks/useNotify';
 import useUsers from '@hooks/useUsers';

@@ -3,7 +3,7 @@ import { Tr, Td } from '@chakra-ui/table';
 import { Center } from '@chakra-ui/layout';
 import { TEXT_COMMON } from '@constants/text';
 import { ITable } from './Table';
-import RowItem from '@common/Table/RowItem';
+import RowItem from '../Table/RowItem';
 
 const TableRows: <T>(props: PropsWithChildren<ITable<T>>) => ReactElement = ({
   error,

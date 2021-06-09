@@ -1,4 +1,4 @@
-export { default as Chevron } from './AnimatedIcons/Chevron';
+export { default as AnimatedChevron } from './AnimatedIcons/Chevron';
 export { default as ErrorMessage } from './ErrorMessage/ErrorMessage';
 export { default as Footer } from './Footer/Footer';
 export { default as Form } from './Form/Form';

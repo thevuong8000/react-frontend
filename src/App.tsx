@@ -1,5 +1,5 @@
 import { useBoolean } from '@chakra-ui/hooks';
-import LoaderFull from '@common/LoaderFull/LoaderFull';
+import { LoaderFull } from '@common';
 import React, { FC, lazy, useEffect } from 'react';
 import { useAuth } from './contexts/auth-provider';
 

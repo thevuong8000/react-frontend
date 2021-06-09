@@ -10,7 +10,7 @@ import React, {
 import { useBoolean } from '@chakra-ui/hooks';
 import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
 import { Flex } from '@chakra-ui/layout';
-import AnimatedChevron from '@common/AnimatedIcons/Chevron';
+import { AnimatedChevron } from '@common';
 import DropdownTable from '@common/Helper-Component/DropdownTable/DropdownTable';
 import { includeStr } from '@utilities/helper';
 import { IDropdownOption } from '../Helper-Component/DropdownTable/DropdownTable';
