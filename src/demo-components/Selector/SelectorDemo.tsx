@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/slider';
@@ -17,22 +17,28 @@ const options = [
   { text: 'aaab' }
 ];
 
+/**
+ * In practice, this should be
+ * @type string
+ * @type string[]
+ */
+type ISelectedOptions = any;
+
 const SelectorDemo = () => {
   const [size, setSize] = useState(1);
   const [isMultiple, setIsMultiple] = useBoolean(false);
 
-  const [selectedOptions, setSelectedOptions] = useState<string | string[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<ISelectedOptions>([]);
 
   useEffect(() => {
     setSelectedOptions([]);
   }, [isMultiple]);
 
-  const _onSelectSingle = (e: ChangeEvent<EventTargetBase>) => {
-    setSelectedOptions(e.target.value);
+  const _onSelectSingle = (value: string) => {
+    setSelectedOptions(value);
   };
 
-  const _onSelectMultiple = (e: ChangeEvent<EventTargetBase>) => {
-    const { value } = e.target;
+  const _onSelectMultiple = (value: string) => {
     setSelectedOptions((prevOpts: string[]) =>
       prevOpts.includes(value) ? prevOpts.filter((opt) => opt !== value) : [...prevOpts, value]
     );
@@ -68,7 +74,7 @@ const SelectorDemo = () => {
             options={options}
             selected={selectedOptions || []}
             isMultiple={isMultiple}
-            onChange={isMultiple ? _onSelectMultiple : _onSelectSingle}
+            onSelect={isMultiple ? _onSelectMultiple : _onSelectSingle}
             placeholder="Select option(s)"
             size={SIZE.DEFAULT[size]}
           />

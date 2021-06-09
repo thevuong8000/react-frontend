@@ -19,10 +19,10 @@ import { includeStr } from '@utilities/helper';
 import { IDropdownOption } from '../Helper-Component/DropdownTable/DropdownTable';
 
 interface ISelector {
-  name?: string;
+  name: string;
   selected: string | string[];
   options: IDropdownOption[];
-  onChange: ChangeEventHandler<EventTargetBase>;
+  onSelect: (option: string) => void;
   isMultiple?: boolean;
 }
 
@@ -30,7 +30,7 @@ const Selector: FC<ISelector> = ({
   name,
   selected, // selected option(s)
   options = [],
-  onChange,
+  onSelect,
   isMultiple = false, // multiple selection
   ...props
 }) => {
@@ -69,8 +69,8 @@ const Selector: FC<ISelector> = ({
     _closeOptions();
   };
 
-  const _onSelect: MouseEventHandler<EventTargetBase> = (e: MouseEvent<EventTargetBase>) => {
-    onChange(e);
+  const _onSelect: MouseEventHandler<HTMLButtonElement> = (e: MouseEvent<HTMLButtonElement>) => {
+    onSelect(e.currentTarget.value);
     if (!isMultiple) _closeOptions();
   };
 

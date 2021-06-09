@@ -10,7 +10,7 @@ import { Tooltip } from '@chakra-ui/tooltip';
 export interface IDropdownOption {
   text: string;
   isDisabled?: boolean;
-  Icon?: ReactElement;
+  Icon: Nullable<ReactElement>;
 }
 
 interface IDropdown {
@@ -31,7 +31,7 @@ const DropdownTable = forwardRef<HTMLDivElement, IDropdown>((props, ref) => {
     falseValue: 'hidden'
   });
 
-  const DropdownItems: FC<IDropdownOption> = ({ text, isDisabled, Icon }) => {
+  const DropdownItems: FC<IDropdownOption> = ({ text, isDisabled = false, Icon }) => {
     const isChecked = selectedOptions.includes(text);
     const checkedVisibility = useToggle<VisibilityState>(isChecked, {
       trueValue: 'visible',
@@ -50,7 +50,7 @@ const DropdownTable = forwardRef<HTMLDivElement, IDropdown>((props, ref) => {
           pb="2"
           justifyContent="space-between"
           isDisabled={isDisabled}
-          leftIcon={Icon}
+          {...(Icon ? { leftIcon: Icon } : {})}
         >
           <Text maxW="85%" textOverflow="ellipsis" overflow="hidden" pointerEvents="none">
             {text}
@@ -83,7 +83,7 @@ const DropdownTable = forwardRef<HTMLDivElement, IDropdown>((props, ref) => {
           <DropdownItems
             key={`${name}-option-${index}`}
             text={option.text}
-            isDisabled={option.isDisabled}
+            isDisabled={option.isDisabled ?? false}
             Icon={option.Icon}
           />
         ))}
