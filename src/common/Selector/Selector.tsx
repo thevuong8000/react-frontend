@@ -22,7 +22,7 @@ interface ISelector {
   name?: string;
   selected: string | string[];
   options: IDropdownOption[];
-  onChange: MouseEventHandler;
+  onChange: ChangeEventHandler<EventTargetBase>;
   isMultiple?: boolean;
 }
 
@@ -70,7 +70,7 @@ const Selector: FC<ISelector> = ({
   };
 
   const _onSelect: MouseEventHandler = (e: MouseEvent) => {
-    onChange(e);
+    onChange(e as unknown as ChangeEvent<EventTargetBase>);
     if (!isMultiple) _closeOptions();
   };
 

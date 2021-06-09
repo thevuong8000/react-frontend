@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/slider';
@@ -21,19 +21,19 @@ const SelectorDemo = () => {
   const [size, setSize] = useState(1);
   const [isMultiple, setIsMultiple] = useBoolean(false);
 
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState<string | string[]>([]);
 
   useEffect(() => {
     setSelectedOptions([]);
   }, [isMultiple]);
 
-  const _onSelectSingle = (e) => {
+  const _onSelectSingle = (e: ChangeEvent<EventTargetBase>) => {
     setSelectedOptions(e.target.value);
   };
 
-  const _onSelectMultiple = (e) => {
+  const _onSelectMultiple = (e: ChangeEvent<EventTargetBase>) => {
     const { value } = e.target;
-    setSelectedOptions((prevOpts) =>
+    setSelectedOptions((prevOpts: string[]) =>
       prevOpts.includes(value) ? prevOpts.filter((opt) => opt !== value) : [...prevOpts, value]
     );
   };
@@ -56,7 +56,7 @@ const SelectorDemo = () => {
         {/* Multiple option */}
         <Flex>
           <Text mr="4">Multiple</Text>
-          <Checkbox value={isMultiple} onChange={setIsMultiple.toggle} />
+          <Checkbox isChecked={isMultiple} onChange={setIsMultiple.toggle} />
         </Flex>
       </Flex>
 
