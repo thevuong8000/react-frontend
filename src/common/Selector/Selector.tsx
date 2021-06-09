@@ -69,8 +69,8 @@ const Selector: FC<ISelector> = ({
     _closeOptions();
   };
 
-  const _onSelect: MouseEventHandler = (e: MouseEvent) => {
-    onChange(e as unknown as ChangeEvent<EventTargetBase>);
+  const _onSelect: MouseEventHandler<EventTargetBase> = (e: MouseEvent<EventTargetBase>) => {
+    onChange(e);
     if (!isMultiple) _closeOptions();
   };
 

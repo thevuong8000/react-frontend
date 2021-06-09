@@ -1,4 +1,4 @@
-import React, { FC, forwardRef, MouseEventHandler, ReactElement } from 'react';
+import React, { CSSProperties, FC, forwardRef, MouseEventHandler, ReactElement } from 'react';
 import { Button } from '@chakra-ui/button';
 import { Box, Text, VStack } from '@chakra-ui/layout';
 import { useColorModeValue, useTheme } from '@chakra-ui/system';
@@ -18,7 +18,7 @@ interface IDropdown {
   selectedOptions: string[];
   options: IDropdownOption[];
   isOpen: boolean;
-  onSelect: MouseEventHandler;
+  onSelect: MouseEventHandler<EventTargetBase>;
 }
 
 const DropdownTable = forwardRef<HTMLDivElement, IDropdown>((props, ref) => {
@@ -26,11 +26,17 @@ const DropdownTable = forwardRef<HTMLDivElement, IDropdown>((props, ref) => {
 
   const { zIndices } = useTheme();
   const opacity = useToggle(isOpen, { trueValue: '1', falseValue: '0' });
-  const visibility = useToggle(isOpen, { trueValue: 'visible', falseValue: 'hidden' });
+  const visibility = useToggle<VisibilityState>(isOpen, {
+    trueValue: 'visible',
+    falseValue: 'hidden'
+  });
 
   const DropdownItems: FC<IDropdownOption> = ({ text, isDisabled, Icon }) => {
     const isChecked = selectedOptions.includes(text);
-    const checkedVisibility = useToggle(isChecked, { trueValue: 'visible', falseValue: 'hidden' });
+    const checkedVisibility = useToggle<VisibilityState>(isChecked, {
+      trueValue: 'visible',
+      falseValue: 'hidden'
+    });
     return (
       <Tooltip label={text} hasArrow placement="auto">
         <Button
