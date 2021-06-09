@@ -14,7 +14,7 @@ export interface IDropdownOption {
 }
 
 interface IDropdown {
-  name: string;
+  name?: string;
   selectedOptions: string[];
   options: IDropdownOption[];
   isOpen: boolean;

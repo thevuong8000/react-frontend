@@ -41,7 +41,7 @@ const Selector: FC<ISelector> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const selectedOptions = Array.isArray(selected) ? selected : [selected];
-  const inputValue = joinStrings(selectedOptions);
+  const inputValue = selectedOptions.join(', ');
 
   useEffect(() => {
     setFilterOptions(options.filter((opt) => includeStr(opt.text, searchQuery)));
@@ -61,7 +61,7 @@ const Selector: FC<ISelector> = ({
 
   const _onInputBlur: FocusEventHandler<HTMLInputElement> = (e: FocusEvent<HTMLInputElement>) => {
     // Do not hide dropdown if click into dropdown or input-field
-    if (dropdownRef.current.contains(e.relatedTarget as Node)) {
+    if (dropdownRef.current?.contains(e.relatedTarget as Node)) {
       if (isMultiple) e.target.focus();
       return;
     }

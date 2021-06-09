@@ -10,7 +10,7 @@ declare global {
   }
 
   export interface EventTargetBase<T = string> {
-    value?: T;
+    value: T;
   }
 
   /**
