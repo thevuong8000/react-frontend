@@ -1,4 +1,5 @@
-import { IRoute } from './constants';
+import { IRoute } from 'routings';
+
 export const EXTERNAL_LINK = {
   FACEBOOK: 'https://www.facebook.com/manh.beomap/',
   GITHUB: 'https://github.com/thevuong8000',

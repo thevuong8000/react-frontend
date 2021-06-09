@@ -8,6 +8,8 @@
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true,
 
+    "typeRoots": ["src/typings", "node_modules/@types"],
+
     "allowJs": true,
     "checkJs": true,
 
