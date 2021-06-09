@@ -4,7 +4,7 @@ import { Radio, RadioGroup } from '@chakra-ui/radio';
 interface IRadioOption {
   text: string;
   value: string;
-  isDisabled: boolean;
+  isDisabled?: boolean;
 }
 
 interface IInputRadio {
@@ -13,7 +13,7 @@ interface IInputRadio {
   options: IRadioOption[];
   onChange: ChangeEventHandler<HTMLInputElement>;
   isColumn?: boolean;
-  gap: '1' | '2' | '4' | '5' | '6' | '7' | '8';
+  gap?: '1' | '2' | '4' | '5' | '6' | '7' | '8';
 }
 
 const InputRadio: FC<IInputRadio> = ({
@@ -41,7 +41,7 @@ const InputRadio: FC<IInputRadio> = ({
         key={`radio-${name}-${index}`}
         value={option.value}
         onChange={onChange}
-        isDisabled={option.isDisabled}
+        isDisabled={option.isDisabled ?? false}
         spacing="1.5"
         cursor="pointer"
       >
