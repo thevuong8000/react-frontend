@@ -1,4 +1,4 @@
-import React, { CSSProperties, FC, forwardRef, MouseEventHandler, ReactElement } from 'react';
+import React, { FC, forwardRef, memo, MouseEventHandler, ReactElement } from 'react';
 import { Button } from '@chakra-ui/button';
 import { Box, Text, VStack } from '@chakra-ui/layout';
 import { useColorModeValue, useTheme } from '@chakra-ui/system';
@@ -18,7 +18,7 @@ interface IDropdown {
   selectedOptions: string[];
   options: IDropdownOption[];
   isOpen: boolean;
-  onSelect: MouseEventHandler<EventTargetBase>;
+  onSelect: MouseEventHandler<HTMLButtonElement>;
 }
 
 const DropdownTable = forwardRef<HTMLDivElement, IDropdown>((props, ref) => {
@@ -31,7 +31,7 @@ const DropdownTable = forwardRef<HTMLDivElement, IDropdown>((props, ref) => {
     falseValue: 'hidden'
   });
 
-  const DropdownItems: FC<IDropdownOption> = ({ text, isDisabled = false, Icon }) => {
+  const DropdownItems: FC<IDropdownOption> = memo(({ text, isDisabled = false, Icon }) => {
     const isChecked = selectedOptions.includes(text);
     const checkedVisibility = useToggle<VisibilityState>(isChecked, {
       trueValue: 'visible',
@@ -59,7 +59,7 @@ const DropdownTable = forwardRef<HTMLDivElement, IDropdown>((props, ref) => {
         </Button>
       </Tooltip>
     );
-  };
+  });
 
   return (
     <Box w="100%" pos="relative" ref={ref}>

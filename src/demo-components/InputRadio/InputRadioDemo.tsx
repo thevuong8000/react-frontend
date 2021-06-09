@@ -17,7 +17,7 @@ const InputRadioDemo = () => {
   const [value, setValue] = useState(options[0].value);
 
   const _onChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setValue(e.currentTarget.value);
+    setValue(e.target.value);
   };
 
   return (

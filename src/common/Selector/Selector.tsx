@@ -1,10 +1,7 @@
 import React, {
-  ChangeEvent,
   ChangeEventHandler,
   FC,
-  FocusEvent,
   FocusEventHandler,
-  MouseEvent,
   MouseEventHandler,
   useEffect,
   useRef,
@@ -59,7 +56,7 @@ const Selector: FC<ISelector> = ({
     setShowOptions.off();
   };
 
-  const _onInputBlur: FocusEventHandler<HTMLInputElement> = (e: FocusEvent<HTMLInputElement>) => {
+  const _onInputBlur: FocusEventHandler<HTMLInputElement> = (e) => {
     // Do not hide dropdown if click into dropdown or input-field
     if (dropdownRef.current?.contains(e.relatedTarget as Node)) {
       if (isMultiple) e.target.focus();
@@ -69,14 +66,12 @@ const Selector: FC<ISelector> = ({
     _closeOptions();
   };
 
-  const _onSelect: MouseEventHandler<HTMLButtonElement> = (e: MouseEvent<HTMLButtonElement>) => {
+  const _onSelect: MouseEventHandler<HTMLButtonElement> = (e) => {
     onSelect(e.currentTarget.value);
     if (!isMultiple) _closeOptions();
   };
 
-  const _onSearchQueryChange: ChangeEventHandler<EventTargetBase> = (
-    e: ChangeEvent<EventTargetBase>
-  ) => {
+  const _onSearchQueryChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setSearchQuery(e.target.value);
   };
 
