@@ -14,11 +14,4 @@ declare global {
    * Value or function returns Value
    */
   export type FunctionValue<T, P> = T extends Function ? never : T | ((props: P) => T);
-
-  /**
-   * message
-   */
-  export interface Message {
-    message: string;
-  }
 }
