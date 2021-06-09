@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { APP_CONFIG } from '../constants/configs';
+
 export interface AuthData {
   accessToken?: string;
   refreshToken?: string;
@@ -37,13 +38,13 @@ export const getLoginInfo = (): AuthData =>
  * @param {object} query Extra config
  */
 export const getRequestConfig = (config: AxiosRequestConfig = {}) => {
-  const { access_token } = getLoginInfo();
+  const { accessToken, tokenType } = getLoginInfo();
   const { headers = {} } = config;
 
   return {
     ...config,
     headers: {
-      ...(access_token ? { Authorization: `Bearer ${access_token}` } : {}),
+      ...(accessToken ? { Authorization: `${tokenType} ${accessToken}` } : {}),
       ...headers
     }
   };

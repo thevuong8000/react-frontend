@@ -41,7 +41,7 @@ const useApi = () => {
 
         saveLoginInfo({
           ...localData,
-          access_token: result.data.access_token
+          accessToken: result.data.accessToken
         });
         return true;
       } catch (e: any) {
