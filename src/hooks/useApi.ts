@@ -35,8 +35,8 @@ const useApi = () => {
       try {
         const localData = getLoginInfo();
         const result = await Axios.post(API_PATH.AUTH.REFRESH_TOKEN, {
-          refresh_token: localData.refresh_token,
-          user_id: localData.user_id
+          refreshToken: localData.refreshToken,
+          userId: localData.id
         });
 
         saveLoginInfo({
