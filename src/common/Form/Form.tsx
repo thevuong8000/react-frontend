@@ -7,7 +7,7 @@ export interface IInputField {
 }
 
 interface IForm {
-  style: CSSProperties;
+  style?: CSSProperties;
   onSubmit(e: FormEvent): void;
 
   // others
