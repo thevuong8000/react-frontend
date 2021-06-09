@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
-import { APP_CONFIG } from '../constants/configs';
+import { APP_CONFIG } from '@constants/configs';
 
 export interface AuthData {
   accessToken?: string;

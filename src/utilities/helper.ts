@@ -1,71 +1,34 @@
-import { APP_CONFIG } from '@constants/configs';
-import { getLoginInfo } from '@utilities/auth';
-
-/** --> TABLE OF CONTENTS <--
- * 	1) USER AUTHENTICATION INFOMATION
- * 	2) STRING PROCESS
- * 	3) API CONFIG
- * 	4) VERIFICATION
- * 	5) OTHERS
- *
- */
-
-/* ============================= STRING PROCESSING ============================= */
-
 /**
  * Replace variables (which is placed between ${}) in a string
- * @param {string} source input string. E.g. "Hello ${name}!"
- * @param {object} replaceObj object contains value to replace. E.g. { name: "Katorin" }
- * Result from above inputs is "Hello Katorin!"
+ * @param source input string.
+ * @param replaceObj object map.
+ * @example insertString("Hello ${ name }", { name: "Katorin" }) => "Hello Katorin!"
  */
-export const insertString = (source, replaceObj) =>
+export const insertString = (source: string, replaceObj: object) =>
   Object.entries(replaceObj).reduce((acc, [key, value]) => {
     const regEx = new RegExp(`\\\${\\s*${key}\\s*}`, 'g');
     return acc.replace(regEx, value);
   }, source);
 
 /**
- * Check if str1 includes str2 insensitively
- * @param {string} str1 source string
- * @param {string} str2 target string
- * @returns {boolean}
+ * Check if str1 includes str2
+ * @param str1 source string
+ * @param str2 target string
+ * @param caseInsensitive compare case-sensitive?
  */
-export const includeStr = (str1 = '', str2 = '') =>
-  `${str1}`.toLowerCase().includes(`${str2}`.toLowerCase());
-
-/**
- * Join strings by a separator
- * @param {array} arrStrings
- * @param {string} separator
- * @returns {string}
- */
-export const joinStrings = (arrStrings = [], separator = ', ') => arrStrings.join(separator);
-
-/* ============================= API CONFIG ============================= */
-
-/* ============================= VERIFICATION ============================= */
-
-/**
- * Validate password as followed rules:
- * 1) Minimum 8 characters
- * 2) Maximum 50 characters
- * 2) One uppercase letter
- * 3) One lowercase letter
- * 4) One number
- * 5) One special character
- * @param {string} password
- * @returns {boolean}
- */
-export const isValidPassword = (password) =>
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,50}$/.test(password);
-
-/* ============================= OTHERS ============================= */
+export const includeStr = (
+  str1: string = '',
+  str2: string = '',
+  caseInsensitive: boolean = false
+): boolean =>
+  caseInsensitive ? str1.includes(str2) : str1.toLowerCase().includes(str2.toLowerCase());
 
 /**
  * Download file from href
- * @param {string} href
+ * @param href uri to data
+ * @param fileName target download file name
  */
-export const downloadFile = (href, fileName) => {
+export const downloadFile = (href: string, fileName: string) => {
   const aTag = document.createElement('a');
   aTag.href = href;
   aTag.target = '_blank';
@@ -87,6 +50,11 @@ export const isEmpty = (input: any): boolean =>
   input === undefined ||
   (typeof input === 'object' && Object.keys(input).length <= 0);
 
+/**
+ * Evaluate {@link FunctionValue}
+ * @param fn
+ * @param props
+ */
 export const evalFV: <T, P>(fn: FunctionValue<T, P>, props: P) => T = (fn, props) => {
   return fn instanceof Function ? fn(props) : fn;
 };
