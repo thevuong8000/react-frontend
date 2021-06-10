@@ -6,6 +6,7 @@ import useToggle from '@hooks/useToggle';
 import { TiTick } from 'react-icons/ti';
 import ChakraIcon from '@chakra-ui/icon';
 import { Tooltip } from '@chakra-ui/tooltip';
+import { Property } from 'csstype';
 
 export interface IDropdownOption {
   text: string;
@@ -37,6 +38,10 @@ const DropdownTable = forwardRef<HTMLDivElement, IDropdown>((props, ref) => {
       trueValue: 'visible',
       falseValue: 'hidden'
     });
+    const pointerEvents = useToggle<Property.PointerEvents>(isOpen, {
+      trueValue: 'all',
+      falseValue: 'none'
+    });
     return (
       <Tooltip label={text} hasArrow placement="auto">
         <Button
@@ -50,6 +55,7 @@ const DropdownTable = forwardRef<HTMLDivElement, IDropdown>((props, ref) => {
           pb="2"
           justifyContent="space-between"
           isDisabled={isDisabled}
+          pointerEvents={pointerEvents}
           {...(Icon ? { leftIcon: Icon } : {})}
         >
           <Text maxW="85%" textOverflow="ellipsis" overflow="hidden" pointerEvents="none">
@@ -71,6 +77,7 @@ const DropdownTable = forwardRef<HTMLDivElement, IDropdown>((props, ref) => {
         zIndex={zIndices.dropdown}
         spacing="0"
         shadow="md"
+        bg={useColorModeValue('gray.100', 'gray.800')}
         borderWidth="thin"
         borderColor={useColorModeValue('gray.200', 'gray.600')}
         borderRadius="md"
