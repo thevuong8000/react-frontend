@@ -3,8 +3,24 @@ export interface IUserLogin {
   password: string;
 }
 
+export interface IUserInfo {
+  id?: string;
+  account?: string;
+  displayName?: string;
+  email?: string;
+  avatar?: string;
+  updatedAt?: string;
+  createdAt?: string;
+}
+
+export interface IAuthData extends IUserInfo {
+  accessToken?: string;
+  refreshToken?: string;
+  tokenType?: string;
+}
+
 export interface IAuthContext {
-  user: object;
+  user: Nullable<IUserInfo>;
 
   /**
    * Login with payload

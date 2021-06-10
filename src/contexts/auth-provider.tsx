@@ -1,14 +1,21 @@
 import { API_PATH } from '@constants/configs';
 import useApi from '@hooks/useApi';
 import { isEmpty } from '@utilities/helper';
-import React, { Context, createContext, FC, useCallback, useContext, useState } from 'react';
-import { IAuthContext, IUserLogin } from 'typings/user';
-import { clearLoginInfo, getLoginInfo, saveLoginInfo, AuthData } from '../utilities/auth';
+import React, { createContext, FC, useCallback, useContext, useState } from 'react';
+import { IAuthContext, IAuthData, IUserLogin } from 'typings/user';
+import { clearLoginInfo, getLoginInfo, saveLoginInfo } from '../utilities/auth';
 
-const AuthContext = createContext<Nullable<IAuthContext>>(null);
+const DEFAULT_AUTH_CONTEXT = {
+  user: null,
+  logIn: (payload: IUserLogin) => Promise.reject(),
+  logOut: () => clearLoginInfo(),
+  verifyToken: () => Promise.reject()
+};
+
+const AuthContext = createContext<IAuthContext>(DEFAULT_AUTH_CONTEXT);
 
 export const AuthProvider: FC = ({ children }) => {
-  const [data, setData] = useState<Nullable<object>>(null);
+  const [data, setData] = useState<Nullable<IAuthData>>(null);
   const { apiPost } = useApi();
 
   /* Verify if memoized user data is still valid */
@@ -33,7 +40,7 @@ export const AuthProvider: FC = ({ children }) => {
    */
   const logIn = useCallback(
     async (payload: IUserLogin) => {
-      const result: AuthData = await apiPost<AuthData>(API_PATH.AUTH.LOGIN, payload);
+      const result = await apiPost<IAuthData>(API_PATH.AUTH.LOGIN, payload);
       saveLoginInfo(result);
       setData(result);
     },
