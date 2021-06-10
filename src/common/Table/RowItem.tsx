@@ -59,10 +59,9 @@ const RowItem: <T>(props: PropsWithChildren<IRowItem<T>>) => ReactElement = ({
               return !isHidden ? (
                 <Tooltip key={`action-${rowIndex}-${colIndex}-${btnIndex}`} label={text}>
                   <Button
-                    type="button"
                     onClick={() => onClick?.(row, rowIndex)}
-                    title={title ?? ''}
-                    disabled={evalFV(isDisabled, { row, rowIndex }) ?? false}
+                    title={title}
+                    disabled={evalFV(isDisabled, { row, rowIndex })}
                     colorScheme={colorScheme}
                     variant={variant}
                   >
