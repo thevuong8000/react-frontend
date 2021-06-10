@@ -46,25 +46,38 @@ const RowItem: <T>(props: PropsWithChildren<IRowItem<T>>) => ReactElement = ({
       } else if (col.cellType === 'action' && col.buttons) {
         content = (
           <ButtonGroup display="flex" justifyContent="center">
-            {col.buttons.map((btn, btnIndex) =>
-              !btn.isHidden ? (
-                <Button
-                  key={`action-${rowIndex}-${btnIndex}`}
-                  type="button"
-                  onClick={() => btn.onClick?.(row, rowIndex)}
-                  title={btn.title}
-                  disabled={evalFV(btn.isDisabled, { row, rowIndex })}
-                  colorScheme={btn.colorScheme}
-                  variant={btn.variant ?? 'ghost'}
-                >
-                  <btn.icon size={20} />
-                </Button>
-              ) : null
-            )}
+            {col.buttons.map((btn, btnIndex) => {
+              const {
+                isHidden = false,
+                onClick,
+                title = '',
+                colorScheme = 'gray',
+                variant = 'ghost',
+                isDisabled = false,
+                text = ''
+              } = btn;
+              return !isHidden ? (
+                <Tooltip label={text}>
+                  <Button
+                    key={`action-${rowIndex}-${btnIndex}`}
+                    type="button"
+                    onClick={() => onClick?.(row, rowIndex)}
+                    title={title ?? ''}
+                    disabled={evalFV(isDisabled, { row, rowIndex }) ?? false}
+                    colorScheme={colorScheme}
+                    variant={variant}
+                  >
+                    {btn.icon && <btn.icon size={20} />}
+                  </Button>
+                </Tooltip>
+              ) : null;
+            })}
           </ButtonGroup>
         );
       } else if (col.cellType === 'index') {
         content = (col.startIndex || 0) + rowIndex;
+      } else if (!col.cellProp) {
+        content = null;
       }
       // Default: Text
       else if (col.mapValue) {

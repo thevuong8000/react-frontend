@@ -61,9 +61,10 @@ const TableDemo = () => {
 
     {
       headerText: 'Social media',
-      mapValue: (_: any, row: IRow) => (
-        <Link href={row.link} color="blue.400" isExternal>
-          {row.link}
+      cellProp: 'link',
+      mapValue: (value: string) => (
+        <Link href={value} color="blue.400" isExternal>
+          {value}
         </Link>
       ),
       cellStyle: {

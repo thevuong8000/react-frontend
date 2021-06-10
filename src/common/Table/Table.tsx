@@ -24,7 +24,7 @@ import { IconType } from 'react-icons/lib';
 import TableHeader from '../Table/TableHeader';
 import TableRows from '../Table/TableRows';
 
-type Cell = 'action' | 'checkbox' | 'index' | 'status' | 'text';
+type Cell = 'action' | 'checkbox' | 'index' | 'status';
 
 interface TableFunctionProps<T> {
   row?: T;
