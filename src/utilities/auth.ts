@@ -1,22 +1,11 @@
 import { AxiosRequestConfig } from 'axios';
 import { APP_CONFIG } from '@constants/configs';
-
-export interface AuthData {
-  accessToken?: string;
-  refreshToken?: string;
-  tokenType?: string;
-  id?: string;
-  account?: string;
-  displayName?: string;
-  email?: string;
-  avatar?: string;
-  status?: string;
-}
+import { IAuthData } from 'typings/user';
 
 /**
  * Save login data into LocalStorage
  */
-export const saveLoginInfo = (authData: AuthData) => {
+export const saveLoginInfo = (authData: IAuthData) => {
   localStorage.setItem(APP_CONFIG.AUTH_DATA, JSON.stringify(authData));
 };
 
@@ -30,7 +19,7 @@ export const clearLoginInfo = () => {
 /**
  * Get login data from Localstorage
  */
-export const getLoginInfo = (): AuthData =>
+export const getLoginInfo = (): IAuthData =>
   JSON.parse(localStorage.getItem(APP_CONFIG.AUTH_DATA) as string) ?? {};
 
 /**

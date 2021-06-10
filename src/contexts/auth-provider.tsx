@@ -1,38 +1,23 @@
 import { API_PATH } from '@constants/configs';
 import useApi from '@hooks/useApi';
 import { isEmpty } from '@utilities/helper';
-import React, { Context, createContext, FC, useCallback, useContext, useState } from 'react';
+import React, { createContext, FC, useCallback, useContext, useState } from 'react';
+import { IAuthContext, IAuthData, IUserInfo, IUserLogin } from 'typings/user';
 import { clearLoginInfo, getLoginInfo, saveLoginInfo } from '../utilities/auth';
 
-export interface IUserLogin {
-  username: string;
-  password: string;
-}
+const EMPTY_USER = {} as IAuthData;
 
-export interface IAuthContext {
-  user: object;
+const DEFAULT_AUTH_CONTEXT: IAuthContext = {
+  user: EMPTY_USER,
+  logIn: (payload: IUserLogin) => Promise.reject(),
+  logOut: () => clearLoginInfo(),
+  verifyToken: () => Promise.reject()
+};
 
-  /**
-   * Login with payload
-   * @param payload username and password
-   */
-  logIn(payload: IUserLogin): Promise<void>;
-
-  /**
-   * Log out and clear stored user data
-   */
-  logOut(): void;
-
-  /**
-   * Verify stored access token
-   */
-  verifyToken(): Promise<void>;
-}
-
-const AuthContext = createContext<Nullable<IAuthContext>>(null);
+const AuthContext = createContext<IAuthContext>(DEFAULT_AUTH_CONTEXT);
 
 export const AuthProvider: FC = ({ children }) => {
-  const [data, setData] = useState<Nullable<object>>(null);
+  const [data, setData] = useState<IAuthData>(EMPTY_USER);
   const { apiPost } = useApi();
 
   /* Verify if memoized user data is still valid */
@@ -42,31 +27,28 @@ export const AuthProvider: FC = ({ children }) => {
     // Nothing to verify
     if (isEmpty(storedInfo)) return;
 
-    const { id } = storedInfo;
     try {
-      await apiPost(API_PATH.AUTH.TEST_TOKEN, { id });
-      setData(storedInfo);
+      const info = await apiPost<IUserInfo>(API_PATH.AUTH.TEST_TOKEN);
+      setData({ ...storedInfo, ...info });
     } catch (error) {
-      setData(null);
+      setData(EMPTY_USER);
     }
   };
 
-  /**
-   * Log in with payload
-   * @param {object} payload: { username, password }
-   */
   const logIn = useCallback(
-    async (payload) => {
-      const result = await apiPost(API_PATH.AUTH.LOGIN, payload);
+    async (payload: IUserLogin) => {
+      const result = await apiPost<IAuthData>(API_PATH.AUTH.LOGIN, payload);
       saveLoginInfo(result);
-      setData(result);
+
+      // Verify the token received after logging in
+      verifyToken();
     },
     [apiPost]
   );
 
   const logOut = useCallback(() => {
     clearLoginInfo();
-    setData(null);
+    setData(EMPTY_USER);
   }, []);
 
   return (

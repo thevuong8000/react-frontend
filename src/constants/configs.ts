@@ -9,13 +9,12 @@ export const API_PATH = {
   AUTH: {
     LOGIN: `${APP_CONFIG.API_ROOT}/login`,
     REFRESH_TOKEN: `${APP_CONFIG.API_ROOT}/refresh-token`,
-    TEST_TOKEN: `${APP_CONFIG.API_ROOT}/test-token`
+    TEST_TOKEN: `${APP_CONFIG.API_ROOT}/login/test-token`
   },
   USERS: {
     ROOT: `${APP_CONFIG.API_ROOT}/users`,
     CREATE: `${APP_CONFIG.API_ROOT}/users/create`,
     ACITON: (id: string) => `${APP_CONFIG.API_ROOT}/users/${id}`,
-    VERIFY: `${APP_CONFIG.API_ROOT}/users/verify`,
     CHANGE_PASSWORD: (id: string) => `${APP_CONFIG.API_ROOT}/users/${id}/change-password`
   }
 };

@@ -13,8 +13,10 @@ import { LightMode } from '@chakra-ui/color-mode';
 import { TEXT_COMMON, TEXT_LOG_IN } from '@constants/text';
 import { PageBase } from 'paging';
 import { IInputField } from 'common/Form/Form';
+import { IUserCreate, IUserLogin } from 'typings/user';
+import { InputProps } from '@chakra-ui/input';
 
-const LOGIN_INPUT_STYLE = {
+const LOGIN_INPUT_STYLE: InputProps = {
   borderColor: 'gray.300',
   _placeholder: {
     color: 'gray.400'
@@ -25,14 +27,12 @@ const LOGIN_INPUT_STYLE = {
   color: 'black'
 };
 
-const username = 'username';
-const password = 'password';
-const DEFAULT_PAYLOAD = { [username]: '', [password]: '' };
+const DEFAULT_PAYLOAD = { username: '', password: '' };
 
 const Login: FC<PageBase> = ({ documentTitle }) => {
   const { logIn } = useAuth();
   const { createUser } = useUsers();
-  const [payload, setPayload] = useState(DEFAULT_PAYLOAD);
+  const [payload, setPayload] = useState<IUserLogin>(DEFAULT_PAYLOAD);
   const [errorMessage, setErrorMessage] = useState('');
 
   const [isLogingIn, setIsLoginIn] = useBoolean(false);
@@ -44,7 +44,7 @@ const Login: FC<PageBase> = ({ documentTitle }) => {
   }, [documentTitle]);
 
   const _isErrorInput = () => {
-    if (isEmpty(payload[username]) || isEmpty(payload[password])) {
+    if (isEmpty(payload.username) || isEmpty(payload.password)) {
       setErrorMessage('username and password can not be empty!');
       return true;
     }
@@ -66,8 +66,8 @@ const Login: FC<PageBase> = ({ documentTitle }) => {
     setIsLoginIn.on();
     try {
       await logIn(payload);
-    } catch (err) {
-      setErrorMessage(err.message);
+    } catch (err: any) {
+      setErrorMessage(err?.message ?? 'Failed to login!');
 
       // Avoid set state when terminate component(log in successfully)
       setIsLoginIn.off();
@@ -78,10 +78,10 @@ const Login: FC<PageBase> = ({ documentTitle }) => {
     if (_isErrorInput()) return;
     setIsCreating.on();
     try {
-      await createUser(payload);
+      await createUser(payload as IUserCreate);
       _onLogin();
-    } catch (err) {
-      setErrorMessage(err.message);
+    } catch (err: any) {
+      setErrorMessage(err?.message ?? 'Failed to create account!');
     } finally {
       setIsCreating.off();
     }
@@ -116,8 +116,8 @@ const Login: FC<PageBase> = ({ documentTitle }) => {
           <Flex direction="column" align="center" gridGap="3">
             <InputText
               {...LOGIN_INPUT_STYLE}
-              name={username}
-              value={payload[username]}
+              name="username"
+              value={payload.username}
               onChange={_onFieldChange}
               icon={<FiUser color="black" />}
               placeholder={TEXT_LOG_IN.USERNAME}
@@ -125,8 +125,8 @@ const Login: FC<PageBase> = ({ documentTitle }) => {
             />
             <InputText
               {...LOGIN_INPUT_STYLE}
-              name={password}
-              value={payload[password]}
+              name="password"
+              value={payload.password}
               onChange={_onFieldChange}
               type="password"
               icon={<FiLock color="black" />}

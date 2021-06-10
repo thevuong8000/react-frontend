@@ -20,7 +20,7 @@ import { InputText, Form } from '@common';
 import { TEXT_COMMON, TEXT_HEADER, TEXT_PROFILE } from '@constants/text';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import { AiOutlineClose, AiOutlineCheck } from 'react-icons/ai';
-import { isEmpty, isValidPassword } from '@utilities/helper';
+import { isEmpty } from '@utilities/helper';
 import useNotify from '@hooks/useNotify';
 import { useBoolean } from '@chakra-ui/hooks';
 import useUsers from '@hooks/useUsers';
@@ -73,16 +73,16 @@ const ChangePasswordModal: FC<ModalBase> = ({ onClose }) => {
 
     setIsLoading.on();
     try {
-      await changePassword(user.id, {
-        current_password: payload.currentPassword,
-        new_password: payload.newPassword
+      await changePassword(user.userId, {
+        currentPassword: payload.currentPassword,
+        newPassword: payload.newPassword
       });
       setNotifier({
         status: 'success',
         description: TEXT_PROFILE.CHANGE_PASSWORD_SUCCESS
       });
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       setNotifier({
         status: 'error',
         description: error.message ?? TEXT_PROFILE.CHANGE_PASSWORD_FAILURE,
