@@ -4,23 +4,23 @@ export interface IUserLogin {
 }
 
 export interface IUserInfo {
-  id?: string;
-  account?: string;
-  displayName?: string;
-  email?: string;
-  avatar?: string;
-  updatedAt?: string;
-  createdAt?: string;
+  userId: string;
+  account: string;
+  displayName: string;
+  email: string;
+  avatar: string;
+  updatedAt: string;
+  createdAt: string;
 }
 
 export interface IAuthData extends IUserInfo {
-  accessToken?: string;
-  refreshToken?: string;
-  tokenType?: string;
+  accessToken: string;
+  refreshToken: string;
+  tokenType: string;
 }
 
 export interface IAuthContext {
-  user: Nullable<IUserInfo>;
+  user: IAuthData;
 
   /**
    * Login with payload

@@ -42,7 +42,7 @@ const SettingsModal: FC<ModalBase> = ({ onClose }) => {
 
   const _onDelete = useCallback(() => {
     if (window.confirm('Are you sure?')) {
-      deleteUser(user.id);
+      deleteUser(user.userId);
       logOut();
     }
   }, []);

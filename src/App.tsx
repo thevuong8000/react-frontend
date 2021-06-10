@@ -24,7 +24,7 @@ const App: FC = () => {
 
   if (!isVerified) return <LoaderFull />;
 
-  return <>{user ? <AuthenticatedPage /> : <UnauthenticatedPage />}</>;
+  return <>{user.userId ? <AuthenticatedPage /> : <UnauthenticatedPage />}</>;
 };
 
 export default App;
