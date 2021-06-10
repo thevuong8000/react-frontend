@@ -24,14 +24,14 @@
 
     "baseUrl": "./src",
     "paths": {
-      "@common/*": ["./common/*"],
       "@common": ["./common"],
-      "@constants/*": ["./constants/*"],
+      "@common/*": ["./common/*"],
       "@constants": ["./constants"],
-      "@contexts/*": ["./contexts/*"],
+      "@constants/*": ["./constants/*"],
       "@contexts": ["./contexts"],
-      "@hooks/*": ["./hooks/*"],
+      "@contexts/*": ["./contexts/*"],
       "@hooks": ["./hooks"],
+      "@hooks/*": ["./hooks/*"],
       "@styles/*": ["./styles/*"],
       "@utilities/*": ["./utilities/*"]
     }
