@@ -3,7 +3,7 @@ import { IUserChangePassword, IUserCreate, IUserUpdatable } from 'typings/user';
 import useApi from './useApi';
 
 const useUsers = () => {
-  const { apiPost, apiPut, apiDelete } = useApi();
+  const { apiPost, apiPatch, apiDelete } = useApi();
 
   const createUser = (payload: IUserCreate) => apiPost<Message>(API_PATH.USERS.CREATE, payload);
 
@@ -14,7 +14,7 @@ const useUsers = () => {
 
   /* payload: { current_password, new_password } */
   const changePassword = (id: string, payload: IUserChangePassword) =>
-    apiPut<Message>(API_PATH.USERS.CHANGE_PASSWORD(id), payload);
+    apiPatch<Message>(API_PATH.USERS.CHANGE_PASSWORD(id), payload);
 
   return { createUser, updateUser, deleteUser, changePassword };
 };
