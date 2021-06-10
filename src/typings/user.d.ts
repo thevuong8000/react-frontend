@@ -38,3 +38,18 @@ export interface IAuthContext {
    */
   verifyToken(): Promise<void>;
 }
+
+export interface IUserCreate {
+  username: string;
+  password: string;
+}
+
+export interface IUserChangePassword {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface IUserUpdatable {
+  displayName?: string;
+  email?: string;
+}

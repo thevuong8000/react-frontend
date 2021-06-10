@@ -1,22 +1,6 @@
 import { API_PATH } from '@constants/configs';
+import { IUserChangePassword, IUserCreate, IUserUpdatable } from 'typings/user';
 import useApi from './useApi';
-
-export interface IUserCreate {
-  username: string;
-  password: string;
-}
-
-export interface IUserChangePassword {
-  currentPassword: string;
-  newPassword: string;
-}
-
-export interface IUser {}
-
-export interface IUserUpdatable {
-  displayName?: string;
-  email?: string;
-}
 
 const useUsers = () => {
   const { apiPost, apiPut, apiDelete } = useApi();
