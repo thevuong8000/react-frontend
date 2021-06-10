@@ -8,7 +8,6 @@ import { getLoginInfo, getRequestConfig, saveLoginInfo } from '../utilities/auth
 export type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
 interface ApiRequestOptions {
-  getFullResponse?: boolean;
   useTimeStamp?: boolean;
 }
 
@@ -57,19 +56,18 @@ const useApi = () => {
     async <T>(
       request: (fullConfigs: AxiosRequestConfig) => Promise<AxiosResponse<T>>,
       config: {},
-      getFullResponse: boolean,
       retried = false
-    ): Promise<T | AxiosResponse<T>> => {
+    ): Promise<T> => {
       try {
         const fullConfigs: AxiosRequestConfig = getRequestConfig(config);
         const result: AxiosResponse<T> = await request(fullConfigs);
 
         /* Axios: The main data is in {result.data} */
-        return getFullResponse ? result : result.data;
+        return result.data;
       } catch (error: any) {
         if (!retried) {
           const couldRetry = await needRetry(error);
-          if (couldRetry) return tryApi(request, config, getFullResponse, true);
+          if (couldRetry) return tryApi(request, config, true);
         }
         return Promise.reject(getErrorResponse(error));
       }
@@ -82,19 +80,20 @@ const useApi = () => {
       method: HttpMethod,
       url: string,
       body: any,
-      { query = {}, config = {}, getFullResponse = false, useTimeStamp = false } = {}
-    ): Promise<T | AxiosResponse<T>> => {
+      { query = {}, config = {}, useTimeStamp = false } = {}
+    ): Promise<T> => {
       const axiosConfigs: AxiosRequestConfig = {
         params: { ...query, ...(useTimeStamp ? { timestamp: Date.now() } : {}) },
         ...config
       };
 
+      // Only POST, PUT, PATCH method need body data
       const needBody = ['post', 'put', 'patch'].includes(method);
 
       const request = (fullConfigs: AxiosRequestConfig) =>
         needBody ? Axios[method](url, body, fullConfigs) : Axios[method](url, fullConfigs);
 
-      return tryApi<T>(request, axiosConfigs, getFullResponse, false);
+      return tryApi<T>(request, axiosConfigs, false);
     },
     [tryApi]
   );
@@ -103,9 +102,8 @@ const useApi = () => {
     <T>(
       url: string,
       query?: any,
-      { getFullResponse = false, useTimeStamp = false, ...config }: ApiRequestOptions = {}
-    ): Promise<T | AxiosResponse<T>> =>
-      apiCall('get', url, null, { query, config, getFullResponse, useTimeStamp }),
+      { useTimeStamp = false, ...config }: ApiRequestOptions = {}
+    ): Promise<T> => apiCall('get', url, null, { query, config, useTimeStamp }),
     [apiCall]
   );
   const apiPost = useCallback(
@@ -113,9 +111,8 @@ const useApi = () => {
       url: string,
       body?: any,
       query?: any,
-      { getFullResponse = false, useTimeStamp = false, ...config }: ApiRequestOptions = {}
-    ): Promise<T | AxiosResponse<T>> =>
-      apiCall('post', url, body, { query, config, getFullResponse, useTimeStamp }),
+      { useTimeStamp = false, ...config }: ApiRequestOptions = {}
+    ): Promise<T> => apiCall('post', url, body, { query, config, useTimeStamp }),
     [apiCall]
   );
 
@@ -124,9 +121,8 @@ const useApi = () => {
       url: string,
       body?: any,
       query?: any,
-      { getFullResponse = false, useTimeStamp = false, ...config }: ApiRequestOptions = {}
-    ): Promise<T | AxiosResponse<T>> =>
-      apiCall('put', url, body, { query, config, getFullResponse, useTimeStamp }),
+      { useTimeStamp = false, ...config }: ApiRequestOptions = {}
+    ): Promise<T> => apiCall('put', url, body, { query, config, useTimeStamp }),
     [apiCall]
   );
 
@@ -135,9 +131,8 @@ const useApi = () => {
       url: string,
       body?: any,
       query?: any,
-      { getFullResponse = false, useTimeStamp = false, ...config }: ApiRequestOptions = {}
-    ): Promise<T | AxiosResponse<T>> =>
-      apiCall('patch', url, body, { query, config, getFullResponse, useTimeStamp }),
+      { useTimeStamp = false, ...config }: ApiRequestOptions = {}
+    ): Promise<T> => apiCall('patch', url, body, { query, config, useTimeStamp }),
     [apiCall]
   );
 
@@ -145,39 +140,10 @@ const useApi = () => {
     <T>(
       url: string,
       query?: any,
-      { getFullResponse = false, useTimeStamp = false, ...config }: ApiRequestOptions = {}
-    ): Promise<T | AxiosResponse<T>> =>
-      apiCall('delete', url, { query, config, getFullResponse, useTimeStamp }),
+      { useTimeStamp = false, ...config }: ApiRequestOptions = {}
+    ): Promise<T> => apiCall('delete', url, { query, config, useTimeStamp }),
     [apiCall]
   );
-
-  // Need refactor
-  // const getIntervalPromise = (fn, verifyFn, retryCount = null) =>
-  //   new Promise((resolve, reject) => {
-  //     let count = retryCount === null ? 1 : retryCount;
-  //     const interval = setInterval(() => {
-  //       fn().then(
-  //         (response) => {
-  //           if (retryCount !== null) {
-  //             count -= 1;
-  //           }
-
-  //           if (verifyFn(response)) {
-  //             clearInterval(interval);
-  //             resolve(response);
-  //           } else if (count < 0) {
-  //             clearInterval(interval);
-  //             // eslint-disable-next-line prefer-promise-reject-errors
-  //             reject({ error: 'Timeout!' });
-  //           }
-  //         },
-  //         (error) => {
-  //           clearInterval(interval);
-  //           reject(error);
-  //         }
-  //       );
-  //     }, 5000);
-  //   });
 
   return {
     apiGet,
@@ -185,7 +151,6 @@ const useApi = () => {
     apiPut,
     apiPatch,
     apiDelete
-    // getIntervalPromise
   };
 };
 
