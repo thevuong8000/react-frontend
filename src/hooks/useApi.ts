@@ -1,5 +1,5 @@
 import { useAuth } from '@contexts/auth-provider';
-import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import Axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useCallback } from 'react';
 import { API_PATH } from '@constants/configs';
 import { HTTP_CODE } from '@constants/global';
@@ -21,15 +21,15 @@ const useApi = () => {
   const { logOut } = useAuth() || {};
 
   /* Get error data */
-  const getErrorResponse = (error: AxiosError<ErrorResponse>) => {
-    const { data, status } = error.response;
+  const getErrorResponse = (error: ErrorResponse) => {
+    const { data = {}, status = HTTP_CODE.BAD_REQUEST } = error;
     return Object.assign(new Error(), { ...data, status });
   };
 
   const needRetry = useCallback(
-    async (error: AxiosError<ErrorResponse>) => {
+    async (error: ErrorResponse) => {
       /* Retry only if unauthorized error */
-      if (error?.response?.status !== HTTP_CODE.UNAUTHORIZED) return false;
+      if (error?.status !== HTTP_CODE.UNAUTHORIZED) return false;
 
       try {
         const localData = getLoginInfo();
@@ -66,10 +66,10 @@ const useApi = () => {
         return result.data;
       } catch (error: any) {
         if (!retried) {
-          const couldRetry = await needRetry(error);
+          const couldRetry = await needRetry(error.response as ErrorResponse);
           if (couldRetry) return tryApi(request, config, true);
         }
-        return Promise.reject(getErrorResponse(error));
+        return Promise.reject(getErrorResponse(error.response as ErrorResponse));
       }
     },
     [needRetry]
