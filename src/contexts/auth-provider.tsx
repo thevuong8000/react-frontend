@@ -2,7 +2,7 @@ import { API_PATH } from '@constants/configs';
 import useApi from '@hooks/useApi';
 import { isEmpty } from '@utilities/helper';
 import React, { createContext, FC, useCallback, useContext, useState } from 'react';
-import { IAuthContext, IAuthData, IUserLogin } from 'typings/user';
+import { IAuthContext, IAuthData, IUserInfo, IUserLogin } from 'typings/user';
 import { clearLoginInfo, getLoginInfo, saveLoginInfo } from '../utilities/auth';
 
 const DEFAULT_AUTH_CONTEXT = {
@@ -25,19 +25,14 @@ export const AuthProvider: FC = ({ children }) => {
     // Nothing to verify
     if (isEmpty(storedInfo)) return;
 
-    const { id } = storedInfo;
     try {
-      await apiPost(API_PATH.AUTH.TEST_TOKEN, { id });
-      setData(storedInfo);
+      const info = await apiPost<IUserInfo>(API_PATH.AUTH.TEST_TOKEN);
+      setData({ ...storedInfo, ...info });
     } catch (error) {
       setData(null);
     }
   };
 
-  /**
-   * Log in with payload
-   * @param {object} payload: { username, password }
-   */
   const logIn = useCallback(
     async (payload: IUserLogin) => {
       const result = await apiPost<IAuthData>(API_PATH.AUTH.LOGIN, payload);
