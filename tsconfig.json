@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "target": "es2019",
+    "lib": ["ES2019", "DOM"],
+    "esModuleInterop": true,
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true,
+
+    "typeRoots": ["src/typings", "node_modules/@types"],
+
+    "allowJs": true,
+    "checkJs": true,
+
+    "strict": true,
+    "isolatedModules": true,
+    "noImplicitAny": true,
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+
+    "declaration": true,
+
+    "baseUrl": "./src",
+    "paths": {
+      "@common/*": ["./common/*"],
+      "@common": ["./common"],
+      "@constants/*": ["./constants/*"],
+      "@constants": ["./constants"],
+      "@contexts/*": ["./contexts/*"],
+      "@contexts": ["./contexts"],
+      "@hooks/*": ["./hooks/*"],
+      "@hooks": ["./hooks"],
+      "@styles/*": ["./styles/*"],
+      "@utilities/*": ["./utilities/*"]
+    }
+  },
+  "include": ["./**/*.ts", "./**/*.tsx"]
+}

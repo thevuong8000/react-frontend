@@ -9,6 +9,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractText = require('mini-css-extract-plugin');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const WebpackBar = require('webpackbar');
 const fs = require('fs');
 
 const isProd = process.env.mode === 'production';
@@ -41,7 +42,7 @@ const publicPath = '/';
 
 module.exports = {
 	entry: {
-		main: path.resolve(__dirname, '../src/index.jsx')
+		main: path.resolve(__dirname, '../src/index.js')
 	},
 	output: {
 		path: path.resolve(__dirname, '../build'),
@@ -50,6 +51,7 @@ module.exports = {
 		publicPath
 	},
 	plugins: [
+		new WebpackBar(),
 		new MiniCssExtractText({
 			filename: isProd ? `css/[name].[contenthash:8].css` : 'css/[name].css'
 		}),
@@ -60,6 +62,7 @@ module.exports = {
 		new webpack.ProvidePlugin({
 			React: 'react'
 		}),
+		new CleanWebpackPlugin(),
 		new HTMLWebpackPlugin({
 			template: path.resolve(__dirname, '../template/index.ejs'),
 			filename: 'index.html',
@@ -84,7 +87,7 @@ module.exports = {
 		})
 	],
 	resolve: {
-		extensions: ['.js', '.jsx', '.scss'],
+		extensions: ['.ts', '.tsx', '.js', '.jsx', '.json', '.scss'],
 		alias: paths,
 		symlinks: false
 	},
@@ -100,7 +103,7 @@ module.exports = {
 				}
 			},
 			{
-				test: /\.(js|jsx)$/,
+				test: /\.(ts|tsx|js|jsx)$/,
 				exclude: /node_modules/,
 				use: {
 					loader: 'babel-loader',
@@ -114,7 +117,7 @@ module.exports = {
 				use: {
 					loader: 'url-loader',
 					options: {
-						limit: 1000,
+						limit: false,
 						name: 'static/[name].[hash:8].[ext]',
 						publicPath
 					}
@@ -135,7 +138,10 @@ module.exports = {
 				test: /\.(scss|css)$/,
 				use: [
 					{
-						loader: MiniCssExtractText.loader
+						loader: MiniCssExtractText.loader,
+						options: {
+							publicPath
+						}
 					},
 					{
 						loader: 'css-loader',
