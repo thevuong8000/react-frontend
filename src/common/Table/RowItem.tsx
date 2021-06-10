@@ -25,17 +25,17 @@ const RowItem: <T>(props: PropsWithChildren<IRowItem<T>>) => ReactElement = ({
       if (col.cellType === 'checkbox') {
         content = (
           <Checkbox
-            onChange={(e) => col.onCellClick(row, rowIndex, e)}
-            isChecked={col.cellChecked(row, rowIndex)}
+            onChange={(e) => col.onCellClick?.(row, rowIndex, e)}
+            isChecked={col.cellChecked?.(row, rowIndex) ?? false}
             spacing={5}
-            isDisabled={evalFV(col.cellDisabled, { row, rowIndex })}
+            isDisabled={evalFV(col.cellDisabled, { row, rowIndex }) ?? false}
           >
             <Flex alignItems="center">
               <Text mr={1}>{col.cellProp ? row[col.cellProp] : rowIndex}</Text>
             </Flex>
           </Checkbox>
         );
-      } else if (col.cellType === 'status') {
+      } else if (col.cellType === 'status' && col.cellProp) {
         content = (
           <Badge size="sm" colorScheme={getStatusColorCode(row[col.cellProp])}>
             <Tooltip label={evalFV(col.message, { row, rowIndex }) ?? ''}>
@@ -43,7 +43,7 @@ const RowItem: <T>(props: PropsWithChildren<IRowItem<T>>) => ReactElement = ({
             </Tooltip>
           </Badge>
         );
-      } else if (col.cellType === 'action') {
+      } else if (col.cellType === 'action' && col.buttons) {
         content = (
           <ButtonGroup display="flex" justifyContent="center">
             {col.buttons.map((btn, btnIndex) =>
@@ -51,7 +51,7 @@ const RowItem: <T>(props: PropsWithChildren<IRowItem<T>>) => ReactElement = ({
                 <Button
                   key={`action-${rowIndex}-${btnIndex}`}
                   type="button"
-                  onClick={() => btn.onClick(row, rowIndex)}
+                  onClick={() => btn.onClick?.(row, rowIndex)}
                   title={btn.title}
                   disabled={evalFV(btn.isDisabled, { row, rowIndex })}
                   colorScheme={btn.colorScheme}

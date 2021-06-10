@@ -2,10 +2,10 @@ import { ThemeTypings } from '@chakra-ui/react';
 
 /**
  * Get coresponding color related to code
- * @param {number} code
+ * @param {*} code should be number for color
  * @returns {string}
  */
-export const getStatusColorCode = (code: number): ThemeTypings['colorSchemes'] => {
+export const getStatusColorCode = (code: any): ThemeTypings['colorSchemes'] => {
   switch (code) {
     case 1:
       return 'orange'; // pending
