@@ -17,8 +17,7 @@ type ErrorResponse<T = any> = {
 };
 
 const useApi = () => {
-  /* Get logOut func even when useAuth has not been initialized */
-  const { logOut } = useAuth() || {};
+  const { logOut } = useAuth();
 
   /* Get error data */
   const getErrorResponse = (error: ErrorResponse) => {
@@ -45,7 +44,7 @@ const useApi = () => {
         return true;
       } catch (e: any) {
         /* log out if refresh-token is expired */
-        logOut?.();
+        logOut();
       }
       return false;
     },
