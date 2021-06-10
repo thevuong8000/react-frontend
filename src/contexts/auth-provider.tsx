@@ -2,32 +2,8 @@ import { API_PATH } from '@constants/configs';
 import useApi from '@hooks/useApi';
 import { isEmpty } from '@utilities/helper';
 import React, { Context, createContext, FC, useCallback, useContext, useState } from 'react';
-import { clearLoginInfo, getLoginInfo, saveLoginInfo } from '../utilities/auth';
-
-export interface IUserLogin {
-  username: string;
-  password: string;
-}
-
-export interface IAuthContext {
-  user: object;
-
-  /**
-   * Login with payload
-   * @param payload username and password
-   */
-  logIn(payload: IUserLogin): Promise<void>;
-
-  /**
-   * Log out and clear stored user data
-   */
-  logOut(): void;
-
-  /**
-   * Verify stored access token
-   */
-  verifyToken(): Promise<void>;
-}
+import { IAuthContext, IUserLogin } from 'typings/user';
+import { clearLoginInfo, getLoginInfo, saveLoginInfo, AuthData } from '../utilities/auth';
 
 const AuthContext = createContext<Nullable<IAuthContext>>(null);
 
@@ -56,8 +32,8 @@ export const AuthProvider: FC = ({ children }) => {
    * @param {object} payload: { username, password }
    */
   const logIn = useCallback(
-    async (payload) => {
-      const result = await apiPost(API_PATH.AUTH.LOGIN, payload);
+    async (payload: IUserLogin) => {
+      const result: AuthData = await apiPost<AuthData>(API_PATH.AUTH.LOGIN, payload);
       saveLoginInfo(result);
       setData(result);
     },
