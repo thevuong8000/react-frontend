@@ -57,9 +57,8 @@ const RowItem: <T>(props: PropsWithChildren<IRowItem<T>>) => ReactElement = ({
                 text = ''
               } = btn;
               return !isHidden ? (
-                <Tooltip label={text}>
+                <Tooltip key={`action-${rowIndex}-${colIndex}-${btnIndex}`} label={text}>
                   <Button
-                    key={`action-${rowIndex}-${btnIndex}`}
                     type="button"
                     onClick={() => onClick?.(row, rowIndex)}
                     title={title ?? ''}
