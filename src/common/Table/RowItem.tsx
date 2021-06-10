@@ -6,7 +6,7 @@ import { Checkbox } from '@chakra-ui/checkbox';
 import { Tooltip } from '@chakra-ui/tooltip';
 import { getStatusColorCode } from './utils/table-helper';
 import { ITableColumn } from './Table';
-import { evalFV } from '../../utilities/helper';
+import { evalFV } from '@utilities/helper';
 
 interface IRowItem<T> {
   row: T;

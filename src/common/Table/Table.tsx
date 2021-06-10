@@ -93,9 +93,9 @@ const Loader: FC<{ colSpan: number }> = ({ colSpan }) => (
 const Table: <T>(props: PropsWithChildren<ITable<T>>) => ReactElement = ({
   colConfigs = [],
   rows = [],
-  isLoading,
+  isLoading = false,
   noResultText = '',
-  error
+  error = ''
 }) => (
   <Box boxShadow="xs" overflow="auto">
     <ChakraTable size="sm" variant="striped">
