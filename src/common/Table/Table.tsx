@@ -26,10 +26,6 @@ import TableRows from '../Table/TableRows';
 
 type Cell = 'action' | 'checkbox' | 'index' | 'status';
 
-interface TableFunctionProps<T> {
-  row?: T;
-  rowIndex?: number;
-}
 interface ActionButton<T = {}> {
   text?: string;
   onClick?: (row: T, rowIndex: number) => void;
