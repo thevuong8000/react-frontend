@@ -37,17 +37,19 @@ const CodeTest: FC<ICodeTest> = ({
   return (
     <Flex direction="column">
       <Flex direction="row">
-        <Text>Test #{index + 1}</Text>
+        <Text mb="1" mr="1">
+          Test #{index + 1}
+        </Text>
 
         <Tooltip label="Run this test">
           <Button variant="ghost" colorScheme="green">
-            <VscRunAll size="18" />
+            <VscRunAll size="22" />
           </Button>
         </Tooltip>
 
         <Tooltip label="Remove this test">
           <Button variant="ghost" colorScheme="red" onClick={() => handleOnRemove(index)}>
-            <MdDelete size="18" />
+            <MdDelete size="22" />
           </Button>
         </Tooltip>
       </Flex>
