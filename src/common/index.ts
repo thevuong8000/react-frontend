@@ -8,4 +8,5 @@ export { default as InputText } from './InputText/InputText';
 export { default as LoaderFull } from './LoaderFull/LoaderFull';
 export { default as Profile } from './Profile/Profile';
 export { default as Selector } from './Selector/Selector';
+export { default as CodeTester } from './CodeEditor/CodeEditor';
 export { default as Table } from './Table/Table';
