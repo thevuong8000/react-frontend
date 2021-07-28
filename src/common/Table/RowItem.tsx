@@ -6,7 +6,6 @@ import { Checkbox } from '@chakra-ui/checkbox';
 import { Tooltip } from '@chakra-ui/tooltip';
 import { getStatusColorCode } from './utils/table-helper';
 import { ITableColumn } from './Table';
-import { evalFV } from '@utilities/helper';
 
 interface IRowItem<T> {
   row: T;
@@ -28,7 +27,7 @@ const RowItem: <T>(props: PropsWithChildren<IRowItem<T>>) => ReactElement = ({
             onChange={(e) => col.onCellClick?.(row, rowIndex, e)}
             isChecked={col.cellChecked?.(row, rowIndex) ?? false}
             spacing={5}
-            isDisabled={evalFV(col.cellDisabled, { row, rowIndex }) ?? false}
+            isDisabled={col.cellDisabled ?? false}
           >
             <Flex alignItems="center">
               <Text mr={1}>{col.cellProp ? row[col.cellProp] : rowIndex}</Text>
@@ -38,7 +37,7 @@ const RowItem: <T>(props: PropsWithChildren<IRowItem<T>>) => ReactElement = ({
       } else if (col.cellType === 'status' && col.cellProp) {
         content = (
           <Badge size="sm" colorScheme={getStatusColorCode(row[col.cellProp])}>
-            <Tooltip label={evalFV(col.message, { row, rowIndex }) ?? ''}>
+            <Tooltip label={col.message ?? ''}>
               <Text>{col.mapValue?.(row[col.cellProp], row, rowIndex) ?? row[col.cellProp]}</Text>
             </Tooltip>
           </Badge>
@@ -61,7 +60,7 @@ const RowItem: <T>(props: PropsWithChildren<IRowItem<T>>) => ReactElement = ({
                   <Button
                     onClick={() => onClick?.(row, rowIndex)}
                     title={title}
-                    disabled={evalFV(isDisabled, { row, rowIndex })}
+                    isDisabled={isDisabled}
                     colorScheme={colorScheme}
                     variant={variant}
                   >
@@ -85,11 +84,7 @@ const RowItem: <T>(props: PropsWithChildren<IRowItem<T>>) => ReactElement = ({
       }
 
       return (
-        <Td
-          key={`row-item-${rowIndex}-${colIndex}`}
-          pl="3"
-          {...evalFV(col.cellStyle, { row, rowIndex })}
-        >
+        <Td key={`row-item-${rowIndex}-${colIndex}`} pl="3" {...col.cellStyle}>
           {content}
         </Td>
       );

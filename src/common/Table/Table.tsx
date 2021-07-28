@@ -26,16 +26,12 @@ import TableRows from '../Table/TableRows';
 
 type Cell = 'action' | 'checkbox' | 'index' | 'status';
 
-interface TableFunctionProps<T> {
-  row?: T;
-  rowIndex?: number;
-}
 interface ActionButton<T = {}> {
   text?: string;
   onClick?: (row: T, rowIndex: number) => void;
   isHidden?: boolean;
   title?: string;
-  isDisabled?: FunctionValue<boolean, TableFunctionProps<T>>;
+  isDisabled?: boolean;
   colorScheme?: ThemeTypings['colorSchemes'];
   variant?: ThemingProps<'Button'>['variant'];
   icon?: IconType;
@@ -59,12 +55,12 @@ export interface ITableCell<T extends {}> {
   onCellClick?: { (row: T, rowIndex: number, e: ChangeEvent): void };
   cellChecked?: { (row: T, rowIndex: number): boolean };
   cellProp?: keyof T;
-  cellStyle?: FunctionValue<TableCellProps, TableFunctionProps<T>>;
-  cellDisabled?: FunctionValue<boolean, TableFunctionProps<T>>;
+  cellStyle?: TableCellProps;
+  cellDisabled?: boolean;
 }
 
 export interface ITableColumn<T extends {}> extends ITableHeader, ITableCell<T> {
-  message?: FunctionValue<string, TableFunctionProps<T>>;
+  message?: string;
   mapValue?: { (value: any, row: T, rowIndex: number): any };
 
   buttons?: ActionButton<T>[];
