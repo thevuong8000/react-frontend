@@ -52,9 +52,11 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
           overflowY="auto"
           pos="relative"
         >
-          <Heading m="0 auto" mb="4">
-            Test
-          </Heading>
+          {tests.length <= 0 && (
+            <Heading m="0 auto" mb="4">
+              You have no test
+            </Heading>
+          )}
           <Flex w="100%" direction="column" gridGap="4">
             {tests.map((test, idx) => (
               <CodeTest
