@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 
 const Homepage = lazy(() => import('../Homepage/Homepage'));
 const DemoComponents = lazy(() => import('../../demo-components/DemoComponents'));
+const CodeTester = lazy(() => import('../CodeTester/CodeTester'));
 
 const AuthenticatedPage: FC = () => (
   <Router>
@@ -25,9 +26,15 @@ const AuthenticatedPage: FC = () => (
             render={() => <DemoComponents documentTitle={ROUTE.DEMO.title} />}
           />
 
+          <Route
+            exact
+            path={ROUTE.CODE_TESTER.to}
+            render={() => <CodeTester documentTitle={ROUTE.CODE_TESTER.title} />}
+          />
+
           {/* Default fall back to Homepage */}
           <Route path="*">
-            <Redirect to={ROUTE.DEMO.to} />
+            <Redirect to={ROUTE.CODE_TESTER.to} />
           </Route>
         </Switch>
       </Box>
