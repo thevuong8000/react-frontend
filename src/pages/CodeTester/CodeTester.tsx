@@ -1,8 +1,10 @@
-import { Button, Flex, Heading } from '@chakra-ui/react';
+import { Button, Flex, Heading, Select } from '@chakra-ui/react';
 import CodeEditor from '@common/CodeEditor/CodeEditor';
 import { PageBase } from 'paging';
 import React, { FC, useEffect, useState } from 'react';
 import CodeTest, { ICodeTest, ICodeTestBase } from './CodeTest/CodeTest';
+
+const SUPPORTED_LANGUAGES = ['javascript', 'cpp', 'python', 'java'];
 
 const DEFAULT_TEST: ICodeTestBase = {
   input: '',
@@ -73,6 +75,11 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
         </Flex>
       </Flex>
       <Flex w="50%" justify="space-around" m="0 auto">
+        <Select variant="filled" w="max-content">
+          {SUPPORTED_LANGUAGES.map((lang) => (
+            <option value={lang}>{lang}</option>
+          ))}
+        </Select>
         <Button size="md" onClick={_handleAddTest}>
           Add Test
         </Button>
