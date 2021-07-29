@@ -1,8 +1,11 @@
 import { Button, Flex, Heading, Select } from '@chakra-ui/react';
 import CodeEditor, { Language } from '@common/CodeEditor/CodeEditor';
+import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
 import CodeTest, { ICodeTest, ICodeTestBase } from './CodeTest/CodeTest';
+import { API_PATH } from '../../constants/configs';
+import { ICodeExecutorBody } from 'code_executor';
 
 const SUPPORTED_LANGUAGES: Language[] = ['javascript', 'typescript', 'cpp', 'python', 'java'];
 
@@ -25,6 +28,8 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   const [codeContent, setCodeContent] = useState<string>(DEFAULT_CODE[language]);
   const [tests, setTests] = useState<ICodeTestBase[]>([]);
 
+  const { apiPost } = useApi();
+
   const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const lang = e.target.value as Language;
     setLanguage(lang);
@@ -32,12 +37,12 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   };
 
   const _handleRunTests = () => {
-    console.log('typed_code: ', codeContent);
-    tests.forEach((test, idx) => {
-      console.log('input', idx);
-      console.log(test.input);
-      console.log(test.expectedOutput);
-    });
+    const body: ICodeExecutorBody = {
+      typedCode: codeContent,
+      input: '',
+      language
+    };
+    apiPost(API_PATH.CODE_EXECUTOR.ROOT, body);
   };
 
   const _handleTestChange: ICodeTest['handleOnChange'] = (index, newTest) => {
