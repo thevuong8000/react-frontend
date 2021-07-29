@@ -1,10 +1,10 @@
 import { Button, Flex, Heading, Select } from '@chakra-ui/react';
-import CodeEditor from '@common/CodeEditor/CodeEditor';
+import CodeEditor, { Language } from '@common/CodeEditor/CodeEditor';
 import { PageBase } from 'paging';
-import React, { FC, useEffect, useState } from 'react';
+import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
 import CodeTest, { ICodeTest, ICodeTestBase } from './CodeTest/CodeTest';
 
-const SUPPORTED_LANGUAGES = ['javascript', 'cpp', 'python', 'java'];
+const SUPPORTED_LANGUAGES: Language[] = ['javascript', 'typescript', 'cpp', 'python', 'java'];
 
 const DEFAULT_TEST: ICodeTestBase = {
   input: '',
@@ -12,9 +12,24 @@ const DEFAULT_TEST: ICodeTestBase = {
   correctOutput: ''
 };
 
+const DEFAULT_CODE: Record<Language, string> = {
+  javascript: '// right some code\n',
+  typescript: '// right some code\n',
+  cpp: '// right some code\n',
+  java: '// right some code\n',
+  python: '# right some code\n'
+};
+
 const CodeTester: FC<PageBase> = ({ documentTitle }) => {
-  const [codeContent, setCodeContent] = useState<string>('// right some code\n');
+  const [language, setLanguage] = useState<Language>('javascript');
+  const [codeContent, setCodeContent] = useState<string>(DEFAULT_CODE[language]);
   const [tests, setTests] = useState<ICodeTestBase[]>([]);
+
+  const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    const lang = e.target.value as Language;
+    setLanguage(lang);
+    setCodeContent(DEFAULT_CODE[lang]);
+  };
 
   const _handleRunTests = () => {
     console.log('typed_code: ', codeContent);
@@ -44,7 +59,13 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   return (
     <Flex direction="column" p="6">
       <Flex direction="row">
-        <CodeEditor height="80vh" width="50vw" content={codeContent} setContent={setCodeContent} />
+        <CodeEditor
+          height="80vh"
+          width="50vw"
+          content={codeContent}
+          setContent={setCodeContent}
+          lang={language}
+        />
         <Flex
           grow={1}
           direction="column"
@@ -75,7 +96,7 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
         </Flex>
       </Flex>
       <Flex w="50%" justify="space-around" m="0 auto">
-        <Select variant="filled" w="max-content">
+        <Select variant="filled" w="max-content" onChange={_handleChangeLanguage}>
           {SUPPORTED_LANGUAGES.map((lang) => (
             <option value={lang}>{lang}</option>
           ))}

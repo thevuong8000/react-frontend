@@ -2,11 +2,11 @@ import React, { FC, useRef } from 'react';
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
 import Editor, { OnChange, OnMount } from '@monaco-editor/react';
 
-type language = 'javascript' | 'cpp' | 'python' | 'java';
+export type Language = 'javascript' | 'typescript' | 'cpp' | 'python' | 'java';
 interface ICodeEditor {
   height?: string;
   width?: string;
-  lang?: language;
+  lang?: Language;
   content?: string;
   setContent: React.Dispatch<React.SetStateAction<string>>;
 }
