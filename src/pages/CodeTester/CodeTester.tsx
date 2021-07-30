@@ -22,7 +22,6 @@ const DEFAULT_TEST: ICodeTestBase = {
 };
 
 const CodeTester: FC<PageBase> = ({ documentTitle }) => {
-  console.log(getLanguageFromStorage());
   const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
   const [codeContent, setCodeContent] = useState<string>('');
   const [tests, setTests] = useState<ICodeTestBase[]>([]);
@@ -111,7 +110,9 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
       <Flex w="50%" justify="space-around" m="0 auto">
         <Select value={language} variant="filled" w="max-content" onChange={_handleChangeLanguage}>
           {SUPPORTED_LANGUAGES.map((lang) => (
-            <option value={lang}>{lang}</option>
+            <option key={`code-lang-${lang}`} value={lang}>
+              {lang}
+            </option>
           ))}
         </Select>
         <Button size="md" onClick={_handleAddTest}>
