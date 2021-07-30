@@ -1,4 +1,9 @@
 import { extendTheme } from '@chakra-ui/react';
+import { Language } from '@common/CodeEditor/CodeEditor';
+
+export const LOCAL_STORAGE = {
+	getKeyCodeStorage: (language: Language) => `code-storage-${language}`
+};
 
 export const APP_CONFIG = {
 	API_ROOT: process.env.REACT_APP_API_DOMAIN,

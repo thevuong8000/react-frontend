@@ -6,6 +6,7 @@ import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
 import CodeTest, { ICodeTest, ICodeTestBase } from './CodeTest/CodeTest';
 import { API_PATH } from '../../constants/configs';
 import { ICodeExecutorBody } from 'code_executor';
+import { getCodeFromStorage, saveCodeIntoStorage } from '@utilities/code-executor';
 
 const SUPPORTED_LANGUAGES: Language[] = ['javascript', 'typescript', 'cpp', 'python', 'java'];
 
@@ -15,17 +16,9 @@ const DEFAULT_TEST: ICodeTestBase = {
   correctOutput: ''
 };
 
-const DEFAULT_CODE: Record<Language, string> = {
-  javascript: '// right some code\n',
-  typescript: '// right some code\n',
-  cpp: '// right some code\n',
-  java: '// right some code\n',
-  python: '# right some code\n'
-};
-
 const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   const [language, setLanguage] = useState<Language>('javascript');
-  const [codeContent, setCodeContent] = useState<string>(DEFAULT_CODE[language]);
+  const [codeContent, setCodeContent] = useState<string>('');
   const [tests, setTests] = useState<ICodeTestBase[]>([]);
 
   const { apiPost } = useApi();
@@ -33,7 +26,6 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const lang = e.target.value as Language;
     setLanguage(lang);
-    setCodeContent(DEFAULT_CODE[lang]);
   };
 
   const _handleRunTests = () => {
@@ -60,6 +52,15 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   useEffect(() => {
     document.title = documentTitle;
   });
+
+  useEffect(() => {
+    setCodeContent(getCodeFromStorage(language));
+  }, [language]);
+
+  useEffect(() => {
+    if (!codeContent) return;
+    saveCodeIntoStorage(codeContent, language);
+  }, [codeContent]);
 
   return (
     <Flex direction="column" p="6">
