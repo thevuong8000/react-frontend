@@ -21,3 +21,21 @@ export const getCodeFromStorage = (language: Language): string => {
 	const key = LOCAL_STORAGE.getKeyCodeStorage(language);
 	return localStorage.getItem(key) ?? DEFAULT_CODE[language];
 };
+
+/**
+ * Save the chosen language into local storage
+ * @param language language
+ */
+export const saveLanguageIntoStorage = (language: Language) => {
+	const key = LOCAL_STORAGE.CODE_LANGUAGE;
+	localStorage.setItem(key, language);
+};
+
+/**
+ * Get language from local storage
+ * @returns 'javascript' | 'typescript' | 'cpp' | 'python' | 'java'
+ */
+export const getLanguageFromStorage = (): Language => {
+	const key = LOCAL_STORAGE.CODE_LANGUAGE;
+	return (localStorage.getItem(key) as Language) ?? 'cpp';
+};

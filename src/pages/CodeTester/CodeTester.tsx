@@ -6,7 +6,12 @@ import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
 import CodeTest, { ICodeTest, ICodeTestBase } from './CodeTest/CodeTest';
 import { API_PATH } from '../../constants/configs';
 import { ICodeExecutorBody } from 'code_executor';
-import { getCodeFromStorage, saveCodeIntoStorage } from '@utilities/code-executor';
+import {
+  getCodeFromStorage,
+  saveCodeIntoStorage,
+  getLanguageFromStorage,
+  saveLanguageIntoStorage
+} from '@utilities/code-executor';
 
 const SUPPORTED_LANGUAGES: Language[] = ['javascript', 'typescript', 'cpp', 'python', 'java'];
 
@@ -17,7 +22,8 @@ const DEFAULT_TEST: ICodeTestBase = {
 };
 
 const CodeTester: FC<PageBase> = ({ documentTitle }) => {
-  const [language, setLanguage] = useState<Language>('javascript');
+  console.log(getLanguageFromStorage());
+  const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
   const [codeContent, setCodeContent] = useState<string>('');
   const [tests, setTests] = useState<ICodeTestBase[]>([]);
 
@@ -54,6 +60,7 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   });
 
   useEffect(() => {
+    saveLanguageIntoStorage(language);
     setCodeContent(getCodeFromStorage(language));
   }, [language]);
 
@@ -102,7 +109,7 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
         </Flex>
       </Flex>
       <Flex w="50%" justify="space-around" m="0 auto">
-        <Select variant="filled" w="max-content" onChange={_handleChangeLanguage}>
+        <Select value={language} variant="filled" w="max-content" onChange={_handleChangeLanguage}>
           {SUPPORTED_LANGUAGES.map((lang) => (
             <option value={lang}>{lang}</option>
           ))}
