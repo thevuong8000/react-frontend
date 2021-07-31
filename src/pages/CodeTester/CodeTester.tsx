@@ -36,7 +36,7 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   const _handleRunTests = () => {
     const body: ICodeExecutorBody = {
       typedCode: codeContent,
-      input: '',
+      inputs: tests.map((test) => test.input),
       language
     };
     apiPost(API_PATH.CODE_EXECUTOR.ROOT, body);
