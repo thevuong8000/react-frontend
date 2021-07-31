@@ -18,7 +18,7 @@ const SUPPORTED_LANGUAGES: Language[] = ['javascript', 'typescript', 'cpp', 'pyt
 const DEFAULT_TEST: ICodeTestBase = {
   input: '',
   expectedOutput: '',
-  correctOutput: ''
+  output: ''
 };
 
 const CodeTester: FC<PageBase> = ({ documentTitle }) => {
@@ -99,7 +99,7 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
                 index={idx}
                 input={test.input}
                 expectedOutput={test.expectedOutput}
-                correctOutput={test.correctOutput}
+                output={test.output}
                 handleOnChange={_handleTestChange}
                 handleOnRemove={_handleRemoveTest}
               />

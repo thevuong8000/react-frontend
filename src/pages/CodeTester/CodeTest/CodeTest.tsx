@@ -6,7 +6,7 @@ import { VscRunAll } from 'react-icons/vsc';
 export interface ICodeTestBase {
   input: string;
   expectedOutput: string;
-  correctOutput: string;
+  output: string;
 }
 
 export interface ICodeTest extends ICodeTestBase {
@@ -18,12 +18,12 @@ export interface ICodeTest extends ICodeTestBase {
 const CodeTest: FC<ICodeTest> = ({
   input,
   expectedOutput,
-  correctOutput,
+  output,
   handleOnChange,
   handleOnRemove,
   index
 }) => {
-  const [test, setTest] = useState<ICodeTestBase>({ input, expectedOutput, correctOutput });
+  const [test, setTest] = useState<ICodeTestBase>({ input, expectedOutput, output });
 
   const _handleOnChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     const { name, value } = e.target;
@@ -80,7 +80,7 @@ const CodeTest: FC<ICodeTest> = ({
             w="100%"
             resize="none"
             placeholder="Corrected Output..."
-            defaultValue={correctOutput}
+            defaultValue={output}
             readOnly
             size="md"
           />
