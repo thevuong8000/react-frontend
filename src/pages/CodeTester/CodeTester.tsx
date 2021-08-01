@@ -44,6 +44,7 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
 
   const _checkResult = async (submissionId: string) => {
     setIsExecuting.on();
+    setTests((prevTests) => prevTests.map((test) => ({ ...test, output: '' })));
 
     const body: ICheckResult = {
       submissionId,
