@@ -3,7 +3,7 @@ import CodeEditor, { Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
-import CodeTest, { ICodeTest, ICodeTestBase } from './CodeTest/CodeTest';
+import CodeTest, { ICodeTest, ICodeTestContent } from './CodeTest/CodeTest';
 import { API_PATH } from '../../constants/configs';
 import { ICodeExecutorBody } from 'code_executor';
 import {
@@ -28,7 +28,7 @@ interface ICodeOutput {
   result: string[];
 }
 
-const DEFAULT_TEST: ICodeTestBase = {
+const DEFAULT_TEST: ICodeTestContent = {
   input: '',
   expectedOutput: '',
   output: ''
@@ -37,7 +37,7 @@ const DEFAULT_TEST: ICodeTestBase = {
 const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
   const [codeContent, setCodeContent] = useState<string>('');
-  const [tests, setTests] = useState<ICodeTestBase[]>([]);
+  const [tests, setTests] = useState<ICodeTestContent[]>([]);
 
   const { apiPost, getIntervalRequest } = useApi();
 
@@ -127,21 +127,11 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
             </Heading>
           )}
           <Flex w="100%" direction="column" gridGap="4">
-            <CodeTest
-              index={0}
-              input=""
-              expectedOutput=""
-              output=""
-              handleOnChange={_handleTestChange}
-              handleOnRemove={_handleRemoveTest}
-            />
             {tests.map((test, idx) => (
               <CodeTest
                 key={`test-${idx}`}
                 index={idx}
-                input={test.input}
-                expectedOutput={test.expectedOutput}
-                output={test.output}
+                test={test}
                 handleOnChange={_handleTestChange}
                 handleOnRemove={_handleRemoveTest}
               />

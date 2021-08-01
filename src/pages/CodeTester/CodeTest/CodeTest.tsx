@@ -4,36 +4,33 @@ import { MdDelete } from 'react-icons/md';
 import { VscRunAll } from 'react-icons/vsc';
 import TestResult, { ITestResultStatus } from './TestResult';
 
-export interface ICodeTestBase {
+export interface ICodeTestContent {
   input: string;
   expectedOutput: string;
   output: string;
 }
 
-export interface ICodeTest extends ICodeTestBase {
+export interface ICodeTest {
+  test: ICodeTestContent;
   index: number;
-  handleOnChange: (index: number, newTest: ICodeTestBase) => void;
+  handleOnChange: (index: number, newTest: ICodeTestContent) => void;
   handleOnRemove: (index: number) => void;
 }
 
-const CodeTest: FC<ICodeTest> = ({
-  input,
-  expectedOutput,
-  output,
-  handleOnChange,
-  handleOnRemove,
-  index
-}) => {
-  const [test, setTest] = useState<ICodeTestBase>({ input, expectedOutput, output });
+const CodeTest: FC<ICodeTest> = ({ test, handleOnChange, handleOnRemove, index }) => {
   const [testResult, setTestResult] = useState<Nullable<ITestResultStatus>>(null);
 
   const _handleOnChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     const { name, value } = e.target;
-    setTest((prevTest) => ({ ...prevTest, [name]: value }));
+    const newTest = { ...test, [name]: value };
+    handleOnChange(index, newTest);
   };
 
   useEffect(() => {
-    handleOnChange(index, test);
+    if (test.output) {
+      if (test.expectedOutput === test.output) setTestResult('Accepted');
+      else setTestResult('Wrong Answer');
+    }
   }, [test]);
 
   return (
@@ -92,7 +89,7 @@ const CodeTest: FC<ICodeTest> = ({
             w="100%"
             resize="none"
             placeholder="Corrected Output..."
-            defaultValue={output}
+            defaultValue={test.output}
             readOnly
             size="md"
           />
