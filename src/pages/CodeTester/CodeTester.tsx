@@ -48,7 +48,6 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     };
     const request = () =>
       apiPost<ICodeOutput>(API_PATH.CODE_EXECUTOR.CHECK_RESULT, body).then((res) => {
-        console.log(res);
         const { result } = res;
         setTests((prevTests) => prevTests.map((test, idx) => ({ ...test, output: result[idx] })));
         return res;
