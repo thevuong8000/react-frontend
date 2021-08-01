@@ -1,9 +1,9 @@
-import { Button, Flex, Heading, Select } from '@chakra-ui/react';
+import { Button, Flex, Heading, Select, useBoolean } from '@chakra-ui/react';
 import CodeEditor, { Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
-import CodeTest, { ICodeTest, ICodeTestBase } from './CodeTest/CodeTest';
+import CodeTest, { ICodeTest, ICodeTestContent } from './CodeTest/CodeTest';
 import { API_PATH } from '../../constants/configs';
 import { ICodeExecutorBody } from 'code_executor';
 import {
@@ -15,31 +15,73 @@ import {
 
 const SUPPORTED_LANGUAGES: Language[] = ['javascript', 'typescript', 'cpp', 'python', 'java'];
 
-const DEFAULT_TEST: ICodeTestBase = {
+interface ICheckResult {
+  submissionId: string;
+  numTests: number;
+}
+
+interface ISubmissionResponse {
+  submissionId: string;
+}
+
+interface ICodeOutput {
+  result: string[];
+}
+
+const DEFAULT_TEST: ICodeTestContent = {
   input: '',
   expectedOutput: '',
-  correctOutput: ''
+  output: ''
 };
 
 const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
   const [codeContent, setCodeContent] = useState<string>('');
-  const [tests, setTests] = useState<ICodeTestBase[]>([]);
+  const [tests, setTests] = useState<ICodeTestContent[]>([]);
+  const [isExecuting, setIsExecuting] = useBoolean(false);
 
-  const { apiPost } = useApi();
+  const { apiPost, getIntervalRequest } = useApi();
+
+  const _checkResult = async (submissionId: string) => {
+    setIsExecuting.on();
+    setTests((prevTests) => prevTests.map((test) => ({ ...test, output: '' })));
+
+    const body: ICheckResult = {
+      submissionId,
+      numTests: tests.length
+    };
+    const request = () =>
+      apiPost<ICodeOutput>(API_PATH.CODE_EXECUTOR.CHECK_RESULT, body).then((res) => {
+        const { result } = res;
+        setTests((prevTests) => prevTests.map((test, idx) => ({ ...test, output: result[idx] })));
+        return res;
+      });
+    const interval = getIntervalRequest<ICodeOutput>(
+      request,
+      (res) => {
+        const isFulfilled = res.result.every((elem) => elem !== null);
+        if (isFulfilled) setIsExecuting.off();
+        return isFulfilled;
+      },
+      1000
+    );
+    // stop requesting if server take too long to response the fulfilled result
+    setTimeout(() => clearInterval(interval), 10000);
+  };
+
+  const _handleRunTests = async () => {
+    const body: ICodeExecutorBody = {
+      typedCode: codeContent,
+      inputs: tests.map((test) => test.input),
+      language
+    };
+    const { submissionId } = await apiPost<ISubmissionResponse>(API_PATH.CODE_EXECUTOR.ROOT, body);
+    _checkResult(submissionId);
+  };
 
   const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const lang = e.target.value as Language;
     setLanguage(lang);
-  };
-
-  const _handleRunTests = () => {
-    const body: ICodeExecutorBody = {
-      typedCode: codeContent,
-      input: '',
-      language
-    };
-    apiPost(API_PATH.CODE_EXECUTOR.ROOT, body);
   };
 
   const _handleTestChange: ICodeTest['handleOnChange'] = (index, newTest) => {
@@ -97,9 +139,8 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
               <CodeTest
                 key={`test-${idx}`}
                 index={idx}
-                input={test.input}
-                expectedOutput={test.expectedOutput}
-                correctOutput={test.correctOutput}
+                isExecuting={isExecuting}
+                test={test}
                 handleOnChange={_handleTestChange}
                 handleOnRemove={_handleRemoveTest}
               />
