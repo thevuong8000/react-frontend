@@ -1,9 +1,9 @@
-import { Button, Flex, Heading, Select, useBoolean } from '@chakra-ui/react';
+import { Button, Flex, Select, useBoolean } from '@chakra-ui/react';
 import CodeEditor, { Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
-import CodeTest, { ICodeTest, ICodeTestContent } from './CodeTest/CodeTest';
+import { ICodeTest, ICodeTestContent } from './CodeTest/CodeTest';
 import { API_PATH } from '@constants/configs';
 import { ICodeExecutorBody } from 'code_executor';
 import {
@@ -12,8 +12,8 @@ import {
   getLanguageFromStorage,
   saveLanguageIntoStorage
 } from '@utilities/code-executor';
-
-const SUPPORTED_LANGUAGES: Language[] = ['javascript', 'typescript', 'cpp', 'python', 'java'];
+import TestList from './CodeTest/TestList';
+import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
 
 interface ICheckResult {
   submissionId: string;
@@ -56,15 +56,14 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
         setTests((prevTests) => prevTests.map((test, idx) => ({ ...test, output: result[idx] })));
         return res;
       });
-    const interval = getIntervalRequest<ICodeOutput>(
-      request,
-      (res) => {
-        const isFulfilled = res.result.every((elem) => elem);
-        if (isFulfilled) setIsExecuting.off();
-        return isFulfilled;
-      },
-      1000
-    );
+
+    const checkFn = (res: ICodeOutput) => {
+      const isFulfilled = res.result.every((elem) => elem);
+      if (isFulfilled) setIsExecuting.off();
+      return isFulfilled;
+    };
+
+    const interval = getIntervalRequest<ICodeOutput>(request, checkFn, 1000);
     // stop requesting if server take too long to response the fulfilled result
     setTimeout(() => {
       clearInterval(interval);
@@ -72,14 +71,19 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     }, 10000);
   };
 
-  const _handleRunTests = async () => {
+  const _handleRunTests = async (testIndices: number[]) => {
+    const targetTests = tests.filter((_, idx) => testIndices.includes(idx));
     const body: ICodeExecutorBody = {
       typedCode: codeContent,
-      inputs: tests.map((test) => test.input),
+      inputs: targetTests.map((test) => test.input),
       language
     };
     const { submissionId } = await apiPost<ISubmissionResponse>(API_PATH.CODE_EXECUTOR.ROOT, body);
     _checkResult(submissionId);
+  };
+
+  const _handleRunAllTests = () => {
+    _handleRunTests(Array.from(Array(tests.length).keys()));
   };
 
   const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = (e) => {
@@ -87,12 +91,12 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     setLanguage(lang);
   };
 
-  const _handleTestChange: ICodeTest['handleOnChange'] = (index, newTest) => {
-    setTests((prevTests) => prevTests.map((test, idx) => (idx == index ? newTest : test)));
-  };
-
   const _handleAddTest = () => {
     setTests((prevTests) => [...prevTests, { ...DEFAULT_TEST }]);
+  };
+
+  const _handleTestChange: ICodeTest['handleOnChange'] = (index, newTest) => {
+    setTests((prevTests) => prevTests.map((test, idx) => (idx == index ? newTest : test)));
   };
 
   const _handleRemoveTest: ICodeTest['handleOnRemove'] = (index) => {
@@ -130,25 +134,14 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
           pt="0"
           maxHeight="80vh"
           overflowY="auto"
-          pos="relative"
+          gridGap="4"
         >
-          {tests.length <= 0 && (
-            <Heading m="0 auto" mb="4">
-              You have no test
-            </Heading>
-          )}
-          <Flex w="100%" direction="column" gridGap="4">
-            {tests.map((test, idx) => (
-              <CodeTest
-                key={`test-${idx}`}
-                index={idx}
-                isExecuting={isExecuting}
-                test={test}
-                handleOnChange={_handleTestChange}
-                handleOnRemove={_handleRemoveTest}
-              />
-            ))}
-          </Flex>
+          <TestList
+            tests={tests}
+            isExecuting={isExecuting}
+            handleTestChange={_handleTestChange}
+            handleRemoveTest={_handleRemoveTest}
+          />
         </Flex>
       </Flex>
 
@@ -164,7 +157,7 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
         <Button size="md" onClick={_handleAddTest}>
           Add Test
         </Button>
-        <Button size="md" onClick={_handleRunTests}>
+        <Button size="md" onClick={_handleRunAllTests}>
           Run Test
         </Button>
       </Flex>

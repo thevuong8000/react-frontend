@@ -15,14 +15,14 @@ export interface ICodeTestContent {
 export interface ICodeTest {
   test: ICodeTestContent;
   isExecuting?: boolean;
-  index: number;
-  handleOnChange: (index: number, newTest: ICodeTestContent) => void;
-  handleOnRemove: (index: number) => void;
+  id: number;
+  handleOnChange: (id: ICodeTest['id'], newTest: ICodeTestContent) => void;
+  handleOnRemove: (id: ICodeTest['id']) => void;
 }
 
 const CodeTest: FC<ICodeTest> = ({
   test,
-  index,
+  id,
   isExecuting = false,
   handleOnChange,
   handleOnRemove
@@ -34,7 +34,7 @@ const CodeTest: FC<ICodeTest> = ({
 
     // Remove output if test content is changed
     const newTest: ICodeTestContent = { ...test, output: '', [name]: value };
-    handleOnChange(index, newTest);
+    handleOnChange(id, newTest);
   };
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const CodeTest: FC<ICodeTest> = ({
     <Flex direction="column">
       {/* Test Toolbar */}
       <Flex direction="row" mb={1}>
-        <Text mr="2">Test #{index + 1}</Text>
+        <Text mr="2">Test #{id}</Text>
 
         <Tooltip label="Run this test">
           <Button variant="ghost" colorScheme="green">
@@ -57,7 +57,7 @@ const CodeTest: FC<ICodeTest> = ({
         </Tooltip>
 
         <Tooltip label="Remove this test">
-          <Button variant="ghost" colorScheme="red" onClick={() => handleOnRemove(index)}>
+          <Button variant="ghost" colorScheme="red" onClick={() => handleOnRemove(id)}>
             <MdDelete size="22" />
           </Button>
         </Tooltip>
