@@ -12,6 +12,7 @@ import {
   getLanguageFromStorage,
   saveLanguageIntoStorage
 } from '@utilities/code-executor';
+import TestList from './CodeTest/TestList';
 
 const SUPPORTED_LANGUAGES: Language[] = ['javascript', 'typescript', 'cpp', 'python', 'java'];
 
@@ -87,12 +88,12 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     setLanguage(lang);
   };
 
-  const _handleTestChange: ICodeTest['handleOnChange'] = (index, newTest) => {
-    setTests((prevTests) => prevTests.map((test, idx) => (idx == index ? newTest : test)));
-  };
-
   const _handleAddTest = () => {
     setTests((prevTests) => [...prevTests, { ...DEFAULT_TEST }]);
+  };
+
+  const _handleTestChange: ICodeTest['handleOnChange'] = (index, newTest) => {
+    setTests((prevTests) => prevTests.map((test, idx) => (idx == index ? newTest : test)));
   };
 
   const _handleRemoveTest: ICodeTest['handleOnRemove'] = (index) => {
@@ -130,25 +131,14 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
           pt="0"
           maxHeight="80vh"
           overflowY="auto"
-          pos="relative"
+          gridGap="4"
         >
-          {tests.length <= 0 && (
-            <Heading m="0 auto" mb="4">
-              You have no test
-            </Heading>
-          )}
-          <Flex w="100%" direction="column" gridGap="4">
-            {tests.map((test, idx) => (
-              <CodeTest
-                key={`test-${idx}`}
-                index={idx}
-                isExecuting={isExecuting}
-                test={test}
-                handleOnChange={_handleTestChange}
-                handleOnRemove={_handleRemoveTest}
-              />
-            ))}
-          </Flex>
+          <TestList
+            tests={tests}
+            isExecuting={isExecuting}
+            handleTestChange={_handleTestChange}
+            handleRemoveTest={_handleRemoveTest}
+          />
         </Flex>
       </Flex>
 
