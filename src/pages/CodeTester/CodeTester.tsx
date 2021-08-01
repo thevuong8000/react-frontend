@@ -1,9 +1,9 @@
-import { Button, Flex, Heading, Select, useBoolean } from '@chakra-ui/react';
+import { Button, Flex, Select, useBoolean } from '@chakra-ui/react';
 import CodeEditor, { Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
-import CodeTest, { ICodeTest, ICodeTestContent } from './CodeTest/CodeTest';
+import { ICodeTest, ICodeTestContent } from './CodeTest/CodeTest';
 import { API_PATH } from '@constants/configs';
 import { ICodeExecutorBody } from 'code_executor';
 import {
@@ -13,8 +13,7 @@ import {
   saveLanguageIntoStorage
 } from '@utilities/code-executor';
 import TestList from './CodeTest/TestList';
-
-const SUPPORTED_LANGUAGES: Language[] = ['javascript', 'typescript', 'cpp', 'python', 'java'];
+import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
 
 interface ICheckResult {
   submissionId: string;
@@ -57,15 +56,14 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
         setTests((prevTests) => prevTests.map((test, idx) => ({ ...test, output: result[idx] })));
         return res;
       });
-    const interval = getIntervalRequest<ICodeOutput>(
-      request,
-      (res) => {
-        const isFulfilled = res.result.every((elem) => elem);
-        if (isFulfilled) setIsExecuting.off();
-        return isFulfilled;
-      },
-      1000
-    );
+
+    const checkFn = (res: ICodeOutput) => {
+      const isFulfilled = res.result.every((elem) => elem);
+      if (isFulfilled) setIsExecuting.off();
+      return isFulfilled;
+    };
+
+    const interval = getIntervalRequest<ICodeOutput>(request, checkFn, 1000);
     // stop requesting if server take too long to response the fulfilled result
     setTimeout(() => {
       clearInterval(interval);

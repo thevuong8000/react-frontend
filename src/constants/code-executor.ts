@@ -7,3 +7,11 @@ export const DEFAULT_CODE: Record<Language, string> = {
 	java: '// right some code\n',
 	python: '# right some code\n'
 };
+
+export const SUPPORTED_LANGUAGES: Language[] = [
+	'javascript',
+	'typescript',
+	'cpp',
+	'python',
+	'java'
+];
