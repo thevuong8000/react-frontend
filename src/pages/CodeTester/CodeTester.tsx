@@ -71,14 +71,18 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     }, 10000);
   };
 
-  const _handleRunTests = async () => {
+  const _handleRunTests = async (targetTests: ICodeTestContent[]) => {
     const body: ICodeExecutorBody = {
       typedCode: codeContent,
-      inputs: tests.map((test) => test.input),
+      inputs: targetTests.map((test) => test.input),
       language
     };
     const { submissionId } = await apiPost<ISubmissionResponse>(API_PATH.CODE_EXECUTOR.ROOT, body);
     _checkResult(submissionId);
+  };
+
+  const _handleRunAllTests = () => {
+    _handleRunTests(tests);
   };
 
   const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = (e) => {
@@ -152,7 +156,7 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
         <Button size="md" onClick={_handleAddTest}>
           Add Test
         </Button>
-        <Button size="md" onClick={_handleRunTests}>
+        <Button size="md" onClick={_handleRunAllTests}>
           Run Test
         </Button>
       </Flex>
