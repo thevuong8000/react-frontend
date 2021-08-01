@@ -21,7 +21,7 @@ const TestList: FC<ITestList> = ({ tests, isExecuting, handleTestChange, handleR
       {tests.map((test, idx) => (
         <CodeTest
           key={`test-${idx}`}
-          index={idx}
+          id={idx}
           isExecuting={isExecuting}
           test={test}
           handleOnChange={handleTestChange}
