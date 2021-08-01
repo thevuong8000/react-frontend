@@ -1,7 +1,9 @@
 import { Button, Flex, Text, Textarea, Tooltip } from '@chakra-ui/react';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
 import { MdDelete } from 'react-icons/md';
+import { TiTick } from 'react-icons/ti';
 import { VscRunAll } from 'react-icons/vsc';
+import { IoMdClose } from 'react-icons/io';
 
 export interface ICodeTestBase {
   input: string;
@@ -15,6 +17,40 @@ export interface ICodeTest extends ICodeTestBase {
   handleOnRemove: (index: number) => void;
 }
 
+type ITestResult = 'Accepted' | 'Wrong Answer' | 'Time Limit Exceeded' | 'Memory Limit Exceeded';
+
+const IconCodeResult: FC<{ result: ITestResult }> = ({ result }) => {
+  switch (result) {
+    case 'Accepted':
+      return (
+        <Button
+          variant="ghost"
+          colorScheme="green"
+          _hover={{ bg: 'none' }}
+          _active={{ bg: 'none' }}
+          pl={0}
+        >
+          <TiTick size={25} />
+          <Text>{result}</Text>
+        </Button>
+      );
+
+    default:
+      return (
+        <Button
+          variant="ghost"
+          colorScheme="red"
+          _hover={{ bg: 'none' }}
+          _active={{ bg: 'none' }}
+          pl={0}
+        >
+          <IoMdClose size={25} />
+          <Text>{result}</Text>
+        </Button>
+      );
+  }
+};
+
 const CodeTest: FC<ICodeTest> = ({
   input,
   expectedOutput,
@@ -24,6 +60,7 @@ const CodeTest: FC<ICodeTest> = ({
   index
 }) => {
   const [test, setTest] = useState<ICodeTestBase>({ input, expectedOutput, output });
+  const [testResult, setTestResult] = useState<Nullable<ITestResult>>(null);
 
   const _handleOnChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     const { name, value } = e.target;
@@ -36,6 +73,7 @@ const CodeTest: FC<ICodeTest> = ({
 
   return (
     <Flex direction="column">
+      {/* Test Toolbar */}
       <Flex direction="row">
         <Text mb="1" mr="1">
           Test #{index + 1}
@@ -53,6 +91,18 @@ const CodeTest: FC<ICodeTest> = ({
           </Button>
         </Tooltip>
       </Flex>
+
+      {/* Test Result */}
+      <Flex>
+        <IconCodeResult result="Accepted" />
+      </Flex>
+      {testResult && (
+        <Flex>
+          <IconCodeResult result={testResult} />
+        </Flex>
+      )}
+
+      {/* Test Content */}
       <Flex direction="row" w="100%" gridGap="3" h="48">
         <Textarea
           name="input"
