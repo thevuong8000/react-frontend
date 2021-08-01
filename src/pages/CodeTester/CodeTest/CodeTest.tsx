@@ -1,4 +1,4 @@
-import { Button, Flex, Text, Textarea, Tooltip } from '@chakra-ui/react';
+import { Button, Flex, Spinner, Text, Textarea, Tooltip } from '@chakra-ui/react';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
 import { MdDelete } from 'react-icons/md';
 import { VscRunAll } from 'react-icons/vsc';
@@ -12,17 +12,26 @@ export interface ICodeTestContent {
 
 export interface ICodeTest {
   test: ICodeTestContent;
+  isExecuting?: boolean;
   index: number;
   handleOnChange: (index: number, newTest: ICodeTestContent) => void;
   handleOnRemove: (index: number) => void;
 }
 
-const CodeTest: FC<ICodeTest> = ({ test, handleOnChange, handleOnRemove, index }) => {
+const CodeTest: FC<ICodeTest> = ({
+  test,
+  index,
+  isExecuting = false,
+  handleOnChange,
+  handleOnRemove
+}) => {
   const [testResult, setTestResult] = useState<Nullable<ITestResultStatus>>(null);
 
   const _handleOnChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     const { name, value } = e.target;
-    const newTest = { ...test, [name]: value };
+
+    // Remove output if test content is changed
+    const newTest: ICodeTestContent = { ...test, output: '', [name]: value };
     handleOnChange(index, newTest);
   };
 
@@ -30,16 +39,14 @@ const CodeTest: FC<ICodeTest> = ({ test, handleOnChange, handleOnRemove, index }
     if (test.output) {
       if (test.expectedOutput === test.output) setTestResult('Accepted');
       else setTestResult('Wrong Answer');
-    }
+    } else setTestResult(null);
   }, [test]);
 
   return (
     <Flex direction="column">
       {/* Test Toolbar */}
-      <Flex direction="row">
-        <Text mb="1" mr="1">
-          Test #{index + 1}
-        </Text>
+      <Flex direction="row" mb={1}>
+        <Text mr="2">Test #{index + 1}</Text>
 
         <Tooltip label="Run this test">
           <Button variant="ghost" colorScheme="green">
@@ -52,6 +59,11 @@ const CodeTest: FC<ICodeTest> = ({ test, handleOnChange, handleOnRemove, index }
             <MdDelete size="22" />
           </Button>
         </Tooltip>
+        {isExecuting && (
+          <Flex pl="2" pr="2" align="center">
+            <Spinner size="sm" speed="0.8s" color="blue.500" />
+          </Flex>
+        )}
       </Flex>
 
       {/* Test Result */}

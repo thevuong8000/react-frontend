@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Select } from '@chakra-ui/react';
+import { Button, Flex, Heading, Select, useBoolean } from '@chakra-ui/react';
 import CodeEditor, { Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
@@ -38,10 +38,13 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
   const [codeContent, setCodeContent] = useState<string>('');
   const [tests, setTests] = useState<ICodeTestContent[]>([]);
+  const [isExecuting, setIsExecuting] = useBoolean(false);
 
   const { apiPost, getIntervalRequest } = useApi();
 
   const _checkResult = async (submissionId: string) => {
+    setIsExecuting.on();
+
     const body: ICheckResult = {
       submissionId,
       numTests: tests.length
@@ -54,7 +57,11 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
       });
     const interval = getIntervalRequest<ICodeOutput>(
       request,
-      (res) => res.result.every((elem) => elem !== null),
+      (res) => {
+        const isFulfilled = res.result.every((elem) => elem !== null);
+        if (isFulfilled) setIsExecuting.off();
+        return isFulfilled;
+      },
       1000
     );
     // stop requesting if server take too long to response the fulfilled result
@@ -131,6 +138,7 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
               <CodeTest
                 key={`test-${idx}`}
                 index={idx}
+                isExecuting={isExecuting}
                 test={test}
                 handleOnChange={_handleTestChange}
                 handleOnRemove={_handleRemoveTest}
