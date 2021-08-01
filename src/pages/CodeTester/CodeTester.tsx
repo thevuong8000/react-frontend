@@ -4,7 +4,7 @@ import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
 import CodeTest, { ICodeTest, ICodeTestContent } from './CodeTest/CodeTest';
-import { API_PATH } from '../../constants/configs';
+import { API_PATH } from '@constants/configs';
 import { ICodeExecutorBody } from 'code_executor';
 import {
   getCodeFromStorage,
@@ -59,14 +59,17 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     const interval = getIntervalRequest<ICodeOutput>(
       request,
       (res) => {
-        const isFulfilled = res.result.every((elem) => elem !== null);
+        const isFulfilled = res.result.every((elem) => elem);
         if (isFulfilled) setIsExecuting.off();
         return isFulfilled;
       },
       1000
     );
     // stop requesting if server take too long to response the fulfilled result
-    setTimeout(() => clearInterval(interval), 10000);
+    setTimeout(() => {
+      clearInterval(interval);
+      setIsExecuting.off();
+    }, 10000);
   };
 
   const _handleRunTests = async () => {
@@ -148,6 +151,8 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
           </Flex>
         </Flex>
       </Flex>
+
+      {/* Functional Buttons */}
       <Flex w="50%" justify="space-around" m="0 auto">
         <Select value={language} variant="filled" w="max-content" onChange={_handleChangeLanguage}>
           {SUPPORTED_LANGUAGES.map((lang) => (
