@@ -71,7 +71,8 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     }, 10000);
   };
 
-  const _handleRunTests = async (targetTests: ICodeTestContent[]) => {
+  const _handleRunTests = async (testIndices: number[]) => {
+    const targetTests = tests.filter((_, idx) => testIndices.includes(idx));
     const body: ICodeExecutorBody = {
       typedCode: codeContent,
       inputs: targetTests.map((test) => test.input),
@@ -82,7 +83,7 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   };
 
   const _handleRunAllTests = () => {
-    _handleRunTests(tests);
+    _handleRunTests(Array.from(Array(tests.length).keys()));
   };
 
   const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = (e) => {
