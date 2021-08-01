@@ -24,7 +24,8 @@ export const API_PATH = {
 		CHANGE_PASSWORD: (id: string) => `${APP_CONFIG.API_ROOT}/users/${id}/change-password`
 	},
 	CODE_EXECUTOR: {
-		ROOT: `${APP_CONFIG.API_ROOT}/code-executor`
+		ROOT: `${APP_CONFIG.API_ROOT}/code-executor`,
+		CHECK_RESULT: `${APP_CONFIG.API_ROOT}/code-executor/check-result`
 	}
 };
 

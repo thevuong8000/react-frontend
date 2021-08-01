@@ -15,6 +15,19 @@ import {
 
 const SUPPORTED_LANGUAGES: Language[] = ['javascript', 'typescript', 'cpp', 'python', 'java'];
 
+interface ICheckResult {
+  submissionId: string;
+  numTests: number;
+}
+
+interface ISubmissionResponse {
+  submissionId: string;
+}
+
+interface ICodeOutput {
+  result: string[];
+}
+
 const DEFAULT_TEST: ICodeTestBase = {
   input: '',
   expectedOutput: '',
@@ -26,20 +39,42 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   const [codeContent, setCodeContent] = useState<string>('');
   const [tests, setTests] = useState<ICodeTestBase[]>([]);
 
-  const { apiPost } = useApi();
+  const { apiPost, getIntervalRequest } = useApi();
 
-  const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const lang = e.target.value as Language;
-    setLanguage(lang);
+  const _checkResult = async (submissionId: string) => {
+    const body: ICheckResult = {
+      submissionId,
+      numTests: tests.length
+    };
+    const request = () =>
+      apiPost<ICodeOutput>(API_PATH.CODE_EXECUTOR.CHECK_RESULT, body).then((res) => {
+        console.log(res);
+        const { result } = res;
+        setTests((prevTests) => prevTests.map((test, idx) => ({ ...test, output: result[idx] })));
+        return res;
+      });
+    const interval = getIntervalRequest<ICodeOutput>(
+      request,
+      (res) => res.result.every((elem) => elem !== null),
+      1000
+    );
+    // stop requesting if server take too long to response the fulfilled result
+    setTimeout(() => clearInterval(interval), 10000);
   };
 
-  const _handleRunTests = () => {
+  const _handleRunTests = async () => {
     const body: ICodeExecutorBody = {
       typedCode: codeContent,
       inputs: tests.map((test) => test.input),
       language
     };
-    apiPost(API_PATH.CODE_EXECUTOR.ROOT, body);
+    const { submissionId } = await apiPost<ISubmissionResponse>(API_PATH.CODE_EXECUTOR.ROOT, body);
+    _checkResult(submissionId);
+  };
+
+  const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    const lang = e.target.value as Language;
+    setLanguage(lang);
   };
 
   const _handleTestChange: ICodeTest['handleOnChange'] = (index, newTest) => {
