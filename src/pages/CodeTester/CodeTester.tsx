@@ -127,14 +127,14 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
             </Heading>
           )}
           <Flex w="100%" direction="column" gridGap="4">
-            {/* <CodeTest
+            <CodeTest
               index={0}
-              input=''
-              expectedOutput=''
-              output=''
+              input=""
+              expectedOutput=""
+              output=""
               handleOnChange={_handleTestChange}
               handleOnRemove={_handleRemoveTest}
-            /> */}
+            />
             {tests.map((test, idx) => (
               <CodeTest
                 key={`test-${idx}`}
