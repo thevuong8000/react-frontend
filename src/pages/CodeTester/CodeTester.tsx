@@ -31,7 +31,8 @@ interface ICodeOutput {
 const DEFAULT_TEST: ICodeTestContent = {
   input: '',
   expectedOutput: '',
-  output: ''
+  output: '',
+  isCollapsed: false
 };
 
 const CodeTester: FC<PageBase> = ({ documentTitle }) => {
@@ -42,7 +43,12 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
 
   const { apiPost, getIntervalRequest } = useApi();
 
+  const _collapseAllTests = () => {
+    setTests((prevTests) => prevTests.map((test) => ({ ...test, isCollapsed: true })));
+  };
+
   const _checkResult = async (submissionId: string) => {
+    _collapseAllTests();
     setIsExecuting.on();
     setTests((prevTests) => prevTests.map((test) => ({ ...test, output: '' })));
 
