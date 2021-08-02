@@ -1,4 +1,4 @@
-import { Heading } from '@chakra-ui/react';
+import { Accordion, Heading } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import CodeTest, { ICodeTest, ICodeTestContent } from './CodeTest';
 
@@ -9,6 +9,10 @@ interface ITestList {
   handleRemoveTest: ICodeTest['handleOnRemove'];
 }
 const TestList: FC<ITestList> = ({ tests, isExecuting, handleTestChange, handleRemoveTest }) => {
+  const indices = tests
+    .map((test, idx) => (test.isCollapsed ? null : idx))
+    .filter((expandedIdx) => expandedIdx !== null);
+
   if (tests.length <= 0)
     return (
       <Heading m="0 auto" mb="4">
@@ -17,7 +21,7 @@ const TestList: FC<ITestList> = ({ tests, isExecuting, handleTestChange, handleR
     );
 
   return (
-    <>
+    <Accordion index={indices as number[]} allowMultiple allowToggle>
       {tests.map((test, idx) => (
         <CodeTest
           key={`test-${idx}`}
@@ -28,7 +32,7 @@ const TestList: FC<ITestList> = ({ tests, isExecuting, handleTestChange, handleR
           handleOnRemove={handleRemoveTest}
         />
       ))}
-    </>
+    </Accordion>
   );
 };
 
