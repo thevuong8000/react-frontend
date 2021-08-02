@@ -3,7 +3,8 @@ import { Language } from '@common/CodeEditor/CodeEditor';
 
 export const LOCAL_STORAGE = {
 	getKeyCodeStorage: (language: Language) => `code-storage-${language}`,
-	CODE_LANGUAGE: 'code-language-storage'
+	CODE_LANGUAGE: 'code-language-storage',
+	TESTS: 'tests-storage'
 };
 
 export const APP_CONFIG = {
