@@ -1,4 +1,4 @@
-import { Button, Flex, Select, useBoolean } from '@chakra-ui/react';
+import { Button, Flex, Select } from '@chakra-ui/react';
 import CodeEditor, { Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
@@ -16,6 +16,7 @@ import {
 } from '@utilities/code-executor';
 import TestList from './CodeTest/TestList';
 import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
+import { isEmpty } from '@utilities/helper';
 
 interface ICheckResult {
   submissionId: string;
@@ -34,14 +35,14 @@ const DEFAULT_TEST: ICodeTestContent = {
   input: '',
   expectedOutput: '',
   output: '',
-  isCollapsed: false
+  isCollapsed: false,
+  isExecuting: false
 };
 
 const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
   const [codeContent, setCodeContent] = useState<string>('');
   const [tests, setTests] = useState<ICodeTestContent[]>(getTestsFromStorage());
-  const [isExecuting, setIsExecuting] = useBoolean(false);
 
   const { apiPost, getIntervalRequest } = useApi();
 
@@ -49,11 +50,15 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     setTests((prevTests) => prevTests.map((test) => ({ ...test, isCollapsed: true })));
   };
 
-  const _checkResult = async (submissionId: string) => {
-    _collapseAllTests();
-    setIsExecuting.on();
-    setTests((prevTests) => prevTests.map((test) => ({ ...test, output: '' })));
+  const _setExecuteTests = (targetTestsIndices: number[]) => {
+    setTests((prevTests) =>
+      prevTests.map((test, idx) => {
+        return targetTestsIndices.includes(idx) ? { ...test, isExecuting: true } : test;
+      })
+    );
+  };
 
+  const _checkResult = async (submissionId: string) => {
     const body: ICheckResult = {
       submissionId,
       numTests: tests.length
@@ -61,13 +66,18 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     const request = () =>
       apiPost<ICodeOutput>(API_PATH.CODE_EXECUTOR.CHECK_RESULT, body).then((res) => {
         const { result } = res;
-        setTests((prevTests) => prevTests.map((test, idx) => ({ ...test, output: result[idx] })));
+        setTests((prevTests) =>
+          prevTests.map((test, idx) => ({
+            ...test,
+            output: result[idx],
+            isExecuting: isEmpty(result[idx])
+          }))
+        );
         return res;
       });
 
     const checkFn = (res: ICodeOutput) => {
       const isFulfilled = res.result.every((elem) => elem);
-      if (isFulfilled) setIsExecuting.off();
       return isFulfilled;
     };
 
@@ -75,11 +85,14 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     // stop requesting if server take too long to response the fulfilled result
     setTimeout(() => {
       clearInterval(interval);
-      setIsExecuting.off();
     }, 10000);
   };
 
   const _handleRunTests = async (testIndices: number[]) => {
+    setTests((prevTests) => prevTests.map((test) => ({ ...test, output: '' })));
+    _setExecuteTests(testIndices);
+    _collapseAllTests();
+
     const targetTests = tests.filter((_, idx) => testIndices.includes(idx));
     const body: ICodeExecutorBody = {
       typedCode: codeContent,
@@ -150,7 +163,6 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
         >
           <TestList
             tests={tests}
-            isExecuting={isExecuting}
             handleTestChange={_handleTestChange}
             handleRemoveTest={_handleRemoveTest}
           />
