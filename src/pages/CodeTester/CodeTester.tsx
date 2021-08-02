@@ -10,7 +10,9 @@ import {
   getCodeFromStorage,
   saveCodeIntoStorage,
   getLanguageFromStorage,
-  saveLanguageIntoStorage
+  saveLanguageIntoStorage,
+  getTestsFromStorage,
+  saveTestsIntoStorage
 } from '@utilities/code-executor';
 import TestList from './CodeTest/TestList';
 import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
@@ -38,7 +40,7 @@ const DEFAULT_TEST: ICodeTestContent = {
 const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
   const [codeContent, setCodeContent] = useState<string>('');
-  const [tests, setTests] = useState<ICodeTestContent[]>([]);
+  const [tests, setTests] = useState<ICodeTestContent[]>(getTestsFromStorage());
   const [isExecuting, setIsExecuting] = useBoolean(false);
 
   const { apiPost, getIntervalRequest } = useApi();
@@ -122,6 +124,10 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     if (!codeContent) return;
     saveCodeIntoStorage(codeContent, language);
   }, [codeContent]);
+
+  useEffect(() => {
+    saveTestsIntoStorage(tests);
+  }, [tests]);
 
   return (
     <Flex direction="column" p="6">
