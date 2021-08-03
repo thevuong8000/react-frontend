@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid';
+
 /**
  * Replace variables (which is placed between ${}) in a string
  * @param source input string.
@@ -49,3 +51,12 @@ export const isEmpty = (input: any): boolean =>
 	input === null ||
 	input === undefined ||
 	(typeof input === 'object' && Object.keys(input).length <= 0);
+
+/**
+ * Generate a random id with specific length
+ * @param length the length of id
+ * @returns the id
+ */
+export const generateId = (length: number | undefined = undefined) => {
+	return nanoid(length);
+};

@@ -6,8 +6,14 @@ interface ITestList {
   tests: ICodeTestContent[];
   handleTestChange: ICodeTest['handleOnChange'];
   handleRemoveTest: ICodeTest['handleOnRemove'];
+  handleRunSingleTest: ICodeTest['handleOnRunSingleTest'];
 }
-const TestList: FC<ITestList> = ({ tests, handleTestChange, handleRemoveTest }) => {
+const TestList: FC<ITestList> = ({
+  tests,
+  handleTestChange,
+  handleRemoveTest,
+  handleRunSingleTest
+}) => {
   const indices = tests
     .map((test, idx) => (test.isCollapsed ? null : idx))
     .filter((expandedIdx) => expandedIdx !== null);
@@ -24,10 +30,10 @@ const TestList: FC<ITestList> = ({ tests, handleTestChange, handleRemoveTest }) 
       {tests.map((test, idx) => (
         <CodeTest
           key={`test-${idx}`}
-          id={idx}
           test={test}
           handleOnChange={handleTestChange}
           handleOnRemove={handleRemoveTest}
+          handleOnRunSingleTest={handleRunSingleTest}
         />
       ))}
     </Accordion>

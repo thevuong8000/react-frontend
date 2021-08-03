@@ -16,11 +16,10 @@ import {
 } from '@utilities/code-executor';
 import TestList from './CodeTest/TestList';
 import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
-import { isEmpty } from '@utilities/helper';
+import { isEmpty, generateId } from '@utilities/helper';
 
 interface ICheckResult {
   submissionId: string;
-  numTests: number;
 }
 
 interface ISubmissionResponse {
@@ -28,16 +27,17 @@ interface ISubmissionResponse {
 }
 
 interface ICodeOutput {
-  result: string[];
+  result: Record<string, string>;
 }
 
-const DEFAULT_TEST: ICodeTestContent = {
+export const createNewTest = (): ICodeTestContent => ({
+  id: generateId(8),
   input: '',
   expectedOutput: '',
   output: '',
   isCollapsed: false,
   executionStatus: 'Not Started'
-};
+});
 
 const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
@@ -50,34 +50,40 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     setTests((prevTests) => prevTests.map((test) => ({ ...test, isCollapsed: true })));
   };
 
-  const _setExecuteTests = (targetTestsIndices: number[]) => {
+  const _setExecuteTests = (testId: string | undefined) => {
     setTests((prevTests) =>
-      prevTests.map((test, idx) => {
-        return targetTestsIndices.includes(idx) ? { ...test, executionStatus: 'Started' } : test;
+      prevTests.map((test) => {
+        return testId
+          ? { ...test, executionStatus: test.id === testId ? 'Started' : test.executionStatus }
+          : { ...test, executionStatus: 'Started' };
       })
     );
   };
 
-  const _checkResult = async (submissionId: string) => {
+  const _checkResult = async (submissionId: string, singleId: string | undefined = undefined) => {
     const body: ICheckResult = {
-      submissionId,
-      numTests: tests.length
+      submissionId
     };
     const request = () =>
       apiPost<ICodeOutput>(API_PATH.CODE_EXECUTOR.CHECK_RESULT, body).then((res) => {
         const { result } = res;
         setTests((prevTests) =>
-          prevTests.map((test, idx) => ({
-            ...test,
-            output: result[idx],
-            executionStatus: isEmpty(result[idx]) ? 'Started' : 'Finished'
-          }))
+          prevTests.map((test) => {
+            return singleId && test.id !== singleId
+              ? test
+              : {
+                  ...test,
+                  output: result[test.id],
+                  executionStatus: isEmpty(result[test.id]) ? 'Started' : 'Finished'
+                };
+          })
         );
         return res;
       });
 
     const checkFn = (res: ICodeOutput) => {
-      const isFulfilled = res.result.every((elem) => elem);
+      const numsTests = singleId ? 1 : tests.length;
+      const isFulfilled = Object.values(res.result).filter((output) => output).length === numsTests;
       return isFulfilled;
     };
 
@@ -88,23 +94,22 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     }, 10000);
   };
 
-  const _handleRunTests = async (testIndices: number[]) => {
-    _setExecuteTests(testIndices);
-    _collapseAllTests();
-
-    const targetTests = tests.filter((_, idx) => testIndices.includes(idx));
+  const _handleRunTests = async (testId: string | undefined = undefined) => {
+    _setExecuteTests(testId);
+    if (!testId) _collapseAllTests();
+    const targetTests: ICodeTestContent[] = testId
+      ? ([tests.find((test) => test.id === testId)].filter((t) => t) as ICodeTestContent[])
+      : tests;
     const body: ICodeExecutorBody = {
       typedCode: codeContent,
-      inputs: targetTests.map((test) => test.input),
+      inputs: targetTests.map((test) => ({ id: test.id, input: test.input })),
       language
     };
     const { submissionId } = await apiPost<ISubmissionResponse>(API_PATH.CODE_EXECUTOR.ROOT, body);
-    _checkResult(submissionId);
+    _checkResult(submissionId, testId);
   };
 
-  const _handleRunAllTests = () => {
-    _handleRunTests(Array.from(Array(tests.length).keys()));
-  };
+  const _handleRunAllTests = () => _handleRunTests();
 
   const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = (e) => {
     const lang = e.target.value as Language;
@@ -112,15 +117,19 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   };
 
   const _handleAddTest = () => {
-    setTests((prevTests) => [...prevTests, { ...DEFAULT_TEST }]);
+    setTests((prevTests) => [...prevTests, createNewTest()]);
   };
 
-  const _handleTestChange: ICodeTest['handleOnChange'] = (index, newTest) => {
-    setTests((prevTests) => prevTests.map((test, idx) => (idx == index ? newTest : test)));
+  const _handleTestChange: ICodeTest['handleOnChange'] = (testId, newTest) => {
+    setTests((prevTests) => prevTests.map((test) => (test.id == testId ? newTest : test)));
   };
 
-  const _handleRemoveTest: ICodeTest['handleOnRemove'] = (index) => {
-    setTests((prevTests) => prevTests.filter((_, idx) => idx != index));
+  const _handleRemoveTest: ICodeTest['handleOnRemove'] = (testId) => {
+    setTests((prevTests) => prevTests.filter((test) => test.id != testId));
+  };
+
+  const _handleRunSingleTest: ICodeTest['handleOnRunSingleTest'] = (id: string) => {
+    _handleRunTests(id);
   };
 
   useEffect(() => {
@@ -164,6 +173,7 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
             tests={tests}
             handleTestChange={_handleTestChange}
             handleRemoveTest={_handleRemoveTest}
+            handleRunSingleTest={_handleRunSingleTest}
           />
         </Flex>
       </Flex>
