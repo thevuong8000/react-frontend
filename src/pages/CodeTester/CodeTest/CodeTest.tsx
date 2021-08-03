@@ -29,12 +29,17 @@ export interface ICodeTestContent {
 
 export interface ICodeTest {
   test: ICodeTestContent;
-  id: number;
-  handleOnChange: (id: ICodeTest['id'], newTest: ICodeTestContent) => void;
-  handleOnRemove: (id: ICodeTest['id']) => void;
+  handleOnChange: (id: string, newTest: ICodeTestContent) => void;
+  handleOnRemove: (id: string) => void;
+  handleOnRunSingleTest: (id: string) => void;
 }
 
-const CodeTest: FC<ICodeTest> = ({ test, id, handleOnChange, handleOnRemove }) => {
+const CodeTest: FC<ICodeTest> = ({
+  test,
+  handleOnChange,
+  handleOnRemove,
+  handleOnRunSingleTest
+}) => {
   const _handleOnChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     const { name, value } = e.target;
 
@@ -45,27 +50,27 @@ const CodeTest: FC<ICodeTest> = ({ test, id, handleOnChange, handleOnRemove }) =
       executionStatus: 'Not Started',
       [name]: value
     };
-    handleOnChange(id, newTest);
+    handleOnChange(test.id, newTest);
   };
 
   const _handleOnCollapseToggle: MouseEventHandler<HTMLButtonElement> = (e) => {
     const newTest: ICodeTestContent = { ...test, isCollapsed: !test.isCollapsed };
-    handleOnChange(id, newTest);
+    handleOnChange(test.id, newTest);
   };
 
   const _handleSetExecutionStatus = (status: ExecutionStatus) => {
     const newTest: ICodeTestContent = { ...test, executionStatus: status };
-    handleOnChange(id, newTest);
+    handleOnChange(test.id, newTest);
   };
 
   const _handleRunSingleTest: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
-    console.log('Run test', id);
+    handleOnRunSingleTest(test.id);
   };
 
   const _handleRemoveTest: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
-    handleOnRemove(id);
+    handleOnRemove(test.id);
   };
 
   useEffect(() => {
@@ -80,7 +85,7 @@ const CodeTest: FC<ICodeTest> = ({ test, id, handleOnChange, handleOnRemove }) =
       <AccordionButton onClick={_handleOnCollapseToggle}>
         {/* Test Toolbar */}
         <Flex direction="row" mb={1}>
-          <Text mr="2">Test #{id}</Text>
+          <Text mr="2">Test #{test.id}</Text>
 
           <Tooltip label="Run this test">
             <Button variant="ghost" colorScheme="green" onClick={_handleRunSingleTest}>
