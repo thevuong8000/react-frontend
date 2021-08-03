@@ -89,7 +89,6 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   };
 
   const _handleRunTests = async (testIndices: number[]) => {
-    setTests((prevTests) => prevTests.map((test) => ({ ...test, output: '' })));
     _setExecuteTests(testIndices);
     _collapseAllTests();
 
