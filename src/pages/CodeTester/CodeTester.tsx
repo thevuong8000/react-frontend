@@ -36,7 +36,7 @@ const DEFAULT_TEST: ICodeTestContent = {
   expectedOutput: '',
   output: '',
   isCollapsed: false,
-  isExecuting: false
+  executionStatus: 'Not Started'
 };
 
 const CodeTester: FC<PageBase> = ({ documentTitle }) => {
@@ -53,7 +53,7 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   const _setExecuteTests = (targetTestsIndices: number[]) => {
     setTests((prevTests) =>
       prevTests.map((test, idx) => {
-        return targetTestsIndices.includes(idx) ? { ...test, isExecuting: true } : test;
+        return targetTestsIndices.includes(idx) ? { ...test, executionStatus: 'Started' } : test;
       })
     );
   };
@@ -70,7 +70,7 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
           prevTests.map((test, idx) => ({
             ...test,
             output: result[idx],
-            isExecuting: isEmpty(result[idx])
+            executionStatus: isEmpty(result[idx]) ? 'Started' : 'Finished'
           }))
         );
         return res;
