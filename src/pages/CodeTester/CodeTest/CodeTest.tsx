@@ -16,6 +16,7 @@ import TestResult, { ITestResultStatus } from './TestResult';
 export type ExecutionStatus = 'Not Started' | 'Started' | 'Finished' | ITestResultStatus;
 
 export interface ICodeTestContent {
+  id: string;
   input: string;
   expectedOutput: string;
 

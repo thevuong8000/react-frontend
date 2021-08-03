@@ -17,6 +17,7 @@ import {
 import TestList from './CodeTest/TestList';
 import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
 import { isEmpty } from '@utilities/helper';
+import { v4 as uuidv4 } from 'uuid';
 
 interface ICheckResult {
   submissionId: string;
@@ -31,13 +32,14 @@ interface ICodeOutput {
   result: string[];
 }
 
-const DEFAULT_TEST: ICodeTestContent = {
+export const createNewTest = (): ICodeTestContent => ({
+  id: uuidv4(),
   input: '',
   expectedOutput: '',
   output: '',
   isCollapsed: false,
   executionStatus: 'Not Started'
-};
+});
 
 const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
@@ -112,7 +114,7 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   };
 
   const _handleAddTest = () => {
-    setTests((prevTests) => [...prevTests, { ...DEFAULT_TEST }]);
+    setTests((prevTests) => [...prevTests, createNewTest()]);
   };
 
   const _handleTestChange: ICodeTest['handleOnChange'] = (index, newTest) => {
