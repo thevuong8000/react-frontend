@@ -1,7 +1,8 @@
-import { Button, Flex, Text } from '@chakra-ui/react';
+import { Button, Spinner, Text } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { TiTick } from 'react-icons/ti';
+import { ExecutionStatus } from './CodeTest';
 
 export type ITestResultStatus =
   | 'Accepted'
@@ -41,12 +42,18 @@ const IconTestResult: FC<{ result: ITestResultStatus }> = ({ result }) => {
   }
 };
 
-export const TestResult: FC<{ result: ITestResultStatus }> = ({ result }) => {
-  return (
-    <Flex>
-      <IconTestResult result={result} />
-    </Flex>
-  );
+export const TestResult: FC<{ result: ExecutionStatus }> = ({ result }) => {
+  switch (result) {
+    case 'Not Started':
+      return null;
+
+    case 'Started':
+    case 'Finished':
+      return <Spinner size="sm" speed="0.8s" color="blue.500" />;
+
+    default:
+      return <IconTestResult result={result} />;
+  }
 };
 
 export default TestResult;

@@ -4,11 +4,10 @@ import CodeTest, { ICodeTest, ICodeTestContent } from './CodeTest';
 
 interface ITestList {
   tests: ICodeTestContent[];
-  isExecuting: boolean;
   handleTestChange: ICodeTest['handleOnChange'];
   handleRemoveTest: ICodeTest['handleOnRemove'];
 }
-const TestList: FC<ITestList> = ({ tests, isExecuting, handleTestChange, handleRemoveTest }) => {
+const TestList: FC<ITestList> = ({ tests, handleTestChange, handleRemoveTest }) => {
   const indices = tests
     .map((test, idx) => (test.isCollapsed ? null : idx))
     .filter((expandedIdx) => expandedIdx !== null);
@@ -26,7 +25,6 @@ const TestList: FC<ITestList> = ({ tests, isExecuting, handleTestChange, handleR
         <CodeTest
           key={`test-${idx}`}
           id={idx}
-          isExecuting={isExecuting}
           test={test}
           handleOnChange={handleTestChange}
           handleOnRemove={handleRemoveTest}
