@@ -20,7 +20,6 @@ import { isEmpty, generateId } from '@utilities/helper';
 
 interface ICheckResult {
   submissionId: string;
-  numTests: number;
 }
 
 interface ISubmissionResponse {
@@ -28,7 +27,7 @@ interface ISubmissionResponse {
 }
 
 interface ICodeOutput {
-  result: string[];
+  result: Record<string, string>;
 }
 
 export const createNewTest = (): ICodeTestContent => ({
@@ -51,34 +50,30 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     setTests((prevTests) => prevTests.map((test) => ({ ...test, isCollapsed: true })));
   };
 
-  const _setExecuteTests = (targetTestsIndices: number[]) => {
-    setTests((prevTests) =>
-      prevTests.map((test, idx) => {
-        return targetTestsIndices.includes(idx) ? { ...test, executionStatus: 'Started' } : test;
-      })
-    );
+  const _setExecuteTests = () => {
+    setTests((prevTests) => prevTests.map((test) => ({ ...test, executionStatus: 'Started' })));
   };
 
   const _checkResult = async (submissionId: string) => {
     const body: ICheckResult = {
-      submissionId,
-      numTests: tests.length
+      submissionId
     };
     const request = () =>
       apiPost<ICodeOutput>(API_PATH.CODE_EXECUTOR.CHECK_RESULT, body).then((res) => {
         const { result } = res;
         setTests((prevTests) =>
-          prevTests.map((test, idx) => ({
+          prevTests.map((test) => ({
             ...test,
-            output: result[idx],
-            executionStatus: isEmpty(result[idx]) ? 'Started' : 'Finished'
+            output: result[test.id],
+            executionStatus: isEmpty(result[test.id]) ? 'Started' : 'Finished'
           }))
         );
         return res;
       });
 
     const checkFn = (res: ICodeOutput) => {
-      const isFulfilled = res.result.every((elem) => elem);
+      const isFulfilled =
+        Object.values(res.result).filter((output) => output).length === tests.length;
       return isFulfilled;
     };
 
@@ -89,22 +84,16 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     }, 10000);
   };
 
-  const _handleRunTests = async (testIndices: number[]) => {
-    _setExecuteTests(testIndices);
+  const _handleRunAllTests = async () => {
+    _setExecuteTests();
     _collapseAllTests();
-
-    const targetTests = tests.filter((_, idx) => testIndices.includes(idx));
     const body: ICodeExecutorBody = {
       typedCode: codeContent,
-      inputs: targetTests.map((test) => test.input),
+      inputs: tests.map((test) => ({ id: test.id, input: test.input })),
       language
     };
     const { submissionId } = await apiPost<ISubmissionResponse>(API_PATH.CODE_EXECUTOR.ROOT, body);
     _checkResult(submissionId);
-  };
-
-  const _handleRunAllTests = () => {
-    _handleRunTests(Array.from(Array(tests.length).keys()));
   };
 
   const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = (e) => {
