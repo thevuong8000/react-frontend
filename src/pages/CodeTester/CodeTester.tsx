@@ -16,8 +16,7 @@ import {
 } from '@utilities/code-executor';
 import TestList from './CodeTest/TestList';
 import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
-import { isEmpty } from '@utilities/helper';
-import { v4 as uuidv4 } from 'uuid';
+import { isEmpty, generateId } from '@utilities/helper';
 
 interface ICheckResult {
   submissionId: string;
@@ -33,7 +32,7 @@ interface ICodeOutput {
 }
 
 export const createNewTest = (): ICodeTestContent => ({
-  id: uuidv4(),
+  id: generateId(8),
   input: '',
   expectedOutput: '',
   output: '',
