@@ -27,7 +27,10 @@ interface ISubmissionResponse {
 }
 
 interface ICodeOutput {
-  result: Record<string, string>;
+  result: {
+    error: string;
+    [x: string]: string;
+  };
 }
 
 export const createNewTest = (): ICodeTestContent => ({
@@ -67,24 +70,31 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     const request = () =>
       apiPost<ICodeOutput>(API_PATH.CODE_EXECUTOR.CHECK_RESULT, body).then((res) => {
         const { result } = res;
+
+        // TODO: handle compile error
+        if (result.error) {
+          console.log('Compile Error:', result.error);
+        }
+
         setTests((prevTests) =>
           prevTests.map((test) => {
-            return singleId && test.id !== singleId
-              ? test
-              : {
-                  ...test,
-                  output: result[test.id],
-                  executionStatus: isEmpty(result[test.id]) ? 'Started' : 'Finished'
-                };
+            if (singleId && test.id !== singleId) return test;
+            if (result.error) return { ...test, executionStatus: 'Not Started' };
+            return {
+              ...test,
+              output: result[test.id],
+              executionStatus: isEmpty(result[test.id]) ? 'Started' : 'Finished'
+            };
           })
         );
         return res;
       });
 
     const checkFn = (res: ICodeOutput) => {
+      if (res.result.error) return true;
       const numsTests = singleId ? 1 : tests.length;
-      const isFulfilled = Object.values(res.result).filter((output) => output).length === numsTests;
-      return isFulfilled;
+      const isFinished = Object.values(res.result).filter((output) => output).length === numsTests;
+      return isFinished;
     };
 
     const interval = getIntervalRequest<ICodeOutput>(request, checkFn, 1000);
