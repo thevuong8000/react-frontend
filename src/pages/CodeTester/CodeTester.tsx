@@ -93,8 +93,8 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     const checkFn = (res: ICodeOutput) => {
       if (res.result.error) return true;
       const numsTests = singleId ? 1 : tests.length;
-      const isFulfilled = Object.values(res.result).filter((output) => output).length === numsTests;
-      return isFulfilled;
+      const isFinished = Object.values(res.result).filter((output) => output).length === numsTests;
+      return isFinished;
     };
 
     const interval = getIntervalRequest<ICodeOutput>(request, checkFn, 1000);
