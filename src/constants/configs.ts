@@ -9,7 +9,8 @@ export const LOCAL_STORAGE = {
 
 export const APP_CONFIG = {
 	API_ROOT: process.env.REACT_APP_API_DOMAIN,
-	AUTH_DATA: `${process.env.APP_TITLE}-auth-data`
+	AUTH_DATA: `${process.env.APP_TITLE}-auth-data`,
+	IS_STANDALONE: process.env.IS_STANDALONE?.toLowerCase() === 'true'
 };
 
 export const API_PATH = {
