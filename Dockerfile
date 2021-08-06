@@ -7,6 +7,9 @@ RUN npm run build
 
 # copy app to nginx
 FROM nginx:1.19.10-alpine
+ARG PORT
+RUN echo $PORT
+
 COPY --from=node-image /app/build /usr/share/nginx/html
-RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx/nginx.conf /etc/nginx/conf.d
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+CMD sed -i -e 's/$PORT/'"$PORT"'/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'
