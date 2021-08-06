@@ -6,35 +6,38 @@ import { IAuthData } from 'typings/user';
  * Save login data into LocalStorage
  */
 export const saveLoginInfo = (authData: IAuthData) => {
-  localStorage.setItem(APP_CONFIG.AUTH_DATA, JSON.stringify(authData));
+	localStorage.setItem(APP_CONFIG.AUTH_DATA, JSON.stringify(authData));
 };
 
 /**
  * Clear login auth data in Localstorage
  */
 export const clearLoginInfo = () => {
-  localStorage.removeItem(APP_CONFIG.AUTH_DATA);
+	localStorage.removeItem(APP_CONFIG.AUTH_DATA);
 };
 
 /**
  * Get login data from Localstorage
  */
 export const getLoginInfo = (): IAuthData =>
-  JSON.parse(localStorage.getItem(APP_CONFIG.AUTH_DATA) as string) ?? {};
+	JSON.parse(localStorage.getItem(APP_CONFIG.AUTH_DATA) as string) ?? {};
 
 /**
  * Setup api config
  * @param {object} query Extra config
  */
 export const getRequestConfig = (config: AxiosRequestConfig = {}) => {
-  const { accessToken, tokenType } = getLoginInfo();
-  const { headers = {} } = config;
+	// not include authentication if standalone
+	if (APP_CONFIG.IS_STANDALONE) return config;
 
-  return {
-    ...config,
-    headers: {
-      ...(accessToken ? { Authorization: `${tokenType} ${accessToken}` } : {}),
-      ...headers
-    }
-  };
+	const { accessToken, tokenType } = getLoginInfo();
+	const { headers = {} } = config;
+
+	return {
+		...config,
+		headers: {
+			...(accessToken ? { Authorization: `${tokenType} ${accessToken}` } : {}),
+			...headers
+		}
+	};
 };
