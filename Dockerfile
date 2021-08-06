@@ -3,7 +3,7 @@ FROM node:12-alpine3.10 as node-image
 WORKDIR /app
 COPY . .
 RUN npm install
-RUN npm run build
+RUN npm run build:production
 
 # copy app to nginx
 FROM nginx:1.19.10-alpine
