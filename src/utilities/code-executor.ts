@@ -47,7 +47,14 @@ export const getLanguageFromStorage = (): Language => {
  */
 export const saveTestsIntoStorage = (tests: ICodeTestContent[]) => {
 	const key = LOCAL_STORAGE.TESTS;
-	const storedTests: ICodeTestContent[] = tests.map((test) => ({ ...test, output: '' }));
+	const storedTests: ICodeTestContent[] = tests.map(
+		(test) =>
+			({
+				...test,
+				output: '',
+				executionStatus: 'Not Started'
+			} as ICodeTestContent)
+	);
 	localStorage.setItem(key, JSON.stringify(storedTests));
 };
 
