@@ -47,7 +47,7 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   const [codeContent, setCodeContent] = useState<string>('');
   const [tests, setTests] = useState<ICodeTestContent[]>(getTestsFromStorage());
 
-  const { apiPost, getIntervalRequest } = useApi();
+  const { apiPost, requestExhausively } = useApi();
 
   const _collapseAllTests = () => {
     setTests((prevTests) => prevTests.map((test) => ({ ...test, isCollapsed: true })));
@@ -67,41 +67,36 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
     const body: ICheckResult = {
       submissionId
     };
-    const request = () =>
-      apiPost<ICodeOutput>(API_PATH.CODE_EXECUTOR.CHECK_RESULT, body).then((res) => {
-        const { result } = res;
 
-        // TODO: handle compile error
-        if (result.error) {
-          console.log('Compile Error:', result.error);
-        }
+    const requestFn = () => apiPost<ICodeOutput>(API_PATH.CODE_EXECUTOR.CHECK_RESULT, body);
+    const processData = (res: ICodeOutput) => {
+      const { result } = res;
 
-        setTests((prevTests) =>
-          prevTests.map((test) => {
-            if (singleId && test.id !== singleId) return test;
-            if (result.error) return { ...test, executionStatus: 'Not Started' };
-            return {
-              ...test,
-              output: result[test.id],
-              executionStatus: isEmpty(result[test.id]) ? 'Started' : 'Finished'
-            };
-          })
-        );
-        return res;
-      });
+      // TODO: handle compile error
+      if (result.error) {
+        console.log('Compile Error:', result.error);
+      }
 
-    const checkFn = (res: ICodeOutput) => {
+      setTests((prevTests) =>
+        prevTests.map((test) => {
+          if (singleId && test.id !== singleId) return test;
+          if (result.error) return { ...test, executionStatus: 'Not Started' };
+          return {
+            ...test,
+            output: result[test.id],
+            executionStatus: isEmpty(result[test.id]) ? 'Started' : 'Finished'
+          };
+        })
+      );
+    };
+    const checkIfFinishedFn = (res: ICodeOutput) => {
       if (res.result.error) return true;
       const numsTests = singleId ? 1 : tests.length;
       const isFinished = Object.values(res.result).filter((output) => output).length === numsTests;
       return isFinished;
     };
 
-    const interval = getIntervalRequest<ICodeOutput>(request, checkFn, 1000);
-    // stop requesting if server take too long to response the fulfilled result
-    setTimeout(() => {
-      clearInterval(interval);
-    }, 10000);
+    requestExhausively(requestFn, processData, checkIfFinishedFn);
   };
 
   const _handleRunTests = async (testId: string | undefined = undefined) => {

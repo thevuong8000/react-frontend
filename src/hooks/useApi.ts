@@ -163,13 +163,35 @@ const useApi = () => {
 		[]
 	);
 
+	/**
+	 * Repeatedly request until get wanted result
+	 * @param request request function
+	 * @param processDataThenCheckIfFinished process data then determine if request should be stopped
+	 */
+	const requestExhausively = useCallback(
+		async <T>(
+			request: () => Promise<T>,
+			processData: (result: T) => void,
+			checkIfFinished: (result: T) => boolean,
+			numCheck: number = 30
+		) => {
+			while (numCheck--) {
+				const result = await request();
+				processData(result);
+				if (checkIfFinished(result)) break;
+			}
+		},
+		[]
+	);
+
 	return {
 		apiGet,
 		apiPost,
 		apiPut,
 		apiPatch,
 		apiDelete,
-		getIntervalRequest
+		getIntervalRequest,
+		requestExhausively
 	};
 };
 
