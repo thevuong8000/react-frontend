@@ -15,9 +15,9 @@ export const ROUTE: Record<any, IRoute> = {
 		to: '/login',
 		title: 'Login'
 	},
-	CODE_TESTER: {
-		to: '/code-tester',
-		title: 'Code Tester'
+	CANDRA: {
+		to: '/',
+		title: 'Candra'
 	},
 	DEMO: {
 		to: '/demo-components',

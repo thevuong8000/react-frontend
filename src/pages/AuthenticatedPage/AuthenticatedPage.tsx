@@ -14,11 +14,11 @@ const AuthenticatedPage: FC = () => (
       <Header />
       <Box overflowX="hidden" overflowY="auto" w="100%" h="100%">
         <Switch>
-          <Route
+          {/* <Route
             exact
             path={ROUTE.HOME.to}
             render={() => <Homepage documentTitle={ROUTE.HOME.title} />}
-          />
+          /> */}
 
           <Route
             exact
@@ -28,13 +28,13 @@ const AuthenticatedPage: FC = () => (
 
           <Route
             exact
-            path={ROUTE.CODE_TESTER.to}
-            render={() => <CodeTester documentTitle={ROUTE.CODE_TESTER.title} />}
+            path={ROUTE.CANDRA.to}
+            render={() => <CodeTester documentTitle={ROUTE.CANDRA.title} />}
           />
 
           {/* Default fall back to Homepage */}
           <Route path="*">
-            <Redirect to={ROUTE.CODE_TESTER.to} />
+            <Redirect to={ROUTE.CANDRA.to} />
           </Route>
         </Switch>
       </Box>
