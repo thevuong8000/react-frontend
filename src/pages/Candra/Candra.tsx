@@ -3,7 +3,7 @@ import CodeEditor, { Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
-import { ITest, ITestCase } from './CodeTest/Test';
+import { ITest, ITestCase } from './ListTests/Test';
 import { API_PATH } from '@constants/configs';
 import { ICodeExecutorBody } from 'code_executor';
 import {
@@ -14,7 +14,7 @@ import {
   getTestsFromStorage,
   saveTestsIntoStorage
 } from '@utilities/code-executor';
-import ListTests from './CodeTest/ListTests';
+import ListTests from './ListTests/ListTests';
 import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
 import { isEmpty, generateId } from '@utilities/helper';
 
