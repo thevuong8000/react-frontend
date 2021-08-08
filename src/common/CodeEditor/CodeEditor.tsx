@@ -19,7 +19,7 @@ const CodeEditor: FC<ICodeEditor> = ({
   content = '',
   setContent
 }) => {
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { colorMode } = useColorMode();
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
 
   const handleEditorDidMount: OnMount = (editor, monaco) => {
@@ -39,6 +39,7 @@ const CodeEditor: FC<ICodeEditor> = ({
       value={content}
       onChange={_onChange}
       onMount={handleEditorDidMount}
+      className="code_editor"
     />
   );
 };
