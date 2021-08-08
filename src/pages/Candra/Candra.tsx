@@ -91,6 +91,8 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
           })
         );
       };
+
+      // TODO: error with add test during executing
       const checkIfFinishedFn = (res: ICodeOutput) => {
         if (res.result.error) return true;
         const numsTests = singleId ? 1 : tests.length;
@@ -101,7 +103,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
       requestExhausively(requestFn, processData, checkIfFinishedFn);
     },
-    []
+    [tests]
   );
 
   const _handleRunTests = useCallback(
