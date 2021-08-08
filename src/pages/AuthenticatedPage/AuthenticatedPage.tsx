@@ -4,9 +4,9 @@ import { Header } from '@common';
 import { ROUTE } from '@constants/routing';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 
-const Homepage = lazy(() => import('../Homepage/Homepage'));
-const DemoComponents = lazy(() => import('../../demo-components/DemoComponents'));
-const CodeTester = lazy(() => import('../CodeTester/CodeTester'));
+// const Homepage = lazy(() => import('../Homepage/Homepage'));
+// const DemoComponents = lazy(() => import('../../demo-components/DemoComponents'));
+const Candra = lazy(() => import('../Candra/Candra'));
 
 const AuthenticatedPage: FC = () => (
   <Router>
@@ -29,7 +29,7 @@ const AuthenticatedPage: FC = () => (
           <Route
             exact
             path={ROUTE.CANDRA.to}
-            render={() => <CodeTester documentTitle={ROUTE.CANDRA.title} />}
+            render={() => <Candra documentTitle={ROUTE.CANDRA.title} />}
           />
 
           {/* Default fall back to Homepage */}

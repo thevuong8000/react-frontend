@@ -1,7 +1,7 @@
 import { Language } from '@common/CodeEditor/CodeEditor';
 import { LOCAL_STORAGE } from '../constants/configs';
 import { DEFAULT_CODE } from '../constants/code-executor';
-import { ICodeTestContent } from 'pages/CodeTester/CodeTest/CodeTest';
+import { ICodeTestContent } from 'pages/Candra/CodeTest/CodeTest';
 
 /**
  * Save code into local storage depended on language.

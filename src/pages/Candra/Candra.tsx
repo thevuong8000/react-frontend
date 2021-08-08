@@ -42,7 +42,7 @@ export const createNewTest = (): ICodeTestContent => ({
   executionStatus: 'Not Started'
 });
 
-const CodeTester: FC<PageBase> = ({ documentTitle }) => {
+const Candra: FC<PageBase> = ({ documentTitle }) => {
   const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
   const [codeContent, setCodeContent] = useState<string>('');
   const [tests, setTests] = useState<ICodeTestContent[]>(getTestsFromStorage());
@@ -203,4 +203,4 @@ const CodeTester: FC<PageBase> = ({ documentTitle }) => {
   );
 };
 
-export default CodeTester;
+export default Candra;
