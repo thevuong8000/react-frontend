@@ -1,5 +1,5 @@
 import { Button, Flex, Select } from '@chakra-ui/react';
-import CodeEditor, { Language } from '@common/CodeEditor/CodeEditor';
+import CodeEditor, { ICodeEditor, Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
@@ -46,6 +46,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
   const [codeContent, setCodeContent] = useState<string>('');
   const [tests, setTests] = useState<ITestCase[]>(getTestsFromStorage());
+  const [editorShortcuts, setEditorShortcuts] = useState<ICodeEditor['editorActions']>([]);
 
   const { apiPost, requestExhausively } = useApi();
 
@@ -139,7 +140,15 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
   useEffect(() => {
     document.title = documentTitle;
-  });
+    setEditorShortcuts([
+      {
+        id: 'execute-shortcut',
+        label: 'execution shortcut',
+        keybindings: [5 | 21],
+        run: _handleRunAllTests
+      }
+    ]);
+  }, [_handleRunAllTests]);
 
   useEffect(() => {
     saveLanguageIntoStorage(language);
@@ -164,6 +173,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
           content={codeContent}
           setContent={setCodeContent}
           lang={language}
+          editorActions={editorShortcuts}
         />
         <Flex
           grow={1}

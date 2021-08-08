@@ -1,15 +1,17 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
-import Editor, { OnChange, OnMount } from '@monaco-editor/react';
+import Editor, { OnChange, OnMount, useMonaco } from '@monaco-editor/react';
 import { useColorMode } from '@chakra-ui/react';
 
 export type Language = 'javascript' | 'typescript' | 'cpp' | 'python' | 'java';
-interface ICodeEditor {
+
+export interface ICodeEditor {
   height?: string;
   width?: string;
   lang?: Language;
   content?: string;
   setContent: React.Dispatch<React.SetStateAction<string>>;
+  editorActions: editor.IActionDescriptor[];
 }
 
 const CodeEditor: FC<ICodeEditor> = ({
@@ -17,10 +19,13 @@ const CodeEditor: FC<ICodeEditor> = ({
   width = '40vw',
   lang = 'javascript',
   content = '',
-  setContent
+  setContent,
+  editorActions = []
 }) => {
   const { colorMode } = useColorMode();
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
+
+  const monaco = useMonaco();
 
   const handleEditorDidMount: OnMount = (editor, monaco) => {
     editorRef.current = editor;
@@ -29,6 +34,18 @@ const CodeEditor: FC<ICodeEditor> = ({
   const _onChange: OnChange = (value, ev) => {
     setContent(value ?? '');
   };
+
+  useEffect(() => {
+    if (editorRef.current && monaco) {
+      console.log(editorActions);
+      editorActions.forEach((action) => {
+        editorRef.current?.addAction({
+          ...action,
+          keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter]
+        });
+      });
+    }
+  }, [editorActions, monaco]);
 
   return (
     <Editor
