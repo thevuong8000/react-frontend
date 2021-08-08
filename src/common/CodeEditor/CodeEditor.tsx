@@ -1,6 +1,7 @@
 import React, { FC, useRef } from 'react';
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
 import Editor, { OnChange, OnMount } from '@monaco-editor/react';
+import { useColorMode } from '@chakra-ui/react';
 
 export type Language = 'javascript' | 'typescript' | 'cpp' | 'python' | 'java';
 interface ICodeEditor {
@@ -18,6 +19,7 @@ const CodeEditor: FC<ICodeEditor> = ({
   content = '',
   setContent
 }) => {
+  const { colorMode, toggleColorMode } = useColorMode();
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
 
   const handleEditorDidMount: OnMount = (editor, monaco) => {
@@ -32,7 +34,7 @@ const CodeEditor: FC<ICodeEditor> = ({
     <Editor
       height={height}
       width={width}
-      theme="vs-dark"
+      theme={colorMode === 'dark' ? 'vs-dark' : 'light'}
       language={lang}
       value={content}
       onChange={_onChange}
