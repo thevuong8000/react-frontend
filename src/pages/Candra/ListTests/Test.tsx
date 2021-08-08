@@ -81,22 +81,24 @@ const Test: FC<ITest> = ({ test, handleOnChange, handleOnRemove, handleOnRunSing
     <AccordionItem>
       <AccordionButton onClick={_handleOnCollapseToggle}>
         {/* Test Toolbar */}
-        <Flex direction="row" mb={1}>
-          <Flex w="9rem" align="start">
-            <Text mr="2">Test #{test.id}</Text>
+        <Flex w="100%" direction="row" mb={1} justify="space-between">
+          <Flex>
+            <Flex w="9rem" align="start">
+              <Text mr="2">Test #{test.id}</Text>
+            </Flex>
+
+            <Tooltip label="Run this test">
+              <Button variant="ghost" colorScheme="green" onClick={_handleRunSingleTest}>
+                <VscRunAll size="22" />
+              </Button>
+            </Tooltip>
+
+            <Tooltip label="Remove this test">
+              <Button variant="ghost" colorScheme="red" onClick={_handleRemoveTest}>
+                <MdDelete size="22" />
+              </Button>
+            </Tooltip>
           </Flex>
-
-          <Tooltip label="Run this test">
-            <Button variant="ghost" colorScheme="green" onClick={_handleRunSingleTest}>
-              <VscRunAll size="22" />
-            </Button>
-          </Tooltip>
-
-          <Tooltip label="Remove this test">
-            <Button variant="ghost" colorScheme="red" onClick={_handleRemoveTest}>
-              <MdDelete size="22" />
-            </Button>
-          </Tooltip>
           <Flex pl="2" pr="2" align="center">
             <TestResult result={test.executionStatus} />
           </Flex>

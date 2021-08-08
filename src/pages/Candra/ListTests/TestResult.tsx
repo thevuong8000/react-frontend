@@ -21,8 +21,8 @@ const IconTestResult: FC<{ result: ITestResultStatus }> = ({ result }) => {
           _active={{ bg: 'none' }}
           pl={0}
         >
-          <TiTick size={25} />
           <Text>{result}</Text>
+          <TiTick size={25} />
         </Button>
       );
 
@@ -35,8 +35,8 @@ const IconTestResult: FC<{ result: ITestResultStatus }> = ({ result }) => {
           _active={{ bg: 'none' }}
           pl={0}
         >
-          <IoMdClose size={25} />
           <Text>{result}</Text>
+          <IoMdClose size={25} />
         </Button>
       );
   }
