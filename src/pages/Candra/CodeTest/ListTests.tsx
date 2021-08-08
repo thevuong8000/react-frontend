@@ -1,6 +1,6 @@
 import { Accordion, Heading } from '@chakra-ui/react';
 import React, { FC } from 'react';
-import CodeTest, { ICodeTest, ICodeTestContent } from './CodeTest';
+import CodeTest, { ICodeTest, ICodeTestContent } from './Test';
 
 interface IListTests {
   tests: ICodeTestContent[];

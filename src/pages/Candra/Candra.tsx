@@ -3,7 +3,7 @@ import CodeEditor, { Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
-import { ICodeTest, ICodeTestContent } from './CodeTest/CodeTest';
+import { ICodeTest, ICodeTestContent } from './CodeTest/Test';
 import { API_PATH } from '@constants/configs';
 import { ICodeExecutorBody } from 'code_executor';
 import {
