@@ -82,7 +82,9 @@ const Test: FC<ITest> = ({ test, handleOnChange, handleOnRemove, handleOnRunSing
       <AccordionButton onClick={_handleOnCollapseToggle}>
         {/* Test Toolbar */}
         <Flex direction="row" mb={1}>
-          <Text mr="2">Test #{test.id}</Text>
+          <Flex w="9rem" align="start">
+            <Text mr="2">Test #{test.id}</Text>
+          </Flex>
 
           <Tooltip label="Run this test">
             <Button variant="ghost" colorScheme="green" onClick={_handleRunSingleTest}>
