@@ -2,7 +2,7 @@ import { Button, Flex, Select } from '@chakra-ui/react';
 import CodeEditor, { ICodeEditor, Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
-import React, { ChangeEventHandler, FC, useCallback, useEffect, useState } from 'react';
+import React, { ChangeEventHandler, FC, useCallback, useEffect, useRef, useState } from 'react';
 import { ITest, ITestCase } from './ListTests/Test';
 import { API_PATH } from '@constants/configs';
 import { ICodeExecutorBody } from 'code_executor';
@@ -17,6 +17,7 @@ import {
 import ListTests from './ListTests/ListTests';
 import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
 import { isEmpty, generateId } from '@utilities/helper';
+import { editor } from 'monaco-editor';
 
 interface ICheckResult {
   submissionId: string;
@@ -47,6 +48,8 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   const [codeContent, setCodeContent] = useState<string>('');
   const [tests, setTests] = useState<ITestCase[]>(getTestsFromStorage());
   const [editorShortcuts, setEditorShortcuts] = useState<ICodeEditor['editorActions']>([]);
+
+  const editorRef = useRef<editor.IStandaloneCodeEditor>();
 
   const { apiPost, requestExhausively } = useApi();
 
@@ -176,10 +179,13 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
     saveTestsIntoStorage(tests);
   }, [tests]);
 
+  const _testFunc = () => console.log(editorRef.current?.getValue());
+
   return (
     <Flex direction="column" p="6">
       <Flex direction="row">
         <CodeEditor
+          ref={editorRef}
           height="80vh"
           width="50vw"
           content={codeContent}
@@ -219,6 +225,9 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         </Button>
         <Button size="md" onClick={_handleRunAllTests}>
           Run Test
+        </Button>
+        <Button size="md" onClick={_testFunc}>
+          Test Func
         </Button>
       </Flex>
     </Flex>

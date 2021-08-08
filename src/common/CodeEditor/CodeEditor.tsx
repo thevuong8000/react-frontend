@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
 import Editor, { OnChange, OnMount, useMonaco } from '@monaco-editor/react';
 import { useColorMode } from '@chakra-ui/react';
@@ -14,51 +14,61 @@ export interface ICodeEditor {
   editorActions: editor.IActionDescriptor[];
 }
 
-const CodeEditor: FC<ICodeEditor> = ({
-  height = '60vh',
-  width = '40vw',
-  lang = 'javascript',
-  content = '',
-  setContent,
-  editorActions = []
-}) => {
-  const { colorMode } = useColorMode();
-  const editorRef = useRef<editor.IStandaloneCodeEditor>();
+const CodeEditor = forwardRef<any, ICodeEditor>(
+  (
+    {
+      height = '60vh',
+      width = '40vw',
+      lang = 'javascript',
+      content = '',
+      setContent,
+      editorActions = []
+    },
+    ref
+  ) => {
+    const { colorMode } = useColorMode();
+    const editorRef = useRef<editor.IStandaloneCodeEditor>();
+    const monaco = useMonaco();
 
-  const monaco = useMonaco();
+    useImperativeHandle(ref, () => ({
+      getValue: () => editorRef.current?.getValue(),
+      setValue: (newValue: string) => editorRef.current?.setValue(newValue),
+      addAction: (action: editor.IActionDescriptor) => editorRef.current?.addAction(action)
+    }));
 
-  const handleEditorDidMount: OnMount = (editor, monaco) => {
-    editorRef.current = editor;
-  };
+    const handleEditorDidMount: OnMount = (editor, monaco) => {
+      editorRef.current = editor;
+    };
 
-  const _onChange: OnChange = (value, ev) => {
-    setContent(value ?? '');
-  };
+    const _onChange: OnChange = (value, ev) => {
+      setContent(value ?? '');
+    };
 
-  useEffect(() => {
-    if (editorRef.current && monaco) {
-      console.log(editorActions);
-      editorActions.forEach((action) => {
-        editorRef.current?.addAction({
-          ...action,
-          keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter]
+    useEffect(() => {
+      if (editorRef.current && monaco) {
+        console.log(editorActions);
+        editorActions.forEach((action) => {
+          editorRef.current?.addAction({
+            ...action,
+            keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter]
+          });
         });
-      });
-    }
-  }, [editorActions, monaco]);
+      }
+    }, [editorActions, monaco]);
 
-  return (
-    <Editor
-      height={height}
-      width={width}
-      theme={colorMode === 'dark' ? 'vs-dark' : 'light'}
-      language={lang}
-      value={content}
-      onChange={_onChange}
-      onMount={handleEditorDidMount}
-      className={colorMode === 'dark' ? 'code_editor_dark' : 'code_editor_light'}
-    />
-  );
-};
+    return (
+      <Editor
+        height={height}
+        width={width}
+        theme={colorMode === 'dark' ? 'vs-dark' : 'light'}
+        language={lang}
+        value={content}
+        onChange={_onChange}
+        onMount={handleEditorDidMount}
+        className={colorMode === 'dark' ? 'code_editor_dark' : 'code_editor_light'}
+      />
+    );
+  }
+);
 
 export default CodeEditor;
