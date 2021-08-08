@@ -1,7 +1,7 @@
 import { Language } from '@common/CodeEditor/CodeEditor';
 import { LOCAL_STORAGE } from '../constants/configs';
 import { DEFAULT_CODE } from '../constants/code-executor';
-import { ICodeTestContent } from 'pages/Candra/CodeTest/CodeTest';
+import { ITestCase } from '../pages/Candra/ListTests/Test';
 
 /**
  * Save code into local storage depended on language.
@@ -45,15 +45,15 @@ export const getLanguageFromStorage = (): Language => {
  * Stored tests into local storage.
  * @param tests tests to be stored
  */
-export const saveTestsIntoStorage = (tests: ICodeTestContent[]) => {
+export const saveTestsIntoStorage = (tests: ITestCase[]) => {
 	const key = LOCAL_STORAGE.TESTS;
-	const storedTests: ICodeTestContent[] = tests.map(
+	const storedTests: ITestCase[] = tests.map(
 		(test) =>
 			({
 				...test,
 				output: '',
 				executionStatus: 'Not Started'
-			} as ICodeTestContent)
+			} as ITestCase)
 	);
 	localStorage.setItem(key, JSON.stringify(storedTests));
 };
@@ -62,7 +62,7 @@ export const saveTestsIntoStorage = (tests: ICodeTestContent[]) => {
  * Get stored tests in local storage.
  * @returns stored tests in local storage
  */
-export const getTestsFromStorage = (): ICodeTestContent[] => {
+export const getTestsFromStorage = (): ITestCase[] => {
 	const key = LOCAL_STORAGE.TESTS;
 	return JSON.parse(localStorage.getItem(key) || JSON.stringify([]));
 };

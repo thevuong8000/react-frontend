@@ -1,12 +1,12 @@
 import { Accordion, Heading } from '@chakra-ui/react';
 import React, { FC } from 'react';
-import CodeTest, { ICodeTest, ICodeTestContent } from './CodeTest';
+import Test, { ITest, ITestCase } from './Test';
 
 interface IListTests {
-  tests: ICodeTestContent[];
-  handleTestChange: ICodeTest['handleOnChange'];
-  handleRemoveTest: ICodeTest['handleOnRemove'];
-  handleRunSingleTest: ICodeTest['handleOnRunSingleTest'];
+  tests: ITestCase[];
+  handleTestChange: ITest['handleOnChange'];
+  handleRemoveTest: ITest['handleOnRemove'];
+  handleRunSingleTest: ITest['handleOnRunSingleTest'];
 }
 const ListTests: FC<IListTests> = ({
   tests,
@@ -28,7 +28,7 @@ const ListTests: FC<IListTests> = ({
   return (
     <Accordion index={indices as number[]} allowMultiple allowToggle>
       {tests.map((test, idx) => (
-        <CodeTest
+        <Test
           key={`test-${idx}`}
           test={test}
           handleOnChange={handleTestChange}

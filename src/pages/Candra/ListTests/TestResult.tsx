@@ -2,7 +2,7 @@ import { Button, Spinner, Text } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { TiTick } from 'react-icons/ti';
-import { ExecutionStatus } from './CodeTest';
+import { ExecutionStatus } from './Test';
 
 export type ITestResultStatus =
   | 'Accepted'

@@ -3,7 +3,7 @@ import CodeEditor, { Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
-import { ICodeTest, ICodeTestContent } from './CodeTest/CodeTest';
+import { ITest, ITestCase } from './ListTests/Test';
 import { API_PATH } from '@constants/configs';
 import { ICodeExecutorBody } from 'code_executor';
 import {
@@ -14,7 +14,7 @@ import {
   getTestsFromStorage,
   saveTestsIntoStorage
 } from '@utilities/code-executor';
-import ListTests from './CodeTest/ListTests';
+import ListTests from './ListTests/ListTests';
 import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
 import { isEmpty, generateId } from '@utilities/helper';
 
@@ -33,7 +33,7 @@ interface ICodeOutput {
   };
 }
 
-export const createNewTest = (): ICodeTestContent => ({
+export const createNewTest = (): ITestCase => ({
   id: generateId(8),
   input: '',
   expectedOutput: '',
@@ -45,7 +45,7 @@ export const createNewTest = (): ICodeTestContent => ({
 const Candra: FC<PageBase> = ({ documentTitle }) => {
   const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
   const [codeContent, setCodeContent] = useState<string>('');
-  const [tests, setTests] = useState<ICodeTestContent[]>(getTestsFromStorage());
+  const [tests, setTests] = useState<ITestCase[]>(getTestsFromStorage());
 
   const { apiPost, requestExhausively } = useApi();
 
@@ -102,8 +102,8 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   const _handleRunTests = async (testId: string | undefined = undefined) => {
     _setExecuteTests(testId);
     if (!testId) _collapseAllTests();
-    const targetTests: ICodeTestContent[] = testId
-      ? ([tests.find((test) => test.id === testId)].filter((t) => t) as ICodeTestContent[])
+    const targetTests: ITestCase[] = testId
+      ? ([tests.find((test) => test.id === testId)].filter((t) => t) as ITestCase[])
       : tests;
     const body: ICodeExecutorBody = {
       typedCode: codeContent,
@@ -125,15 +125,15 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
     setTests((prevTests) => [...prevTests, createNewTest()]);
   };
 
-  const _handleTestChange: ICodeTest['handleOnChange'] = (testId, newTest) => {
+  const _handleTestChange: ITest['handleOnChange'] = (testId, newTest) => {
     setTests((prevTests) => prevTests.map((test) => (test.id == testId ? newTest : test)));
   };
 
-  const _handleRemoveTest: ICodeTest['handleOnRemove'] = (testId) => {
+  const _handleRemoveTest: ITest['handleOnRemove'] = (testId) => {
     setTests((prevTests) => prevTests.filter((test) => test.id != testId));
   };
 
-  const _handleRunSingleTest: ICodeTest['handleOnRunSingleTest'] = (id: string) => {
+  const _handleRunSingleTest: ITest['handleOnRunSingleTest'] = (id: string) => {
     _handleRunTests(id);
   };
 
