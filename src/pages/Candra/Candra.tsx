@@ -2,7 +2,7 @@ import { Button, Flex, Select } from '@chakra-ui/react';
 import CodeEditor, { ICodeEditor, Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
-import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
+import React, { ChangeEventHandler, FC, useCallback, useEffect, useState } from 'react';
 import { ITest, ITestCase } from './ListTests/Test';
 import { API_PATH } from '@constants/configs';
 import { ICodeExecutorBody } from 'code_executor';
@@ -50,11 +50,11 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
   const { apiPost, requestExhausively } = useApi();
 
-  const _collapseAllTests = () => {
+  const _collapseAllTests = useCallback(() => {
     setTests((prevTests) => prevTests.map((test) => ({ ...test, isCollapsed: true })));
-  };
+  }, []);
 
-  const _setExecuteTests = (testId: string | undefined) => {
+  const _setExecuteTests = useCallback((testId: string | undefined) => {
     setTests((prevTests) =>
       prevTests.map((test) => {
         return testId
@@ -62,81 +62,91 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
           : { ...test, executionStatus: 'Started' };
       })
     );
-  };
+  }, []);
 
-  const _checkResult = async (submissionId: string, singleId: string | undefined = undefined) => {
-    const body: ICheckResult = {
-      submissionId
-    };
+  const _checkResult = useCallback(
+    async (submissionId: string, singleId: string | undefined = undefined) => {
+      const body: ICheckResult = {
+        submissionId
+      };
 
-    const requestFn = () => apiPost<ICodeOutput>(API_PATH.CODE_EXECUTOR.CHECK_RESULT, body);
-    const processData = (res: ICodeOutput) => {
-      const { result } = res;
+      const requestFn = () => apiPost<ICodeOutput>(API_PATH.CODE_EXECUTOR.CHECK_RESULT, body);
+      const processData = (res: ICodeOutput) => {
+        const { result } = res;
 
-      // TODO: handle compile error
-      if (result.error) {
-        console.log('Compile Error:', result.error);
-      }
+        // TODO: handle compile error
+        if (result.error) {
+          console.log('Compile Error:', result.error);
+        }
 
-      setTests((prevTests) =>
-        prevTests.map((test) => {
-          if (singleId && test.id !== singleId) return test;
-          if (result.error) return { ...test, executionStatus: 'Not Started' };
-          return {
-            ...test,
-            output: result[test.id],
-            executionStatus: isEmpty(result[test.id]) ? 'Started' : 'Finished'
-          };
-        })
+        setTests((prevTests) =>
+          prevTests.map((test) => {
+            if (singleId && test.id !== singleId) return test;
+            if (result.error) return { ...test, executionStatus: 'Not Started' };
+            return {
+              ...test,
+              output: result[test.id],
+              executionStatus: isEmpty(result[test.id]) ? 'Started' : 'Finished'
+            };
+          })
+        );
+      };
+      const checkIfFinishedFn = (res: ICodeOutput) => {
+        if (res.result.error) return true;
+        const numsTests = singleId ? 1 : tests.length;
+        const isFinished =
+          Object.values(res.result).filter((output) => output).length === numsTests;
+        return isFinished;
+      };
+
+      requestExhausively(requestFn, processData, checkIfFinishedFn);
+    },
+    []
+  );
+
+  const _handleRunTests = useCallback(
+    async (testId: string | undefined = undefined) => {
+      _setExecuteTests(testId);
+      if (!testId) _collapseAllTests();
+      const targetTests: ITestCase[] = testId
+        ? ([tests.find((test) => test.id === testId)].filter((t) => t) as ITestCase[])
+        : tests;
+      const body: ICodeExecutorBody = {
+        typedCode: codeContent,
+        inputs: targetTests.map((test) => ({ id: test.id, input: test.input })),
+        language
+      };
+      const { submissionId } = await apiPost<ISubmissionResponse>(
+        API_PATH.CODE_EXECUTOR.ROOT,
+        body
       );
-    };
-    const checkIfFinishedFn = (res: ICodeOutput) => {
-      if (res.result.error) return true;
-      const numsTests = singleId ? 1 : tests.length;
-      const isFinished = Object.values(res.result).filter((output) => output).length === numsTests;
-      return isFinished;
-    };
+      _checkResult(submissionId, testId);
+    },
+    [_checkResult, codeContent, language, tests]
+  );
 
-    requestExhausively(requestFn, processData, checkIfFinishedFn);
-  };
+  const _handleRunAllTests = useCallback(() => _handleRunTests(), [_handleRunTests]);
 
-  const _handleRunTests = async (testId: string | undefined = undefined) => {
-    _setExecuteTests(testId);
-    if (!testId) _collapseAllTests();
-    const targetTests: ITestCase[] = testId
-      ? ([tests.find((test) => test.id === testId)].filter((t) => t) as ITestCase[])
-      : tests;
-    const body: ICodeExecutorBody = {
-      typedCode: codeContent,
-      inputs: targetTests.map((test) => ({ id: test.id, input: test.input })),
-      language
-    };
-    const { submissionId } = await apiPost<ISubmissionResponse>(API_PATH.CODE_EXECUTOR.ROOT, body);
-    _checkResult(submissionId, testId);
-  };
-
-  const _handleRunAllTests = () => _handleRunTests();
-
-  const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = (e) => {
+  const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = useCallback((e) => {
     const lang = e.target.value as Language;
     setLanguage(lang);
-  };
+  }, []);
 
-  const _handleAddTest = () => {
+  const _handleAddTest = useCallback(() => {
     setTests((prevTests) => [...prevTests, createNewTest()]);
-  };
+  }, []);
 
-  const _handleTestChange: ITest['handleOnChange'] = (testId, newTest) => {
+  const _handleTestChange: ITest['handleOnChange'] = useCallback((testId, newTest) => {
     setTests((prevTests) => prevTests.map((test) => (test.id == testId ? newTest : test)));
-  };
+  }, []);
 
-  const _handleRemoveTest: ITest['handleOnRemove'] = (testId) => {
+  const _handleRemoveTest: ITest['handleOnRemove'] = useCallback((testId) => {
     setTests((prevTests) => prevTests.filter((test) => test.id != testId));
-  };
+  }, []);
 
-  const _handleRunSingleTest: ITest['handleOnRunSingleTest'] = (id: string) => {
+  const _handleRunSingleTest: ITest['handleOnRunSingleTest'] = useCallback((id: string) => {
     _handleRunTests(id);
-  };
+  }, []);
 
   useEffect(() => {
     document.title = documentTitle;
