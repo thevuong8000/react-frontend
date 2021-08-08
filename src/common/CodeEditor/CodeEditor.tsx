@@ -39,7 +39,7 @@ const CodeEditor: FC<ICodeEditor> = ({
       value={content}
       onChange={_onChange}
       onMount={handleEditorDidMount}
-      className="code_editor"
+      className={colorMode === 'dark' ? 'code_editor_dark' : 'code_editor_light'}
     />
   );
 };
