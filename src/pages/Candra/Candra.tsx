@@ -18,6 +18,7 @@ import ListTests from './ListTests/ListTests';
 import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
 import { isEmpty, generateId } from '@utilities/helper';
 import { editor } from 'monaco-editor';
+import { Monaco } from '@monaco-editor/react';
 
 interface ICheckResult {
   submissionId: string;
@@ -45,11 +46,10 @@ export const createNewTest = (): ITestCase => ({
 
 const Candra: FC<PageBase> = ({ documentTitle }) => {
   const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
-  const [codeContent, setCodeContent] = useState<string>('');
   const [tests, setTests] = useState<ITestCase[]>(getTestsFromStorage());
-  const [editorShortcuts, setEditorShortcuts] = useState<ICodeEditor['editorActions']>([]);
 
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
+  const monacoRef = useRef<Monaco>();
 
   const { apiPost, requestExhausively } = useApi();
 
@@ -117,7 +117,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         ? ([tests.find((test) => test.id === testId)].filter((t) => t) as ITestCase[])
         : tests;
       const body: ICodeExecutorBody = {
-        typedCode: codeContent,
+        typedCode: editorRef.current?.getValue() || '',
         inputs: targetTests.map((test) => ({ id: test.id, input: test.input })),
         language
       };
@@ -127,7 +127,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
       );
       _checkResult(submissionId, testId);
     },
-    [_checkResult, codeContent, language, tests]
+    [_checkResult, language, tests]
   );
 
   const _handleRunAllTests = useCallback(() => _handleRunTests(), [_handleRunTests]);
@@ -153,33 +153,51 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
     _handleRunTests(id);
   }, []);
 
-  useEffect(() => {
-    document.title = documentTitle;
-    setEditorShortcuts([
-      {
+  const _setEditorSubmitAction = useCallback(
+    (ed: editor.IStandaloneCodeEditor, monaco: Monaco) => {
+      ed.addAction({
         id: 'execute-shortcut',
         label: 'execution shortcut',
-        keybindings: [5 | 21],
+        keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
         run: _handleRunAllTests
-      }
-    ]);
-  }, [_handleRunAllTests]);
+      });
+    },
+    [_handleRunAllTests]
+  );
+
+  const _handleEditorDidMount: ICodeEditor['handleEditorDidMount'] = useCallback(
+    (editor, monaco) => {
+      editorRef.current = editor;
+      monacoRef.current = monaco;
+
+      editor.setValue(getCodeFromStorage(language));
+
+      _setEditorSubmitAction(editor, monaco);
+    },
+    []
+  );
+
+  useEffect(() => {
+    document.title = documentTitle;
+  }, []);
 
   useEffect(() => {
     saveLanguageIntoStorage(language);
-    setCodeContent(getCodeFromStorage(language));
+    if (editorRef.current) editorRef.current.setValue(getCodeFromStorage(language));
   }, [language]);
-
-  useEffect(() => {
-    if (!codeContent) return;
-    saveCodeIntoStorage(codeContent, language);
-  }, [codeContent]);
 
   useEffect(() => {
     saveTestsIntoStorage(tests);
   }, [tests]);
 
-  const _testFunc = () => console.log(editorRef.current?.getValue());
+  useEffect(() => {
+    if (editorRef.current && monacoRef.current)
+      _setEditorSubmitAction(editorRef.current, monacoRef.current);
+  }, [_handleRunAllTests]);
+
+  const _testFunc = () => {
+    editorRef.current?.setValue(getCodeFromStorage(language));
+  };
 
   return (
     <Flex direction="column" p="6">
@@ -188,10 +206,8 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
           ref={editorRef}
           height="80vh"
           width="50vw"
-          content={codeContent}
-          setContent={setCodeContent}
           lang={language}
-          editorActions={editorShortcuts}
+          handleEditorDidMount={_handleEditorDidMount}
         />
         <Flex
           grow={1}
