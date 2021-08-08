@@ -20,11 +20,11 @@ const AuthenticatedPage: FC = () => (
             render={() => <Homepage documentTitle={ROUTE.HOME.title} />}
           /> */}
 
-          <Route
+          {/* <Route
             exact
             path={ROUTE.DEMO.to}
             render={() => <DemoComponents documentTitle={ROUTE.DEMO.title} />}
-          />
+          /> */}
 
           <Route
             exact
