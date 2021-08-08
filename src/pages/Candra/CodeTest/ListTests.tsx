@@ -2,13 +2,13 @@ import { Accordion, Heading } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import CodeTest, { ICodeTest, ICodeTestContent } from './CodeTest';
 
-interface ITestList {
+interface IListTests {
   tests: ICodeTestContent[];
   handleTestChange: ICodeTest['handleOnChange'];
   handleRemoveTest: ICodeTest['handleOnRemove'];
   handleRunSingleTest: ICodeTest['handleOnRunSingleTest'];
 }
-const TestList: FC<ITestList> = ({
+const ListTests: FC<IListTests> = ({
   tests,
   handleTestChange,
   handleRemoveTest,
@@ -40,4 +40,4 @@ const TestList: FC<ITestList> = ({
   );
 };
 
-export default TestList;
+export default ListTests;

@@ -14,7 +14,7 @@ import {
   getTestsFromStorage,
   saveTestsIntoStorage
 } from '@utilities/code-executor';
-import TestList from './CodeTest/TestList';
+import ListTests from './CodeTest/ListTests';
 import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
 import { isEmpty, generateId } from '@utilities/helper';
 
@@ -174,7 +174,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
           overflowY="auto"
           gridGap="4"
         >
-          <TestList
+          <ListTests
             tests={tests}
             handleTestChange={_handleTestChange}
             handleRemoveTest={_handleRemoveTest}
