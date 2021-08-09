@@ -257,11 +257,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
     // Store code, language into local storage
     const interval = setInterval(() => {
-      if (editorRef.current) {
-        const content = editorRef.current?.getValue();
-        console.log('save', content, 'to', language);
-        saveCodeIntoStorage(editorRef.current?.getValue(), language);
-      }
+      if (editorRef.current) saveCodeIntoStorage(editorRef.current?.getValue(), language);
     }, 200);
 
     return () => clearInterval(interval);
