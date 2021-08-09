@@ -1,4 +1,4 @@
-import { Button, Flex, Select } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import CodeEditor, { ICodeEditor, Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
@@ -14,13 +14,13 @@ import {
   getTestsFromStorage,
   saveTestsIntoStorage
 } from '@utilities/code-executor';
-import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
 import { isEmpty, generateId } from '@utilities/helper';
 import { editor } from 'monaco-editor';
 import { Monaco } from '@monaco-editor/react';
 import Executor from './Executor';
 import { IExecutionMode } from './Executor';
 import { useHeader } from '../../contexts/header-provider';
+import CandraFunctions from './CandraFunctions';
 
 interface ICheckResult {
   submissionId: string;
@@ -36,53 +36,6 @@ interface ICodeOutput {
     [x: string]: string;
   };
 }
-
-interface ICandraHeaderFunctions {
-  initLanguage: Language;
-  handleCollapseAll: () => void;
-  handleExpendAll: () => void;
-  handleChangeLanguage: ChangeEventHandler<HTMLSelectElement>;
-  handleAddTest: () => void;
-  handleExecuteCode: () => void | Promise<void>;
-}
-
-const CandraHeaderFunctions: FC<ICandraHeaderFunctions> = ({
-  initLanguage,
-  handleCollapseAll,
-  handleExpendAll,
-  handleChangeLanguage,
-  handleAddTest,
-  handleExecuteCode
-}) => {
-  return (
-    <Flex w="50%" justify="space-around" m="0 auto">
-      <Select
-        defaultValue={initLanguage}
-        variant="filled"
-        w="max-content"
-        onChange={handleChangeLanguage}
-      >
-        {SUPPORTED_LANGUAGES.map((lang) => (
-          <option key={`code-lang-${lang}`} value={lang}>
-            {lang}
-          </option>
-        ))}
-      </Select>
-      <Button size="md" onClick={handleAddTest}>
-        Add Test
-      </Button>
-      <Button size="md" onClick={handleCollapseAll}>
-        Collapse All
-      </Button>
-      <Button size="md" onClick={handleExpendAll}>
-        Expand All
-      </Button>
-      <Button size="md" onClick={handleExecuteCode}>
-        Execute
-      </Button>
-    </Flex>
-  );
-};
 
 export const createNewTest = (): ITestCase => ({
   id: generateId(8),
@@ -277,7 +230,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
     // Change header functions
     setHeaderFunctions(() => (
-      <CandraHeaderFunctions
+      <CandraFunctions
         initLanguage={language}
         handleCollapseAll={_collapseAllTests}
         handleExpendAll={_expandAllTests}
