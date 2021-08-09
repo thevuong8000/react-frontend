@@ -67,8 +67,10 @@ const CandraHeaderFunctions: FC<ICandraHeaderFunctions> = ({
       <Button size="md" onClick={handleAddTest}>
         Add Test
       </Button>
+      <Button size="md">Collapse All</Button>
+      <Button size="md">Expand All</Button>
       <Button size="md" onClick={handleExecuteCode}>
-        Run Test
+        Execute
       </Button>
     </Flex>
   );
