@@ -1,15 +1,12 @@
 import React, { FC } from 'react';
 import { Flex, Spacer, Box } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/button';
-import { Link, useLocation } from 'react-router-dom';
-import { ROUTE } from '@constants/routing';
 import { Profile } from '@common';
 import { TEXT_COMMON } from '@constants/text';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { FaMoon, FaSun } from 'react-icons/fa';
 
 const Header: FC = () => {
-  const location = useLocation();
   const { colorMode, toggleColorMode } = useColorMode();
 
   const LeftItems = () => (
