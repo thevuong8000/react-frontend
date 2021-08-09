@@ -2,7 +2,7 @@ import { Accordion, Heading } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import Test, { ITest, ITestCase } from './Test';
 
-interface IListTests {
+export interface IListTests {
   tests: ITestCase[];
   handleTestChange: ITest['handleOnChange'];
   handleRemoveTest: ITest['handleOnRemove'];

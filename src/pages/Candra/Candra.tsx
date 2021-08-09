@@ -14,11 +14,11 @@ import {
   getTestsFromStorage,
   saveTestsIntoStorage
 } from '@utilities/code-executor';
-import ListTests from './ListTests/ListTests';
 import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
 import { isEmpty, generateId } from '@utilities/helper';
 import { editor } from 'monaco-editor';
 import { Monaco } from '@monaco-editor/react';
+import Executor from './Executor';
 
 interface ICheckResult {
   submissionId: string;
@@ -216,7 +216,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
           overflowY="auto"
           gridGap="4"
         >
-          <ListTests
+          <Executor
             tests={tests}
             handleTestChange={_handleTestChange}
             handleRemoveTest={_handleRemoveTest}
