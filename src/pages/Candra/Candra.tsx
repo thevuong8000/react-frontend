@@ -1,4 +1,4 @@
-import { Button, Flex, Select } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import CodeEditor, { ICodeEditor, Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
@@ -14,12 +14,13 @@ import {
   getTestsFromStorage,
   saveTestsIntoStorage
 } from '@utilities/code-executor';
-import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
 import { isEmpty, generateId } from '@utilities/helper';
 import { editor } from 'monaco-editor';
 import { Monaco } from '@monaco-editor/react';
 import Executor from './Executor';
 import { IExecutionMode } from './Executor';
+import { useHeader } from '../../contexts/header-provider';
+import CandraFunctions from './CandraFunctions';
 
 interface ICheckResult {
   submissionId: string;
@@ -55,9 +56,14 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   const monacoRef = useRef<Monaco>();
 
   const { apiPost, requestExhausively } = useApi();
+  const { setHeaderFunctions } = useHeader();
 
   const _collapseAllTests = useCallback(() => {
     setTests((prevTests) => prevTests.map((test) => ({ ...test, isCollapsed: true })));
+  }, []);
+
+  const _expandAllTests = useCallback(() => {
+    setTests((prevTests) => prevTests.map((test) => ({ ...test, isCollapsed: false })));
   }, []);
 
   const _setExecuteTests = useCallback((testId: string | undefined) => {
@@ -199,16 +205,19 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
   useEffect(() => {
     document.title = documentTitle;
-
-    // Store code, language into local storage
-    setInterval(() => {
-      if (editorRef.current) saveCodeIntoStorage(editorRef.current?.getValue(), language);
-    }, 200);
   }, []);
 
   useEffect(() => {
     saveLanguageIntoStorage(language);
+
     if (editorRef.current) editorRef.current.setValue(getCodeFromStorage(language));
+
+    // Store code, language into local storage
+    const interval = setInterval(() => {
+      if (editorRef.current) saveCodeIntoStorage(editorRef.current?.getValue(), language);
+    }, 200);
+
+    return () => clearInterval(interval);
   }, [language]);
 
   useEffect(() => {
@@ -218,6 +227,18 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   useEffect(() => {
     if (editorRef.current && monacoRef.current)
       _setEditorSubmitAction(editorRef.current, monacoRef.current);
+
+    // Change header functions
+    setHeaderFunctions(() => (
+      <CandraFunctions
+        initLanguage={language}
+        handleCollapseAll={_collapseAllTests}
+        handleExpendAll={_expandAllTests}
+        handleChangeLanguage={_handleChangeLanguage}
+        handleAddTest={_handleAddTest}
+        handleExecuteCode={_handleExecuteCode}
+      />
+    ));
   }, [_handleExecuteCode]);
 
   return (
@@ -248,23 +269,6 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
             handleRunSingleTest={_handleRunSingleTest}
           />
         </Flex>
-      </Flex>
-
-      {/* Functional Buttons */}
-      <Flex w="50%" justify="space-around" m="0 auto">
-        <Select value={language} variant="filled" w="max-content" onChange={_handleChangeLanguage}>
-          {SUPPORTED_LANGUAGES.map((lang) => (
-            <option key={`code-lang-${lang}`} value={lang}>
-              {lang}
-            </option>
-          ))}
-        </Select>
-        <Button size="md" onClick={_handleAddTest}>
-          Add Test
-        </Button>
-        <Button size="md" onClick={_handleExecuteCode}>
-          Run Test
-        </Button>
       </Flex>
     </Flex>
   );

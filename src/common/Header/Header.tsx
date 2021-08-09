@@ -5,9 +5,11 @@ import { Profile } from '@common';
 import { TEXT_COMMON } from '@constants/text';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { FaMoon, FaSun } from 'react-icons/fa';
+import { useHeader } from '../../contexts/header-provider';
 
 const Header: FC = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const { HeaderFunctions } = useHeader();
 
   const LeftItems = () => (
     <Box
@@ -37,6 +39,9 @@ const Header: FC = () => {
   return (
     <Flex boxShadow="sm" align="center" justify="space-between" h="14" p="6">
       <LeftItems />
+      <Spacer />
+      {/* <HeaderFunctions /> */}
+      {HeaderFunctions}
       <Spacer />
       <RightItems />
     </Flex>
