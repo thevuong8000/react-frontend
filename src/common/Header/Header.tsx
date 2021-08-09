@@ -40,7 +40,8 @@ const Header: FC = () => {
     <Flex boxShadow="sm" align="center" justify="space-between" h="14" p="6">
       <LeftItems />
       <Spacer />
-      <HeaderFunctions />
+      {/* <HeaderFunctions /> */}
+      {HeaderFunctions}
       <Spacer />
       <RightItems />
     </Flex>

@@ -20,6 +20,7 @@ import { editor } from 'monaco-editor';
 import { Monaco } from '@monaco-editor/react';
 import Executor from './Executor';
 import { IExecutionMode } from './Executor';
+import { useHeader } from '../../contexts/header-provider';
 
 interface ICheckResult {
   submissionId: string;
@@ -35,6 +36,43 @@ interface ICodeOutput {
     [x: string]: string;
   };
 }
+
+interface ICandraHeaderFunctions {
+  initLanguage: Language;
+  handleChangeLanguage: ChangeEventHandler<HTMLSelectElement>;
+  handleAddTest: () => void;
+  handleExecuteCode: () => void | Promise<void>;
+}
+
+const CandraHeaderFunctions: FC<ICandraHeaderFunctions> = ({
+  initLanguage,
+  handleChangeLanguage,
+  handleAddTest,
+  handleExecuteCode
+}) => {
+  return (
+    <Flex w="50%" justify="space-around" m="0 auto">
+      <Select
+        defaultValue={initLanguage}
+        variant="filled"
+        w="max-content"
+        onChange={handleChangeLanguage}
+      >
+        {SUPPORTED_LANGUAGES.map((lang) => (
+          <option key={`code-lang-${lang}`} value={lang}>
+            {lang}
+          </option>
+        ))}
+      </Select>
+      <Button size="md" onClick={handleAddTest}>
+        Add Test
+      </Button>
+      <Button size="md" onClick={handleExecuteCode}>
+        Run Test
+      </Button>
+    </Flex>
+  );
+};
 
 export const createNewTest = (): ITestCase => ({
   id: generateId(8),
@@ -55,6 +93,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   const monacoRef = useRef<Monaco>();
 
   const { apiPost, requestExhausively } = useApi();
+  const { setHeaderFunctions } = useHeader();
 
   const _collapseAllTests = useCallback(() => {
     setTests((prevTests) => prevTests.map((test) => ({ ...test, isCollapsed: true })));
@@ -200,15 +239,32 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   useEffect(() => {
     document.title = documentTitle;
 
-    // Store code, language into local storage
-    setInterval(() => {
-      if (editorRef.current) saveCodeIntoStorage(editorRef.current?.getValue(), language);
-    }, 200);
+    // Change header functions
+    setHeaderFunctions(() => (
+      <CandraHeaderFunctions
+        initLanguage={language}
+        handleChangeLanguage={_handleChangeLanguage}
+        handleAddTest={_handleAddTest}
+        handleExecuteCode={_handleExecuteCode}
+      />
+    ));
   }, []);
 
   useEffect(() => {
     saveLanguageIntoStorage(language);
+
     if (editorRef.current) editorRef.current.setValue(getCodeFromStorage(language));
+
+    // Store code, language into local storage
+    const interval = setInterval(() => {
+      if (editorRef.current) {
+        const content = editorRef.current?.getValue();
+        console.log('save', content, 'to', language);
+        saveCodeIntoStorage(editorRef.current?.getValue(), language);
+      }
+    }, 200);
+
+    return () => clearInterval(interval);
   }, [language]);
 
   useEffect(() => {
@@ -248,23 +304,6 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
             handleRunSingleTest={_handleRunSingleTest}
           />
         </Flex>
-      </Flex>
-
-      {/* Functional Buttons */}
-      <Flex w="50%" justify="space-around" m="0 auto">
-        <Select value={language} variant="filled" w="max-content" onChange={_handleChangeLanguage}>
-          {SUPPORTED_LANGUAGES.map((lang) => (
-            <option key={`code-lang-${lang}`} value={lang}>
-              {lang}
-            </option>
-          ))}
-        </Select>
-        <Button size="md" onClick={_handleAddTest}>
-          Add Test
-        </Button>
-        <Button size="md" onClick={_handleExecuteCode}>
-          Run Test
-        </Button>
       </Flex>
     </Flex>
   );
