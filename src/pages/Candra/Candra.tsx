@@ -68,7 +68,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   }, []);
 
   const _checkResult = useCallback(
-    async (submissionId: string, singleId: string | undefined = undefined) => {
+    async (submissionId: string, numsTest: number, singleId: string | undefined = undefined) => {
       const body: ICheckResult = {
         submissionId
       };
@@ -95,12 +95,9 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         );
       };
 
-      // TODO: error with add test during executing
       const checkIfFinishedFn = (res: ICodeOutput) => {
         if (res.result.error) return true;
-        const numsTests = singleId ? 1 : tests.length;
-        const isFinished =
-          Object.values(res.result).filter((output) => output).length === numsTests;
+        const isFinished = Object.values(res.result).filter((output) => output).length === numsTest;
         return isFinished;
       };
 
@@ -125,7 +122,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         API_PATH.CODE_EXECUTOR.ROOT,
         body
       );
-      _checkResult(submissionId, testId);
+      _checkResult(submissionId, targetTests.length, testId);
     },
     [_checkResult, language, tests]
   );
