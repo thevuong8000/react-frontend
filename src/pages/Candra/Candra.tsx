@@ -109,7 +109,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
     [tests]
   );
 
-  const _handleRunTests = useCallback(
+  const _handleExecuteTestsCompetitiveMode = useCallback(
     async (testId: string | undefined = undefined) => {
       _setExecuteTests(testId);
       if (!testId) _collapseAllTests();
@@ -130,24 +130,27 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
     [_checkResult, language, tests]
   );
 
-  const _handleRunAllTests = useCallback(() => _handleRunTests(), [_handleRunTests]);
+  const _handleExecuteAllTestsCompetitiveMode = useCallback(
+    () => _handleExecuteTestsCompetitiveMode(),
+    [_handleExecuteTestsCompetitiveMode]
+  );
 
-  const _handleRunCodeWithoutInput = useCallback(() => {
+  const _handleExecuteRegularMode = useCallback(() => {
     alert('run in regular mode');
   }, []);
 
   const _handleExecuteCode = useCallback(() => {
     switch (executionMode) {
       case 'Competitive Programming':
-        return _handleRunAllTests();
+        return _handleExecuteAllTestsCompetitiveMode();
 
       case 'Regular':
-        return _handleRunCodeWithoutInput();
+        return _handleExecuteRegularMode();
 
       default:
         return;
     }
-  }, [executionMode, _handleRunAllTests, _handleRunCodeWithoutInput]);
+  }, [executionMode, _handleExecuteAllTestsCompetitiveMode, _handleExecuteRegularMode]);
 
   const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = useCallback((e) => {
     const lang = e.target.value as Language;
@@ -167,7 +170,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   }, []);
 
   const _handleRunSingleTest: ITest['handleOnRunSingleTest'] = useCallback((id: string) => {
-    _handleRunTests(id);
+    _handleExecuteTestsCompetitiveMode(id);
   }, []);
 
   const _setEditorSubmitAction = useCallback(
