@@ -176,6 +176,11 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
   useEffect(() => {
     document.title = documentTitle;
+
+    // Store code, language into local storage
+    setInterval(() => {
+      if (editorRef.current) saveCodeIntoStorage(editorRef.current?.getValue(), language);
+    }, 200);
   }, []);
 
   useEffect(() => {
@@ -191,10 +196,6 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
     if (editorRef.current && monacoRef.current)
       _setEditorSubmitAction(editorRef.current, monacoRef.current);
   }, [_handleRunAllTests]);
-
-  const _testFunc = () => {
-    editorRef.current?.setValue(getCodeFromStorage(language));
-  };
 
   return (
     <Flex direction="column" p="6">
@@ -238,9 +239,6 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         </Button>
         <Button size="md" onClick={_handleRunAllTests}>
           Run Test
-        </Button>
-        <Button size="md" onClick={_testFunc}>
-          Test Func
         </Button>
       </Flex>
     </Flex>
