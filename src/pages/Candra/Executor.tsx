@@ -1,10 +1,13 @@
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import { Tab, TabList, TabPanel, TabPanels, Tabs, UseTabsProps } from '@chakra-ui/react';
+import React, { FC, useCallback, useMemo } from 'react';
 import ListTests, { IListTests } from './ListTests/ListTests';
 
-interface IExecutor extends IListTests {}
-
 export type IExecutionMode = 'Competitive Programming' | 'Regular';
+
+interface IExecutor extends IListTests {
+  executionMode: IExecutionMode;
+  setExecutionMode: React.Dispatch<React.SetStateAction<IExecutionMode>>;
+}
 
 interface ITabMode {
   label: IExecutionMode;
@@ -12,28 +15,42 @@ interface ITabMode {
 }
 
 const Executor: FC<IExecutor> = ({
+  executionMode,
+  setExecutionMode,
   tests,
   handleTestChange,
   handleRemoveTest,
   handleRunSingleTest
 }) => {
-  const tabData: ITabMode[] = [
-    {
-      label: 'Competitive Programming',
-      content: (
-        <ListTests
-          tests={tests}
-          handleTestChange={handleTestChange}
-          handleRemoveTest={handleRemoveTest}
-          handleRunSingleTest={handleRunSingleTest}
-        />
-      )
+  const tabData: ITabMode[] = useMemo(
+    () => [
+      {
+        label: 'Competitive Programming',
+        content: (
+          <ListTests
+            tests={tests}
+            handleTestChange={handleTestChange}
+            handleRemoveTest={handleRemoveTest}
+            handleRunSingleTest={handleRunSingleTest}
+          />
+        )
+      },
+      { label: 'Regular', content: <span>Regular Mode</span> }
+    ],
+    [tests, handleTestChange, handleRemoveTest, handleRunSingleTest]
+  );
+
+  const _handleOnChange: UseTabsProps['onChange'] = useCallback(
+    (index) => {
+      setExecutionMode(tabData[index].label);
     },
-    { label: 'Regular', content: <span>Regular Mode</span> }
-  ];
+    [tabData]
+  );
+
+  const tabIndex = tabData.findIndex((tab) => tab.label === executionMode);
 
   return (
-    <Tabs variant="solid-rounded" colorScheme="blue">
+    <Tabs variant="solid-rounded" colorScheme="blue" index={tabIndex} onChange={_handleOnChange}>
       <TabList>
         {tabData.map((tab, idx) => (
           <Tab key={`tab-label-${idx}`}>{tab.label}</Tab>
