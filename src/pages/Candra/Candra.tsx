@@ -238,16 +238,6 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
   useEffect(() => {
     document.title = documentTitle;
-
-    // Change header functions
-    setHeaderFunctions(() => (
-      <CandraHeaderFunctions
-        initLanguage={language}
-        handleChangeLanguage={_handleChangeLanguage}
-        handleAddTest={_handleAddTest}
-        handleExecuteCode={_handleExecuteCode}
-      />
-    ));
   }, []);
 
   useEffect(() => {
@@ -270,6 +260,16 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   useEffect(() => {
     if (editorRef.current && monacoRef.current)
       _setEditorSubmitAction(editorRef.current, monacoRef.current);
+
+    // Change header functions
+    setHeaderFunctions(() => (
+      <CandraHeaderFunctions
+        initLanguage={language}
+        handleChangeLanguage={_handleChangeLanguage}
+        handleAddTest={_handleAddTest}
+        handleExecuteCode={_handleExecuteCode}
+      />
+    ));
   }, [_handleExecuteCode]);
 
   return (
