@@ -1,47 +1,31 @@
-import React, { FC, useRef } from 'react';
-import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
-import Editor, { OnChange, OnMount } from '@monaco-editor/react';
+import React, { forwardRef } from 'react';
+import Editor, { OnMount } from '@monaco-editor/react';
 import { useColorMode } from '@chakra-ui/react';
 
 export type Language = 'javascript' | 'typescript' | 'cpp' | 'python' | 'java';
-interface ICodeEditor {
+
+export interface ICodeEditor {
   height?: string;
   width?: string;
   lang?: Language;
-  content?: string;
-  setContent: React.Dispatch<React.SetStateAction<string>>;
+  handleEditorDidMount: OnMount;
 }
 
-const CodeEditor: FC<ICodeEditor> = ({
-  height = '60vh',
-  width = '40vw',
-  lang = 'javascript',
-  content = '',
-  setContent
-}) => {
-  const { colorMode } = useColorMode();
-  const editorRef = useRef<editor.IStandaloneCodeEditor>();
+const CodeEditor = forwardRef<any, ICodeEditor>(
+  ({ height = '60vh', width = '40vw', lang = 'javascript', handleEditorDidMount }, ref) => {
+    const { colorMode } = useColorMode();
 
-  const handleEditorDidMount: OnMount = (editor, monaco) => {
-    editorRef.current = editor;
-  };
-
-  const _onChange: OnChange = (value, ev) => {
-    setContent(value ?? '');
-  };
-
-  return (
-    <Editor
-      height={height}
-      width={width}
-      theme={colorMode === 'dark' ? 'vs-dark' : 'light'}
-      language={lang}
-      value={content}
-      onChange={_onChange}
-      onMount={handleEditorDidMount}
-      className={colorMode === 'dark' ? 'code_editor_dark' : 'code_editor_light'}
-    />
-  );
-};
+    return (
+      <Editor
+        height={height}
+        width={width}
+        theme={colorMode === 'dark' ? 'vs-dark' : 'light'}
+        language={lang}
+        onMount={handleEditorDidMount}
+        className={colorMode === 'dark' ? 'code_editor_dark' : 'code_editor_light'}
+      />
+    );
+  }
+);
 
 export default CodeEditor;
