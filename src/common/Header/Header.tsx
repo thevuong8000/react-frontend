@@ -22,12 +22,7 @@ const Header: FC = () => {
       alignItems="center"
     >
       {/* Logo */}
-      <Button
-        as={Link}
-        to={{ pathname: ROUTE.HOME.to, state: { from: location.pathname } }}
-        variant="outline"
-        size="md"
-      >
+      <Button variant="outline" size="md">
         {TEXT_COMMON.APP_TITLE}
       </Button>
     </Box>

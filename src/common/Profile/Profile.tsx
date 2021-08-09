@@ -25,7 +25,7 @@ const Profile: FC = () => {
         <MenuButton as={Button} size="md" variant="ghost" colorScheme="gray">
           <Flex align="center">
             <Avatar name={user.displayName} size="xs" />
-            <Text ml="1.5">{user.displayName}</Text>
+            <Text ml="1.5">{user.displayName || 'Guest'}</Text>
           </Flex>
         </MenuButton>
         <MenuList zIndex="dropdown">
