@@ -1,6 +1,5 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
-import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
-import Editor, { OnMount, useMonaco } from '@monaco-editor/react';
+import React, { forwardRef } from 'react';
+import Editor, { OnMount } from '@monaco-editor/react';
 import { useColorMode } from '@chakra-ui/react';
 
 export type Language = 'javascript' | 'typescript' | 'cpp' | 'python' | 'java';
