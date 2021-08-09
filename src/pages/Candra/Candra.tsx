@@ -39,6 +39,8 @@ interface ICodeOutput {
 
 interface ICandraHeaderFunctions {
   initLanguage: Language;
+  handleCollapseAll: () => void;
+  handleExpendAll: () => void;
   handleChangeLanguage: ChangeEventHandler<HTMLSelectElement>;
   handleAddTest: () => void;
   handleExecuteCode: () => void | Promise<void>;
@@ -46,6 +48,8 @@ interface ICandraHeaderFunctions {
 
 const CandraHeaderFunctions: FC<ICandraHeaderFunctions> = ({
   initLanguage,
+  handleCollapseAll,
+  handleExpendAll,
   handleChangeLanguage,
   handleAddTest,
   handleExecuteCode
@@ -67,8 +71,12 @@ const CandraHeaderFunctions: FC<ICandraHeaderFunctions> = ({
       <Button size="md" onClick={handleAddTest}>
         Add Test
       </Button>
-      <Button size="md">Collapse All</Button>
-      <Button size="md">Expand All</Button>
+      <Button size="md" onClick={handleCollapseAll}>
+        Collapse All
+      </Button>
+      <Button size="md" onClick={handleExpendAll}>
+        Expand All
+      </Button>
       <Button size="md" onClick={handleExecuteCode}>
         Execute
       </Button>
@@ -99,6 +107,10 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
   const _collapseAllTests = useCallback(() => {
     setTests((prevTests) => prevTests.map((test) => ({ ...test, isCollapsed: true })));
+  }, []);
+
+  const _expandAllTests = useCallback(() => {
+    setTests((prevTests) => prevTests.map((test) => ({ ...test, isCollapsed: false })));
   }, []);
 
   const _setExecuteTests = useCallback((testId: string | undefined) => {
@@ -267,6 +279,8 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
     setHeaderFunctions(() => (
       <CandraHeaderFunctions
         initLanguage={language}
+        handleCollapseAll={_collapseAllTests}
+        handleExpendAll={_expandAllTests}
         handleChangeLanguage={_handleChangeLanguage}
         handleAddTest={_handleAddTest}
         handleExecuteCode={_handleExecuteCode}
