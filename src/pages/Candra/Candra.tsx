@@ -14,11 +14,12 @@ import {
   getTestsFromStorage,
   saveTestsIntoStorage
 } from '@utilities/code-executor';
-import ListTests from './ListTests/ListTests';
 import { SUPPORTED_LANGUAGES } from '@constants/code-executor';
 import { isEmpty, generateId } from '@utilities/helper';
 import { editor } from 'monaco-editor';
 import { Monaco } from '@monaco-editor/react';
+import Executor from './Executor';
+import { IExecutionMode } from './Executor';
 
 interface ICheckResult {
   submissionId: string;
@@ -47,6 +48,8 @@ export const createNewTest = (): ITestCase => ({
 const Candra: FC<PageBase> = ({ documentTitle }) => {
   const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
   const [tests, setTests] = useState<ITestCase[]>(getTestsFromStorage());
+
+  const [executionMode, setExecutionMode] = useState<IExecutionMode>('Competitive Programming');
 
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
   const monacoRef = useRef<Monaco>();
@@ -106,7 +109,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
     [tests]
   );
 
-  const _handleRunTests = useCallback(
+  const _handleExecuteTestsCompetitiveMode = useCallback(
     async (testId: string | undefined = undefined) => {
       _setExecuteTests(testId);
       if (!testId) _collapseAllTests();
@@ -127,7 +130,27 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
     [_checkResult, language, tests]
   );
 
-  const _handleRunAllTests = useCallback(() => _handleRunTests(), [_handleRunTests]);
+  const _handleExecuteAllTestsCompetitiveMode = useCallback(
+    () => _handleExecuteTestsCompetitiveMode(),
+    [_handleExecuteTestsCompetitiveMode]
+  );
+
+  const _handleExecuteRegularMode = useCallback(() => {
+    alert('run in regular mode');
+  }, []);
+
+  const _handleExecuteCode = useCallback(() => {
+    switch (executionMode) {
+      case 'Competitive Programming':
+        return _handleExecuteAllTestsCompetitiveMode();
+
+      case 'Regular':
+        return _handleExecuteRegularMode();
+
+      default:
+        return;
+    }
+  }, [executionMode, _handleExecuteAllTestsCompetitiveMode, _handleExecuteRegularMode]);
 
   const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = useCallback((e) => {
     const lang = e.target.value as Language;
@@ -147,7 +170,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   }, []);
 
   const _handleRunSingleTest: ITest['handleOnRunSingleTest'] = useCallback((id: string) => {
-    _handleRunTests(id);
+    _handleExecuteTestsCompetitiveMode(id);
   }, []);
 
   const _setEditorSubmitAction = useCallback(
@@ -156,10 +179,10 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         id: 'execute-shortcut',
         label: 'execution shortcut',
         keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
-        run: _handleRunAllTests
+        run: _handleExecuteCode
       });
     },
-    [_handleRunAllTests]
+    [_handleExecuteCode]
   );
 
   const _handleEditorDidMount: ICodeEditor['handleEditorDidMount'] = useCallback(
@@ -195,7 +218,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   useEffect(() => {
     if (editorRef.current && monacoRef.current)
       _setEditorSubmitAction(editorRef.current, monacoRef.current);
-  }, [_handleRunAllTests]);
+  }, [_handleExecuteCode]);
 
   return (
     <Flex direction="column" p="6">
@@ -216,8 +239,10 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
           overflowY="auto"
           gridGap="4"
         >
-          <ListTests
+          <Executor
             tests={tests}
+            executionMode={executionMode}
+            setExecutionMode={setExecutionMode}
             handleTestChange={_handleTestChange}
             handleRemoveTest={_handleRemoveTest}
             handleRunSingleTest={_handleRunSingleTest}
@@ -237,7 +262,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         <Button size="md" onClick={_handleAddTest}>
           Add Test
         </Button>
-        <Button size="md" onClick={_handleRunAllTests}>
+        <Button size="md" onClick={_handleExecuteCode}>
           Run Test
         </Button>
       </Flex>
