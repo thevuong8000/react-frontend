@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { Flex, useToast } from '@chakra-ui/react';
 import CodeEditor, { ICodeEditor, Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
@@ -22,6 +22,7 @@ import { IExecutionMode } from './Executor';
 import { useHeader } from '../../contexts/header-provider';
 import CandraFunctions from './CandraFunctions';
 import useServerStatus from '@hooks/useServerStatus';
+import useNotify from '@hooks/useNotify';
 
 interface ICheckResult {
   submissionId: string;
@@ -37,6 +38,8 @@ interface ICodeOutput {
     [x: string]: string;
   };
 }
+
+const COMPILE_ERROR_TOAST_ID = 'compile-error-toast-id';
 
 export const createNewTest = (): ITestCase => ({
   id: generateId(8),
@@ -59,6 +62,8 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   const { apiPost, requestExhausively } = useApi();
   const { setHeaderFunctions } = useHeader();
   const { checkIfServerIsRestarting } = useServerStatus();
+  const { setNotifier } = useNotify();
+  const toast = useToast();
 
   const _collapseAllTests = useCallback(() => {
     setTests((prevTests) => prevTests.map((test) => ({ ...test, isCollapsed: true })));
@@ -90,7 +95,13 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
         // TODO: handle compile error
         if (result.error) {
-          console.log('Compile Error:', result.error);
+          setNotifier({
+            id: COMPILE_ERROR_TOAST_ID,
+            title: 'Compile Error',
+            description: result.error,
+            status: 'error',
+            duration: null
+          });
         }
 
         setTests((prevTests) =>
@@ -144,10 +155,12 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   );
 
   const _handleExecuteRegularMode = useCallback(() => {
-    alert('run in regular mode');
+    alert('This funciton has not been available yet!');
   }, []);
 
   const _handleExecuteCode = useCallback(() => {
+    toast.close(COMPILE_ERROR_TOAST_ID);
+
     switch (executionMode) {
       case 'Competitive Programming':
         return _handleExecuteAllTestsCompetitiveMode();
@@ -208,6 +221,8 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   useEffect(() => {
     document.title = documentTitle;
 
+    // At first, check if the server is up
+    // if not, wake the server up by call an API
     checkIfServerIsRestarting();
   }, []);
 
