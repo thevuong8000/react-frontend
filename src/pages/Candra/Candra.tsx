@@ -21,6 +21,7 @@ import Executor from './Executor';
 import { IExecutionMode } from './Executor';
 import { useHeader } from '../../contexts/header-provider';
 import CandraFunctions from './CandraFunctions';
+import useServerStatus from '@hooks/useServerStatus';
 
 interface ICheckResult {
   submissionId: string;
@@ -57,6 +58,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
   const { apiPost, requestExhausively } = useApi();
   const { setHeaderFunctions } = useHeader();
+  const { checkIfServerIsRestarting } = useServerStatus();
 
   const _collapseAllTests = useCallback(() => {
     setTests((prevTests) => prevTests.map((test) => ({ ...test, isCollapsed: true })));
@@ -205,6 +207,8 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
   useEffect(() => {
     document.title = documentTitle;
+
+    checkIfServerIsRestarting();
   }, []);
 
   useEffect(() => {
