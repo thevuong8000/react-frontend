@@ -60,3 +60,26 @@ export const isEmpty = (input: any): boolean =>
 export const generateId = (length: number | undefined = undefined) => {
 	return nanoid(length);
 };
+
+interface IStringEqualOptions {
+	isCaseInsensitive?: boolean;
+	isExact?: boolean;
+}
+
+/**
+ * Check if 2 strings are equal under options
+ * @param str1 string
+ * @param str2 string
+ * @param param2 options for comparation
+ * @returns
+ */
+export const isStringEqual = (
+	str1: string,
+	str2: string,
+	{ isCaseInsensitive = false, isExact = false }: IStringEqualOptions = {}
+) => {
+	if (isExact) return str1 === str2;
+	const transformedStr1 = (isCaseInsensitive ? str1 : str1.toLowerCase()).trim();
+	const transformedStr2 = (isCaseInsensitive ? str2 : str2.toLowerCase()).trim();
+	return transformedStr1 === transformedStr2;
+};

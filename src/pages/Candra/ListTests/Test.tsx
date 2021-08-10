@@ -8,6 +8,7 @@ import {
   Textarea,
   Tooltip
 } from '@chakra-ui/react';
+import { isStringEqual } from '@utilities/helper';
 import React, { ChangeEventHandler, FC, MouseEventHandler, useEffect } from 'react';
 import { MdDelete } from 'react-icons/md';
 import { VscRunAll } from 'react-icons/vsc';
@@ -72,7 +73,7 @@ const Test: FC<ITest> = ({ test, handleOnChange, handleOnRemove, handleOnRunSing
 
   useEffect(() => {
     if (test.executionStatus === 'Finished') {
-      if (test.expectedOutput === test.output) _handleSetExecutionStatus('Accepted');
+      if (isStringEqual(test.expectedOutput, test.output)) _handleSetExecutionStatus('Accepted');
       else _handleSetExecutionStatus('Wrong Answer');
     }
   }, [test]);
@@ -133,9 +134,8 @@ const Test: FC<ITest> = ({ test, handleOnChange, handleOnRemove, handleOnRunSing
               h="100%"
               w="100%"
               resize="none"
-              placeholder="Corrected Output..."
-              defaultValue={test.output}
-              readOnly
+              placeholder="Output..."
+              value={test.output}
               size="md"
             />
           </Flex>
