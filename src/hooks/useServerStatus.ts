@@ -1,9 +1,8 @@
 import useApi from './useApi';
 import useNotify, { DEFAULT_TOAST_OPTIONS } from './useNotify';
 import { API_PATH } from '../constants/configs';
-import { getMockRequest } from '@utilities/mock';
 import { useRef } from 'react';
-import { ToastId, useToast, UseToastOptions } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 
 const useServerStatus = () => {
 	const toast = useToast();
@@ -12,8 +11,7 @@ const useServerStatus = () => {
 
 	const toastIdRef = useRef<string | number | undefined>(undefined);
 
-	// const _tryApi = () => apiGet(API_PATH.ROOT);
-	const _tryApi = () => getMockRequest({ data: 'Hello world!', howLong: 3000 });
+	const _tryApi = () => apiGet(API_PATH.ROOT);
 
 	const _setServerErrorNotification = () => {
 		toast.closeAll();
