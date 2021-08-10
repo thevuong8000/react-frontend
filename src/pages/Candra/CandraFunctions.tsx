@@ -35,21 +35,31 @@ const CandraFunctions: FC<ICandraHeaderFunctions> = ({
           </option>
         ))}
       </Select>
-      <Button size="md" onClick={handleAddTest} colorScheme="cyan" rightIcon={<VscAdd />}>
+      <Button size="md" onClick={handleAddTest} colorScheme="cyan" rightIcon={<VscAdd size={18} />}>
         Add Test
       </Button>
       <Button
         size="md"
         onClick={handleCollapseAll}
         colorScheme="blue"
-        rightIcon={<VscCollapseAll />}
+        rightIcon={<VscCollapseAll size={18} />}
       >
         Collapse All
       </Button>
-      <Button size="md" onClick={handleExpendAll} colorScheme="teal" rightIcon={<VscExpandAll />}>
+      <Button
+        size="md"
+        onClick={handleExpendAll}
+        colorScheme="teal"
+        rightIcon={<VscExpandAll size={18} />}
+      >
         Expand All
       </Button>
-      <Button size="md" onClick={handleExecuteCode} colorScheme="green" rightIcon={<VscRunAll />}>
+      <Button
+        size="md"
+        onClick={handleExecuteCode}
+        colorScheme="green"
+        rightIcon={<VscRunAll size={18} />}
+      >
         Execute
       </Button>
     </Flex>
