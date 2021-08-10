@@ -8,6 +8,7 @@ import {
   Textarea,
   Tooltip
 } from '@chakra-ui/react';
+import useNotify from '@hooks/useNotify';
 import { isStringEqual } from '@utilities/helper';
 import React, { ChangeEventHandler, FC, MouseEventHandler, useEffect } from 'react';
 import { MdDelete } from 'react-icons/md';
@@ -38,6 +39,8 @@ export interface ITest {
 }
 
 const Test: FC<ITest> = ({ test, handleOnChange, handleOnRemove, handleOnRunSingleTest }) => {
+  const { setNotifier } = useNotify();
+
   const _handleOnChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     const { name, value } = e.target;
 
@@ -49,6 +52,15 @@ const Test: FC<ITest> = ({ test, handleOnChange, handleOnRemove, handleOnRunSing
       [name]: value
     };
     handleOnChange(test.id, newTest);
+  };
+
+  const _handleOnOutputChange: ChangeEventHandler<HTMLTextAreaElement> = () => {
+    setNotifier({
+      title: 'Output Change Warning',
+      description: 'Output is not expected to be changed by users',
+      id: 'test-output-change-warning',
+      status: 'error'
+    });
   };
 
   const _handleOnCollapseToggle: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -136,6 +148,7 @@ const Test: FC<ITest> = ({ test, handleOnChange, handleOnRemove, handleOnRunSing
               resize="none"
               placeholder="Output..."
               value={test.output}
+              onChange={_handleOnOutputChange}
               size="md"
             />
           </Flex>
