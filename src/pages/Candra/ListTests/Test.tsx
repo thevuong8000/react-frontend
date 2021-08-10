@@ -8,6 +8,8 @@ import {
   Textarea,
   Tooltip
 } from '@chakra-ui/react';
+import useNotify from '@hooks/useNotify';
+import { isStringEqual } from '@utilities/helper';
 import React, { ChangeEventHandler, FC, MouseEventHandler, useEffect } from 'react';
 import { MdDelete } from 'react-icons/md';
 import { VscRunAll } from 'react-icons/vsc';
@@ -37,6 +39,8 @@ export interface ITest {
 }
 
 const Test: FC<ITest> = ({ test, handleOnChange, handleOnRemove, handleOnRunSingleTest }) => {
+  const { setNotifier } = useNotify();
+
   const _handleOnChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     const { name, value } = e.target;
 
@@ -48,6 +52,15 @@ const Test: FC<ITest> = ({ test, handleOnChange, handleOnRemove, handleOnRunSing
       [name]: value
     };
     handleOnChange(test.id, newTest);
+  };
+
+  const _handleOnOutputChange: ChangeEventHandler<HTMLTextAreaElement> = () => {
+    setNotifier({
+      title: 'Output Change Warning',
+      description: 'Output is not expected to be changed by users',
+      id: 'test-output-change-warning',
+      status: 'error'
+    });
   };
 
   const _handleOnCollapseToggle: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -72,7 +85,7 @@ const Test: FC<ITest> = ({ test, handleOnChange, handleOnRemove, handleOnRunSing
 
   useEffect(() => {
     if (test.executionStatus === 'Finished') {
-      if (test.expectedOutput === test.output) _handleSetExecutionStatus('Accepted');
+      if (isStringEqual(test.expectedOutput, test.output)) _handleSetExecutionStatus('Accepted');
       else _handleSetExecutionStatus('Wrong Answer');
     }
   }, [test]);
@@ -133,9 +146,9 @@ const Test: FC<ITest> = ({ test, handleOnChange, handleOnRemove, handleOnRunSing
               h="100%"
               w="100%"
               resize="none"
-              placeholder="Corrected Output..."
-              defaultValue={test.output}
-              readOnly
+              placeholder="Output..."
+              value={test.output}
+              onChange={_handleOnOutputChange}
               size="md"
             />
           </Flex>
