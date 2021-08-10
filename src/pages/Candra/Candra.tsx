@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { Flex, useBoolean, useToast } from '@chakra-ui/react';
 import CodeEditor, { ICodeEditor, Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
@@ -22,6 +22,7 @@ import { IExecutionMode } from './Executor';
 import { useHeader } from '../../contexts/header-provider';
 import CandraFunctions from './CandraFunctions';
 import useServerStatus from '@hooks/useServerStatus';
+import useNotify from '@hooks/useNotify';
 
 interface ICheckResult {
   submissionId: string;
@@ -38,6 +39,8 @@ interface ICodeOutput {
   };
 }
 
+const COMPILE_ERROR_TOAST_ID = 'compile-error-toast-id';
+
 export const createNewTest = (): ITestCase => ({
   id: generateId(8),
   input: '',
@@ -50,6 +53,7 @@ export const createNewTest = (): ITestCase => ({
 const Candra: FC<PageBase> = ({ documentTitle }) => {
   const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
   const [tests, setTests] = useState<ITestCase[]>(getTestsFromStorage());
+  const [isExecuting, setIsExecuting] = useBoolean(false);
 
   const [executionMode, setExecutionMode] = useState<IExecutionMode>('Competitive Programming');
 
@@ -59,6 +63,8 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   const { apiPost, requestExhausively } = useApi();
   const { setHeaderFunctions } = useHeader();
   const { checkIfServerIsRestarting } = useServerStatus();
+  const { setNotifier } = useNotify();
+  const toast = useToast();
 
   const _collapseAllTests = useCallback(() => {
     setTests((prevTests) => prevTests.map((test) => ({ ...test, isCollapsed: true })));
@@ -90,7 +96,13 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
         // TODO: handle compile error
         if (result.error) {
-          console.log('Compile Error:', result.error);
+          setNotifier({
+            id: COMPILE_ERROR_TOAST_ID,
+            title: 'Compile Error',
+            description: result.error,
+            status: 'error',
+            duration: null
+          });
         }
 
         setTests((prevTests) =>
@@ -106,9 +118,12 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         );
       };
 
+      // The execution is finished if Compile Error or All tests are done
       const checkIfFinishedFn = (res: ICodeOutput) => {
-        if (res.result.error) return true;
-        const isFinished = Object.values(res.result).filter((output) => output).length === numsTest;
+        const isFinished =
+          !!res.result.error ||
+          Object.values(res.result).filter((output) => output).length === numsTest;
+        if (isFinished) setIsExecuting.off();
         return isFinished;
       };
 
@@ -144,10 +159,13 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   );
 
   const _handleExecuteRegularMode = useCallback(() => {
-    alert('run in regular mode');
+    alert('This funciton has not been available yet!');
   }, []);
 
   const _handleExecuteCode = useCallback(() => {
+    toast.close(COMPILE_ERROR_TOAST_ID);
+    setIsExecuting.on();
+
     switch (executionMode) {
       case 'Competitive Programming':
         return _handleExecuteAllTestsCompetitiveMode();
@@ -208,6 +226,8 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   useEffect(() => {
     document.title = documentTitle;
 
+    // At first, check if the server is up
+    // if not, wake the server up by call an API
     checkIfServerIsRestarting();
   }, []);
 
@@ -231,11 +251,14 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   useEffect(() => {
     if (editorRef.current && monacoRef.current)
       _setEditorSubmitAction(editorRef.current, monacoRef.current);
+  }, [_handleExecuteCode]);
 
+  useEffect(() => {
     // Change header functions
     setHeaderFunctions(() => (
       <CandraFunctions
         initLanguage={language}
+        isExecuting={isExecuting}
         handleCollapseAll={_collapseAllTests}
         handleExpendAll={_expandAllTests}
         handleChangeLanguage={_handleChangeLanguage}
@@ -243,7 +266,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         handleExecuteCode={_handleExecuteCode}
       />
     ));
-  }, [_handleExecuteCode]);
+  }, [_handleExecuteCode, isExecuting]);
 
   return (
     <Flex direction="column" p="6">

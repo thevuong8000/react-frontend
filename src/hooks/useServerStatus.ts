@@ -1,8 +1,8 @@
 import useApi from './useApi';
 import useNotify, { DEFAULT_TOAST_OPTIONS } from './useNotify';
-import { API_PATH } from '../constants/configs';
 import { useRef } from 'react';
 import { useToast } from '@chakra-ui/react';
+import { API_PATH } from '@constants/configs';
 
 const useServerStatus = () => {
 	const toast = useToast();
@@ -32,7 +32,7 @@ const useServerStatus = () => {
 		const timeout = setTimeout(() => {
 			toastIdRef.current = setNotifier({
 				title: 'Server is currently restarting',
-				description: 'Heroku server take about 30 seconds to be up. Please chill!',
+				description: 'Heroku server takes about 30 seconds to be up. Please chill!',
 				duration: null,
 				id: 'heroku-server-restart',
 				status: 'info'
