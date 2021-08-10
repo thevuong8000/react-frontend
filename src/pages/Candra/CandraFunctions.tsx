@@ -6,6 +6,7 @@ import { VscCollapseAll, VscExpandAll, VscAdd, VscRunAll } from 'react-icons/vsc
 
 interface ICandraHeaderFunctions {
   initLanguage: Language;
+  isExecuting: boolean;
   handleCollapseAll: () => void;
   handleExpendAll: () => void;
   handleChangeLanguage: ChangeEventHandler<HTMLSelectElement>;
@@ -15,6 +16,7 @@ interface ICandraHeaderFunctions {
 
 const CandraFunctions: FC<ICandraHeaderFunctions> = ({
   initLanguage,
+  isExecuting,
   handleCollapseAll,
   handleExpendAll,
   handleChangeLanguage,
@@ -59,6 +61,9 @@ const CandraFunctions: FC<ICandraHeaderFunctions> = ({
         onClick={handleExecuteCode}
         colorScheme="green"
         rightIcon={<VscRunAll size={18} />}
+        isDisabled={isExecuting}
+        isLoading={isExecuting}
+        loadingText="Executing"
       >
         Execute
       </Button>

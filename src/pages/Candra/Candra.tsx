@@ -1,4 +1,4 @@
-import { Flex, useToast } from '@chakra-ui/react';
+import { Flex, useBoolean, useToast } from '@chakra-ui/react';
 import CodeEditor, { ICodeEditor, Language } from '@common/CodeEditor/CodeEditor';
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
@@ -53,6 +53,7 @@ export const createNewTest = (): ITestCase => ({
 const Candra: FC<PageBase> = ({ documentTitle }) => {
   const [language, setLanguage] = useState<Language>(getLanguageFromStorage());
   const [tests, setTests] = useState<ITestCase[]>(getTestsFromStorage());
+  const [isExecuting, setIsExecuting] = useBoolean(false);
 
   const [executionMode, setExecutionMode] = useState<IExecutionMode>('Competitive Programming');
 
@@ -117,9 +118,12 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         );
       };
 
+      // The execution is finished if Compile Error or All tests are done
       const checkIfFinishedFn = (res: ICodeOutput) => {
-        if (res.result.error) return true;
-        const isFinished = Object.values(res.result).filter((output) => output).length === numsTest;
+        const isFinished =
+          !!res.result.error ||
+          Object.values(res.result).filter((output) => output).length === numsTest;
+        if (isFinished) setIsExecuting.off();
         return isFinished;
       };
 
@@ -160,6 +164,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
   const _handleExecuteCode = useCallback(() => {
     toast.close(COMPILE_ERROR_TOAST_ID);
+    setIsExecuting.on();
 
     switch (executionMode) {
       case 'Competitive Programming':
@@ -246,11 +251,14 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   useEffect(() => {
     if (editorRef.current && monacoRef.current)
       _setEditorSubmitAction(editorRef.current, monacoRef.current);
+  }, [_handleExecuteCode]);
 
+  useEffect(() => {
     // Change header functions
     setHeaderFunctions(() => (
       <CandraFunctions
         initLanguage={language}
+        isExecuting={isExecuting}
         handleCollapseAll={_collapseAllTests}
         handleExpendAll={_expandAllTests}
         handleChangeLanguage={_handleChangeLanguage}
@@ -258,7 +266,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         handleExecuteCode={_handleExecuteCode}
       />
     ));
-  }, [_handleExecuteCode]);
+  }, [_handleExecuteCode, isExecuting]);
 
   return (
     <Flex direction="column" p="6">
