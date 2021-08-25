@@ -8,7 +8,8 @@ export type ITestResultStatus =
   | 'Accepted'
   | 'Wrong Answer'
   | 'Time Limit Exceeded'
-  | 'Memory Limit Exceeded';
+  | 'Memory Limit Exceeded'
+  | 'Runtime Error';
 
 const IconTestResult: FC<{ result: ITestResultStatus }> = ({ result }) => {
   switch (result) {

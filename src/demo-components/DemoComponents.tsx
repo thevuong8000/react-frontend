@@ -1,9 +1,9 @@
 import { Box, Flex, Heading } from '@chakra-ui/layout';
 import React, { FC, ReactNode, useEffect } from 'react';
+import { PageBase } from 'paging';
 import TableDemo from './Table/TableDemo';
 import InputRadioDemo from './InputRadio/InputRadioDemo';
 import SelectorDemo from './Selector/SelectorDemo';
-import { PageBase } from 'paging';
 import FileUploadDemo from './FileUpload/FileUploadDemo';
 
 interface IDemo {

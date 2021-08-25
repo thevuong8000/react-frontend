@@ -3,9 +3,7 @@ import CodeEditor, { ICodeEditor, Language } from '@common/CodeEditor/CodeEditor
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
 import React, { ChangeEventHandler, FC, useCallback, useEffect, useRef, useState } from 'react';
-import { ITest, ITestCase } from './ListTests/Test';
 import { API_PATH } from '@constants/configs';
-import { ICodeExecutorBody } from 'code_executor';
 import {
   getCodeFromStorage,
   saveCodeIntoStorage,
@@ -17,12 +15,13 @@ import {
 import { isEmpty, generateId } from '@utilities/helper';
 import { editor } from 'monaco-editor';
 import { Monaco } from '@monaco-editor/react';
-import Executor from './Executor';
-import { IExecutionMode } from './Executor';
-import { useHeader } from '../../contexts/header-provider';
-import CandraFunctions from './CandraFunctions';
 import useServerStatus from '@hooks/useServerStatus';
 import useNotify from '@hooks/useNotify';
+import { ICodeExecutorBody } from 'code_executor';
+import Executor, { IExecutionMode } from './Executor';
+import { useHeader } from '../../contexts/header-provider';
+import CandraFunctions from './CandraFunctions';
+import { ITest, ITestCase } from './ListTests/Test';
 
 interface ICheckResult {
   submissionId: string;
@@ -32,11 +31,30 @@ interface ISubmissionResponse {
   submissionId: string;
 }
 
+interface IOutputSuccess {
+  readonly status: 'Success';
+  readonly output?: string;
+}
+
+interface IOutputFailure {
+  readonly status: 'Error' | 'Pending';
+  readonly type?: 'Runtime Error';
+  readonly errorDetail?: string;
+}
+
+type IOutput = IOutputSuccess | IOutputFailure;
+
+// eslint-disable-next-line no-unused-vars
+interface IRegularResult {
+  readonly regular_output: IOutput;
+}
+
+type ICompetitiveResult = Record<string, IOutput>;
+
 interface ICodeOutput {
-  result: {
-    error: string;
-    [x: string]: string;
-  };
+  status: 'Success' | 'Error';
+  isFinished: boolean;
+  [key: string]: any;
 }
 
 const COMPILE_ERROR_TOAST_ID = 'compile-error-toast-id';
@@ -76,59 +94,71 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
   const _setExecuteTests = useCallback((testId: string | undefined) => {
     setTests((prevTests) =>
-      prevTests.map((test) => {
-        return testId
+      prevTests.map((test) =>
+        testId
           ? { ...test, executionStatus: test.id === testId ? 'Started' : test.executionStatus }
-          : { ...test, executionStatus: 'Started' };
-      })
+          : { ...test, executionStatus: 'Started' }
+      )
     );
   }, []);
 
+  const _handleCompileError = useCallback((name: string, detail: string) => {
+    setNotifier({
+      id: COMPILE_ERROR_TOAST_ID,
+      title: name,
+      description: detail,
+      status: 'error',
+      duration: null
+    });
+
+    setTests((prevTests) => prevTests.map((test) => ({ ...test, executionStatus: 'Not Started' })));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const _handleUpdateTestsStatus = (result: ICompetitiveResult) => {
+    setTests((prevTests) =>
+      prevTests.map((test) => {
+        const { status = 'Pending' } = result[test.id] ?? {};
+        if (status === 'Error') return { ...test, executionStatus: 'Runtime Error' };
+        if (status === 'Success') {
+          const { output } = result[test.id] as IOutputSuccess;
+          return {
+            ...test,
+            output: output ?? '',
+            executionStatus: isEmpty(output) ? 'Started' : 'Finished'
+          };
+        }
+        return test;
+      })
+    );
+  };
+
   const _checkResult = useCallback(
-    async (submissionId: string, numsTest: number, singleId: string | undefined = undefined) => {
+    async (submissionId: string) => {
       const body: ICheckResult = {
         submissionId
       };
 
       const requestFn = () => apiPost<ICodeOutput>(API_PATH.CODE_EXECUTOR.CHECK_RESULT, body);
       const processData = (res: ICodeOutput) => {
-        const { result } = res;
+        const { status } = res;
 
-        // TODO: handle compile error
-        if (result.error) {
-          setNotifier({
-            id: COMPILE_ERROR_TOAST_ID,
-            title: 'Compile Error',
-            description: result.error,
-            status: 'error',
-            duration: null
-          });
-        }
-
-        setTests((prevTests) =>
-          prevTests.map((test) => {
-            if (singleId && test.id !== singleId) return test;
-            if (result.error) return { ...test, executionStatus: 'Not Started' };
-            return {
-              ...test,
-              output: result[test.id],
-              executionStatus: isEmpty(result[test.id]) ? 'Started' : 'Finished'
-            };
-          })
-        );
+        if (status === 'Error') return _handleCompileError(res.type, res.detail);
+        return _handleUpdateTestsStatus(res.result);
       };
 
       // The execution is finished if Compile Error or All tests are done
       const checkIfFinishedFn = (res: ICodeOutput) => {
-        const isFinished =
-          !!res.result.error ||
-          Object.values(res.result).filter((output) => output).length === numsTest;
+        const { isFinished } = res;
         if (isFinished) setIsExecuting.off();
         return isFinished;
       };
 
       requestExhausively(requestFn, processData, checkIfFinishedFn);
     },
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [tests]
   );
 
@@ -139,18 +169,21 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
       const targetTests: ITestCase[] = testId
         ? ([tests.find((test) => test.id === testId)].filter((t) => t) as ITestCase[])
         : tests;
-      const body: ICodeExecutorBody = {
+
+      const body: ICodeExecutorBody<'Competitive Programming'> = {
+        mode: 'Competitive Programming',
         typedCode: editorRef.current?.getValue() || '',
         inputs: targetTests.map((test) => ({ id: test.id, input: test.input })),
         language
       };
+
       const { submissionId } = await apiPost<ISubmissionResponse>(
         API_PATH.CODE_EXECUTOR.ROOT,
         body
       );
-      _checkResult(submissionId, targetTests.length, testId);
+      _checkResult(submissionId);
     },
-    [_checkResult, language, tests]
+    [_checkResult, _setExecuteTests, _collapseAllTests, apiPost, language, tests]
   );
 
   const _handleExecuteAllTestsCompetitiveMode = useCallback(
@@ -174,8 +207,10 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         return _handleExecuteRegularMode();
 
       default:
-        return;
+        return undefined;
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [executionMode, _handleExecuteAllTestsCompetitiveMode, _handleExecuteRegularMode]);
 
   const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = useCallback((e) => {
@@ -188,22 +223,27 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   }, []);
 
   const _handleTestChange: ITest['handleOnChange'] = useCallback((testId, newTest) => {
-    setTests((prevTests) => prevTests.map((test) => (test.id == testId ? newTest : test)));
+    setTests((prevTests) => prevTests.map((test) => (test.id === testId ? newTest : test)));
   }, []);
 
   const _handleRemoveTest: ITest['handleOnRemove'] = useCallback((testId) => {
-    setTests((prevTests) => prevTests.filter((test) => test.id != testId));
+    setTests((prevTests) => prevTests.filter((test) => test.id !== testId));
   }, []);
 
-  const _handleRunSingleTest: ITest['handleOnRunSingleTest'] = useCallback((id: string) => {
-    _handleExecuteTestsCompetitiveMode(id);
-  }, []);
+  const _handleRunSingleTest: ITest['handleOnRunSingleTest'] = useCallback(
+    (id: string) => {
+      _handleExecuteTestsCompetitiveMode(id);
+    },
+    [_handleExecuteTestsCompetitiveMode]
+  );
 
   const _setEditorSubmitAction = useCallback(
     (ed: editor.IStandaloneCodeEditor, monaco: Monaco) => {
       ed.addAction({
         id: 'execute-shortcut',
         label: 'execution shortcut',
+
+        // eslint-disable-next-line no-bitwise
         keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
         run: _handleExecuteCode
       });
@@ -212,13 +252,13 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   );
 
   const _handleEditorDidMount: ICodeEditor['handleEditorDidMount'] = useCallback(
-    (editor, monaco) => {
-      editorRef.current = editor;
+    (codeEditor, monaco) => {
+      editorRef.current = codeEditor;
       monacoRef.current = monaco;
 
-      editor.setValue(getCodeFromStorage(language));
+      codeEditor.setValue(getCodeFromStorage(language));
 
-      _setEditorSubmitAction(editor, monaco);
+      _setEditorSubmitAction(codeEditor, monaco);
     },
     []
   );
@@ -229,6 +269,8 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
     // At first, check if the server is up
     // if not, wake the server up by call an API
     checkIfServerIsRestarting();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -266,7 +308,16 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         handleExecuteCode={_handleExecuteCode}
       />
     ));
-  }, [_handleExecuteCode, isExecuting]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    _collapseAllTests,
+    _expandAllTests,
+    _handleAddTest,
+    _handleChangeLanguage,
+    _handleExecuteCode,
+    isExecuting
+  ]);
 
   return (
     <Flex direction="column" p="6">
