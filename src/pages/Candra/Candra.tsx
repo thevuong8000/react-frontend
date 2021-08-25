@@ -134,6 +134,10 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
     );
   };
 
+  const _handleReceiveRegularResult = (result: IRegularResult) => {
+    console.log(result);
+  };
+
   const _checkResult = useCallback(
     async (submissionId: string) => {
       const body: ICheckResult = {
@@ -145,7 +149,10 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         const { status } = res;
 
         if (status === 'Error') return _handleCompileError(res.type, res.detail);
-        return _handleUpdateTestsStatus(res.result);
+
+        return executionMode === 'Regular'
+          ? _handleReceiveRegularResult(res.result)
+          : _handleUpdateTestsStatus(res.result);
       };
 
       // The execution is finished if Compile Error or All tests are done
@@ -159,7 +166,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
     },
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tests]
+    [tests, executionMode]
   );
 
   const _handleExecuteTestsCompetitiveMode = useCallback(
@@ -191,9 +198,17 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
     [_handleExecuteTestsCompetitiveMode]
   );
 
-  const _handleExecuteRegularMode = useCallback(() => {
-    alert('This funciton has not been available yet!');
-  }, []);
+  const _handleExecuteRegularMode = useCallback(async () => {
+    const body: ICodeExecutorBody<'Regular'> = {
+      mode: 'Regular',
+      typedCode: editorRef.current?.getValue() || '',
+      language
+    };
+
+    const { submissionId } = await apiPost<ISubmissionResponse>(API_PATH.CODE_EXECUTOR.ROOT, body);
+
+    _checkResult(submissionId);
+  }, [_checkResult, apiPost, language]);
 
   const _handleExecuteCode = useCallback(() => {
     toast.close(COMPILE_ERROR_TOAST_ID);
