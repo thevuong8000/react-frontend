@@ -3,9 +3,7 @@ import CodeEditor, { ICodeEditor, Language } from '@common/CodeEditor/CodeEditor
 import useApi from '@hooks/useApi';
 import { PageBase } from 'paging';
 import React, { ChangeEventHandler, FC, useCallback, useEffect, useRef, useState } from 'react';
-import { ITest, ITestCase } from './ListTests/Test';
 import { API_PATH } from '@constants/configs';
-import { ICodeExecutorBody } from 'code_executor';
 import {
   getCodeFromStorage,
   saveCodeIntoStorage,
@@ -17,12 +15,13 @@ import {
 import { isEmpty, generateId } from '@utilities/helper';
 import { editor } from 'monaco-editor';
 import { Monaco } from '@monaco-editor/react';
-import Executor from './Executor';
-import { IExecutionMode } from './Executor';
-import { useHeader } from '../../contexts/header-provider';
-import CandraFunctions from './CandraFunctions';
 import useServerStatus from '@hooks/useServerStatus';
 import useNotify from '@hooks/useNotify';
+import { ICodeExecutorBody } from 'code_executor';
+import Executor, { IExecutionMode } from './Executor';
+import { useHeader } from '../../contexts/header-provider';
+import CandraFunctions from './CandraFunctions';
+import { ITest, ITestCase } from './ListTests/Test';
 
 interface ICheckResult {
   submissionId: string;
@@ -76,11 +75,11 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
   const _setExecuteTests = useCallback((testId: string | undefined) => {
     setTests((prevTests) =>
-      prevTests.map((test) => {
-        return testId
+      prevTests.map((test) =>
+        testId
           ? { ...test, executionStatus: test.id === testId ? 'Started' : test.executionStatus }
-          : { ...test, executionStatus: 'Started' };
-      })
+          : { ...test, executionStatus: 'Started' }
+      )
     );
   }, []);
 
@@ -129,6 +128,8 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
 
       requestExhausively(requestFn, processData, checkIfFinishedFn);
     },
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [tests]
   );
 
@@ -139,18 +140,21 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
       const targetTests: ITestCase[] = testId
         ? ([tests.find((test) => test.id === testId)].filter((t) => t) as ITestCase[])
         : tests;
-      const body: ICodeExecutorBody = {
+
+      const body: ICodeExecutorBody<'Competitive Programming'> = {
+        mode: 'Competitive Programming',
         typedCode: editorRef.current?.getValue() || '',
         inputs: targetTests.map((test) => ({ id: test.id, input: test.input })),
         language
       };
+
       const { submissionId } = await apiPost<ISubmissionResponse>(
         API_PATH.CODE_EXECUTOR.ROOT,
         body
       );
       _checkResult(submissionId, targetTests.length, testId);
     },
-    [_checkResult, language, tests]
+    [_checkResult, _setExecuteTests, _collapseAllTests, apiPost, language, tests]
   );
 
   const _handleExecuteAllTestsCompetitiveMode = useCallback(
@@ -174,8 +178,10 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         return _handleExecuteRegularMode();
 
       default:
-        return;
+        return undefined;
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [executionMode, _handleExecuteAllTestsCompetitiveMode, _handleExecuteRegularMode]);
 
   const _handleChangeLanguage: ChangeEventHandler<HTMLSelectElement> = useCallback((e) => {
@@ -188,22 +194,27 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   }, []);
 
   const _handleTestChange: ITest['handleOnChange'] = useCallback((testId, newTest) => {
-    setTests((prevTests) => prevTests.map((test) => (test.id == testId ? newTest : test)));
+    setTests((prevTests) => prevTests.map((test) => (test.id === testId ? newTest : test)));
   }, []);
 
   const _handleRemoveTest: ITest['handleOnRemove'] = useCallback((testId) => {
-    setTests((prevTests) => prevTests.filter((test) => test.id != testId));
+    setTests((prevTests) => prevTests.filter((test) => test.id !== testId));
   }, []);
 
-  const _handleRunSingleTest: ITest['handleOnRunSingleTest'] = useCallback((id: string) => {
-    _handleExecuteTestsCompetitiveMode(id);
-  }, []);
+  const _handleRunSingleTest: ITest['handleOnRunSingleTest'] = useCallback(
+    (id: string) => {
+      _handleExecuteTestsCompetitiveMode(id);
+    },
+    [_handleExecuteTestsCompetitiveMode]
+  );
 
   const _setEditorSubmitAction = useCallback(
     (ed: editor.IStandaloneCodeEditor, monaco: Monaco) => {
       ed.addAction({
         id: 'execute-shortcut',
         label: 'execution shortcut',
+
+        // eslint-disable-next-line no-bitwise
         keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
         run: _handleExecuteCode
       });
@@ -212,13 +223,13 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   );
 
   const _handleEditorDidMount: ICodeEditor['handleEditorDidMount'] = useCallback(
-    (editor, monaco) => {
-      editorRef.current = editor;
+    (codeEditor, monaco) => {
+      editorRef.current = codeEditor;
       monacoRef.current = monaco;
 
-      editor.setValue(getCodeFromStorage(language));
+      codeEditor.setValue(getCodeFromStorage(language));
 
-      _setEditorSubmitAction(editor, monaco);
+      _setEditorSubmitAction(codeEditor, monaco);
     },
     []
   );
@@ -229,6 +240,8 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
     // At first, check if the server is up
     // if not, wake the server up by call an API
     checkIfServerIsRestarting();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -266,7 +279,16 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         handleExecuteCode={_handleExecuteCode}
       />
     ));
-  }, [_handleExecuteCode, isExecuting]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    _collapseAllTests,
+    _expandAllTests,
+    _handleAddTest,
+    _handleChangeLanguage,
+    _handleExecuteCode,
+    isExecuting
+  ]);
 
   return (
     <Flex direction="column" p="6">
