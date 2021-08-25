@@ -31,11 +31,30 @@ interface ISubmissionResponse {
   submissionId: string;
 }
 
+interface IOutputSuccess {
+  readonly status: 'Success';
+  readonly output?: string;
+}
+
+interface IOutputFailure {
+  readonly status: 'Error' | 'Pending';
+  readonly type?: 'Runtime Error';
+  readonly errorDetail?: string;
+}
+
+type IOutput = IOutputSuccess | IOutputFailure;
+
+// eslint-disable-next-line no-unused-vars
+interface IRegularResult {
+  readonly regular_output: IOutput;
+}
+
+type ICompetitiveResult = Record<string, IOutput>;
+
 interface ICodeOutput {
-  result: {
-    error: string;
-    [x: string]: string;
-  };
+  status: 'Success' | 'Error';
+  isFinished: boolean;
+  [key: string]: any;
 }
 
 const COMPILE_ERROR_TOAST_ID = 'compile-error-toast-id';
@@ -83,45 +102,55 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
     );
   }, []);
 
+  const _handleCompileError = useCallback((name: string, detail: string) => {
+    setNotifier({
+      id: COMPILE_ERROR_TOAST_ID,
+      title: name,
+      description: detail,
+      status: 'error',
+      duration: null
+    });
+
+    setTests((prevTests) => prevTests.map((test) => ({ ...test, executionStatus: 'Not Started' })));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const _handleUpdateTestsStatus = (result: ICompetitiveResult) => {
+    setTests((prevTests) =>
+      prevTests.map((test) => {
+        const { status = 'Pending' } = result[test.id] ?? {};
+        if (status === 'Error') return { ...test, executionStatus: 'Runtime Error' };
+        if (status === 'Success') {
+          const { output } = result[test.id] as IOutputSuccess;
+          return {
+            ...test,
+            output: output ?? '',
+            executionStatus: isEmpty(output) ? 'Started' : 'Finished'
+          };
+        }
+        return test;
+      })
+    );
+  };
+
   const _checkResult = useCallback(
-    async (submissionId: string, numsTest: number, singleId: string | undefined = undefined) => {
+    async (submissionId: string) => {
       const body: ICheckResult = {
         submissionId
       };
 
       const requestFn = () => apiPost<ICodeOutput>(API_PATH.CODE_EXECUTOR.CHECK_RESULT, body);
       const processData = (res: ICodeOutput) => {
-        const { result } = res;
+        const { status } = res;
 
-        // TODO: handle compile error
-        if (result.error) {
-          setNotifier({
-            id: COMPILE_ERROR_TOAST_ID,
-            title: 'Compile Error',
-            description: result.error,
-            status: 'error',
-            duration: null
-          });
-        }
-
-        setTests((prevTests) =>
-          prevTests.map((test) => {
-            if (singleId && test.id !== singleId) return test;
-            if (result.error) return { ...test, executionStatus: 'Not Started' };
-            return {
-              ...test,
-              output: result[test.id],
-              executionStatus: isEmpty(result[test.id]) ? 'Started' : 'Finished'
-            };
-          })
-        );
+        if (status === 'Error') return _handleCompileError(res.type, res.detail);
+        return _handleUpdateTestsStatus(res.result);
       };
 
       // The execution is finished if Compile Error or All tests are done
       const checkIfFinishedFn = (res: ICodeOutput) => {
-        const isFinished =
-          !!res.result.error ||
-          Object.values(res.result).filter((output) => output).length === numsTest;
+        const { isFinished } = res;
         if (isFinished) setIsExecuting.off();
         return isFinished;
       };
@@ -152,7 +181,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
         API_PATH.CODE_EXECUTOR.ROOT,
         body
       );
-      _checkResult(submissionId, targetTests.length, testId);
+      _checkResult(submissionId);
     },
     [_checkResult, _setExecuteTests, _collapseAllTests, apiPost, language, tests]
   );
