@@ -22,6 +22,7 @@ import Executor, { IExecutionMode } from './Executor';
 import { useHeader } from '../../contexts/header-provider';
 import CandraFunctions from './CandraFunctions';
 import { ITest, ITestCase } from './ListTests/Test';
+import { IRegular } from './Regular/Regular';
 
 interface ICheckResult {
   submissionId: string;
@@ -74,6 +75,8 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   const [isExecuting, setIsExecuting] = useBoolean(false);
 
   const [executionMode, setExecutionMode] = useState<IExecutionMode>('Competitive Programming');
+
+  const [regularResult, setRegularResult] = useState<IRegular>({ status: 'Idle', detail: '' });
 
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
   const monacoRef = useRef<Monaco>();
@@ -135,7 +138,31 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   };
 
   const _handleReceiveRegularResult = (result: IRegularResult) => {
-    console.log(result);
+    const { regular_output } = result;
+    const { status } = regular_output;
+    switch (status) {
+      case 'Success':
+        setRegularResult((prevResult) => ({
+          ...prevResult,
+          status: 'Success',
+          detail: (regular_output as IOutputSuccess).output
+        }));
+        break;
+
+      case 'Error':
+        setRegularResult((prevResult) => ({
+          ...prevResult,
+          status: 'Compile Error',
+          detail: (regular_output as IOutputFailure).errorDetail
+        }));
+        break;
+
+      case 'Pending':
+        setRegularResult((prevResult) => ({ ...prevResult, status: 'Pending', detail: '' }));
+        break;
+
+      default:
+    }
   };
 
   const _checkResult = useCallback(
@@ -360,6 +387,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
             handleTestChange={_handleTestChange}
             handleRemoveTest={_handleRemoveTest}
             handleRunSingleTest={_handleRunSingleTest}
+            regularProps={regularResult}
           />
         </Flex>
       </Flex>
