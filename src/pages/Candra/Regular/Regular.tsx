@@ -11,7 +11,7 @@ interface IRegularFailure {
   detail: string;
 }
 
-type IRegular = IRegularSuccess | IRegularFailure;
+export type IRegular = Partial<IRegularSuccess | IRegularFailure>;
 
 const getColorSchemeByStatus = (status: IRegular['status']): ThemeTypings['colorSchemes'] => {
   switch (status) {

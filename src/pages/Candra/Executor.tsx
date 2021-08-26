@@ -1,12 +1,14 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs, UseTabsProps } from '@chakra-ui/react';
 import React, { FC, useCallback, useMemo } from 'react';
 import ListTests, { IListTests } from './ListTests/ListTests';
+import Regular, { IRegular } from './Regular/Regular';
 
 export type IExecutionMode = 'Competitive Programming' | 'Regular';
-
 interface IExecutor extends IListTests {
   executionMode: IExecutionMode;
   setExecutionMode: React.Dispatch<React.SetStateAction<IExecutionMode>>;
+
+  regularProps?: IRegular;
 }
 
 interface ITabMode {
@@ -20,7 +22,9 @@ const Executor: FC<IExecutor> = ({
   tests,
   handleTestChange,
   handleRemoveTest,
-  handleRunSingleTest
+  handleRunSingleTest,
+
+  regularProps = {}
 }) => {
   const tabData: ITabMode[] = useMemo(
     () => [
@@ -35,9 +39,9 @@ const Executor: FC<IExecutor> = ({
           />
         )
       },
-      { label: 'Regular', content: <span>Regular Mode</span> }
+      { label: 'Regular', content: <Regular {...regularProps} /> }
     ],
-    [tests, handleTestChange, handleRemoveTest, handleRunSingleTest]
+    [tests, handleTestChange, handleRemoveTest, handleRunSingleTest, regularProps]
   );
 
   const _handleOnChange: UseTabsProps['onChange'] = useCallback(
