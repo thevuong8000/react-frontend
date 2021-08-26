@@ -11,7 +11,17 @@ interface IRegularFailure {
   detail: string;
 }
 
-export type IRegular = Partial<IRegularSuccess | IRegularFailure>;
+interface IRegularPending {
+  status: 'Pending';
+  detail: string;
+}
+
+interface IRegularIdle {
+  status: 'Idle';
+  detail: string;
+}
+
+export type IRegular = Partial<IRegularSuccess | IRegularFailure | IRegularPending | IRegularIdle>;
 
 const getColorSchemeByStatus = (status: IRegular['status']): ThemeTypings['colorSchemes'] => {
   switch (status) {
@@ -27,7 +37,7 @@ const getColorSchemeByStatus = (status: IRegular['status']): ThemeTypings['color
   }
 };
 
-const Regular: FC<IRegular> = ({ status, detail }) => {
+const Regular: FC<IRegular> = ({ status = 'Idle', detail = '' }) => {
   const colorScheme = getColorSchemeByStatus(status);
   return (
     <Flex>
