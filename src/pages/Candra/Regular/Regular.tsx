@@ -37,11 +37,13 @@ const getColorSchemeByStatus = (status: IRegular['status']): ThemeTypings['color
   }
 };
 
-const Regular: FC<IRegular> = ({ status = 'Idle', detail = '' }) => {
+const Regular: FC<IRegular> = ({ status = 'Idle', detail }) => {
   const colorScheme = getColorSchemeByStatus(status);
   return (
-    <Flex>
-      <Text colorScheme={colorScheme}>{status}</Text>
+    <Flex direction="column">
+      <Text colorScheme={colorScheme} fontSize="3xl" fontWeight="bold">
+        {status}
+      </Text>
       <Text>{detail}</Text>
     </Flex>
   );
