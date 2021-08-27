@@ -74,9 +74,12 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   const [tests, setTests] = useState<ITestCase[]>(getTestsFromStorage());
   const [isExecuting, setIsExecuting] = useBoolean(false);
 
-  const [executionMode, setExecutionMode] = useState<IExecutionMode>('Competitive Programming');
+  const [executionMode, setExecutionMode] = useState<IExecutionMode>('Regular');
 
-  const [regularResult, setRegularResult] = useState<IRegular>({ status: 'Idle', detail: '' });
+  const [regularResult, setRegularResult] = useState<IRegular>({
+    status: 'Idle',
+    detail: 'This is the shit'
+  });
 
   const editorRef = useRef<editor.IStandaloneCodeEditor>();
   const monacoRef = useRef<Monaco>();
@@ -140,6 +143,7 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
   const _handleReceiveRegularResult = (result: IRegularResult) => {
     const { regular_output } = result;
     const { status } = regular_output;
+
     switch (status) {
       case 'Success':
         setRegularResult((prevResult) => ({
@@ -152,13 +156,18 @@ const Candra: FC<PageBase> = ({ documentTitle }) => {
       case 'Error':
         setRegularResult((prevResult) => ({
           ...prevResult,
-          status: 'Compile Error',
+          status: (regular_output as IOutputFailure).type,
           detail: (regular_output as IOutputFailure).errorDetail
         }));
         break;
 
+      // TODO: Should not do anything if pending (only should loading indicator)
       case 'Pending':
-        setRegularResult((prevResult) => ({ ...prevResult, status: 'Pending', detail: '' }));
+        setRegularResult((prevResult) => ({
+          ...prevResult,
+          status: 'Pending',
+          detail: ''
+        }));
         break;
 
       default:
